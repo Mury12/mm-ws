@@ -19,13 +19,13 @@ use MMWS\Model\Layout;
 return [
     'login' => [
         'body' => $l = new Layout(),
-        $l->page('user/login')
+        $l->post('user/login', 'auth_request')
             ->permission('any')
     ],
 
     'signup' => [
         'body' => $l = new Layout,
-        $l->page('user/signup')
+        $l->post('user/signup', 'create_user')
             ->permission('not')
     ]
 ];

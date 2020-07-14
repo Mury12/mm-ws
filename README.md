@@ -65,9 +65,15 @@ return [
   'route-name' => [
     'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
     'body' => $jimmy = new Layout(),
-      $jimmy->page('band/yardbirds')
+      $jimmy->page('band/yardbirds') // Function page creates a generic any-method request
       ->permission('auth')
-  ]
+  ],
+  'route-get' => [
+    'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
+    'body' => $jimmy = new Layout(),
+      $jimmy->get('band/led-zeppelin', 'getZoso') // Function post|patch|get|delete uses specific request method and procedure.
+      ->permission('auth')
+  ],
 ];
 
 ```
