@@ -7,6 +7,6 @@ return [
         'params' => ['len', 'hash'],
         'body' =>
         $l = new Layout,
-        $l->page('uniqid_gen')
+        $l->patch('uniqid_gen', 'getUniqueId')
     ]
 ];

@@ -144,7 +144,7 @@ function unique_id(Int $size = 6, $hash = 'sha256')
     $uid = '';
     $len = 6;
 
-    if(!$pre) return ['res' => false, 'msg' => 'Invalid hashing algorithm.'];
+    if (!$pre) return ['res' => false, 'msg' => 'Invalid hashing algorithm.'];
 
     if ($size <= 128) {
         $len = $size;
@@ -212,9 +212,25 @@ function pop_encrypt(String $str)
  * @return mixed
  */
 
-function get_post($key = false)
+function post_params($key = false)
 {
-    return $_POST;
+    if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
+        return $_POST;
+    }
+}
+
+/**
+ * Gets the patch variables or array
+ * @param String $key is the key
+ * @return mixed
+ */
+
+function patch_params($key = false)
+{
+    if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PATCH') {
+        parse_str(file_get_contents('php://input'), $_PATCH);
+        return $_PATCH;
+    }
 }
 
 /**
@@ -261,7 +277,33 @@ function get_part_template(String $template, array $data)
             $html = preg_replace("/\{\{" . $key . "}\}/", $value, $html);
         }
         return $html;
-    }else{
+    } else {
         return false;
+    }
+}
+
+/**
+ * Checks if a string contains any of the substrings given
+ * @param string $source source string to check
+ * @param array $cmp array of strings to compare
+ * @param string $regEx set true if cmp is an unescaped regex array.
+ * @param bool $getMatches return the matched therms.
+ * @return bool|array if found any of the therms.
+ */
+function str_in(string $source, array $cmp, bool $regEx = false, bool $getMatches = false)
+{
+    $matches = array();
+
+    if(!$regEx){
+        foreach($cmp as $therm){
+            if(strpos(strtolower($source), strtolower($therm), 0) !== false) {
+                if($getMatches){
+                    array_push($matches, $therm);
+                }else{
+                    return true;
+                }
+            }
+        }
+        return sizeof($matches) > 0 ? $matches : false;
     }
 }

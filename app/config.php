@@ -26,6 +26,9 @@ require_once 'config/db-conf.php';
 
 /** instantiates the router */
 $r = new Router();
+
+/** init param array */
+$param = array();
 /** Prints the page headers */
 $r->headers();
 /** Init session */

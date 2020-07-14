@@ -12,7 +12,7 @@ namespace MMWS\Middleware;
 use MMWS\Interfaces\Middleware;
 use MMWS\Controller\UserController;
 
-require_once('app/util/ploader.php');
+// require_once('app/util/ploader.php');
 
 class Authentication implements Middleware
 {

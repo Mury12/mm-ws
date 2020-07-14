@@ -7,21 +7,10 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
-/**
- * @var Array $data is the content extracted from the POST request
- */
-$data = get_post();
-
-if (array_key_exists('_', $data)) {
-    /**
-     * @var String $procedure the procedure name to call from the POST request
-     */
-    $procedure = $data['_'];
-    unset($data['_']);
-} else {
-    send(error_message(400));
-    die();
-}
+ /**
+  * @var string $procedure gets the route function procedure
+  */
+global $procedure;
 
 /**
  * @var Array $procedures array of procedures to perform in the endpoint
