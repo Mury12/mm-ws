@@ -1,0 +1,1 @@
+<?php send(error_message(404));

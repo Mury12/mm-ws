@@ -1,0 +1,3 @@
+RewriteEngine ON
+RewriteBase /
+RewriteRule ^(.+)$ index.php [QSA,L]

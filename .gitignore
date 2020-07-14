@@ -1,0 +1,34 @@
+.vscode/*
+
+.DS_Store
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+#files to be ignored
+app/_files/**/*
+app/logs/error.log
+app/config/local/*-local.php
+app/util/WillSmithTheRouteProtector.php
+/wsrp/*
+/vendor
+composer.lock
+
+#files

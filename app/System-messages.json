@@ -1,0 +1,47 @@
+{
+  "25001": {
+    "message": "Conectado de outro local."
+  },
+  "25002" :{
+    "message" : "Usuário ou senha incorretos."
+  },
+  "25003" : {
+    "message" : "Erro ao cadastrar usuário."
+  },
+  "25004": {
+    "message" : "Nome de usuário já existe."
+  },
+  "25005": {
+    "message" : "Conta bloqueada."
+  },
+  "25006":{
+    "message" : "Houve um problema ao carregar a rede."
+  },
+  "25007":{
+    "message" : "Houve um erro ao carregar seus indicados."
+  },
+  "25008":{
+    "message" : "Não possui indicados diretos."
+  },
+  "25009":{
+    "message" : "Não possui filhos."
+  },
+  "25010":{
+    "message" : "Usuário não encontrado."
+  },
+  "25011":{
+    "message" : "Houve um problema ao enviar seu e-mail. Por favor, tente novamente em alguns minutos."
+  },
+  "25012":{
+    "message" : "Não encontramos nenhum pagamento em seu nome."
+  },
+  "25013":{
+    "message" : "Usuario não possui pai."
+  },
+  "25014":{
+    "message" : "Nenhum usuário aguardando aprovação."
+  },
+  "25015":{
+    "message" : "Erro desconhecido."
+  }
+}
