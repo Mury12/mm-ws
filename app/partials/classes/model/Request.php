@@ -4,21 +4,34 @@ namespace MMWS\Model;
 
 class Request
 {
+    /**
+     * @var Array<Array> $request contains the endpoint [request_method] => ['page', 'procedure'] for each endpoint set to the same file.
+     */
     private $request = [];
 
     function __construct()
     {
     }
 
+    /**
+     * Adds a request method to an endpoint
+     * @param String $method GET|POST|DELETE|PATCH|PUT
+     * @param String $page the actual file to the endpoint
+     * @param String $procedure the method to be called in $file
+     */
     public function add(String $method, String $page, String $procedure)
     {
         $this->request[strtoupper($method)] = [
-            'page' => $this->page($page),
+            'page' => $this->setFilePath($page),
             'procedure' => $procedure
         ];
         return $this;
     }
 
+    /**
+     * Gets the endpoint configuration method, request and file
+     * @return bool|Array the configurations or false if not exists.
+     */
     public function get(String $method)
     {
         if (array_key_exists(strtoupper($method), $this->request)) {
@@ -28,11 +41,13 @@ class Request
     }
 
     /**
-     * Esta função é responsável por dizer qual é a página a ser carregada no corpo de seu site.
-     * @param $page é o diretório da página, já considerando estar na pasta correta app/pages.
-     * @param Int $v é a versão do webservice. Default 2
+     * This method mounts the actual file path to be loaded as an endpoint. Must be set or anything will
+     * happen.
+     * @param String $page is the domain/file combination where "domain" is the folder and "file" is the actual file name.
+     * @param Int $v version control. Default is 2.
+     * @return String with full path.
      */
-    private function page($page, Int $v = 2)
+    private function setFilePath(String $page, Int $v = 2)
     {
         return 'app/_ws/v' . $v . '/' . $page . '.php';
     }

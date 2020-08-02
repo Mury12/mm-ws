@@ -7,12 +7,38 @@ use MMWS\Model\Request;
 class Endpoint
 {
 
+    /**
+     * @var Array $env are the environment variables that will be extracted to the page body.
+     */
     private $_env = array();
+    /**
+     * @var Bool $api sets if the page is an endpoint
+     * @deprecated in v1.0.1
+     */
     private $api = true;
+    /**
+     * @var String $access sets the access type to the endpoint. 
+     * - any means that anybody can request to this page
+     * - auth means that only authenticated requests can request
+     * - not means that only not authenticated requests can request
+     */
     private $access = 'any';
+    /**
+     * @var String $route is the URI to the endpoint, automatically set in the router configuration.
+     */
     private $route;
+    /**
+     * @var Request $request is the Request object that handles request configurations
+     */
     private $request;
+    /**
+     * @var String $procedure is the procedure that will be called in the mounted endpoint. 
+     * This is set right after the URL is called and Endpoints tries to render.
+     */
     public $procedure;
+    /**
+     * @var Array $body is the body params catched from get_`reqmethod`() so it can be accessed like $endpoint->body params.
+     */
     public $body = array();
 
     function __construct()
@@ -21,7 +47,7 @@ class Endpoint
     }
 
     /**
-     * Este método retorna os arquivos parciais que você inseriu em @method appendPartials()
+     * Return files inserted in @method appendPartials()
      * @return file de arquivos
      */
     public function getPartials()
@@ -29,46 +55,89 @@ class Endpoint
         return require_once $this->partials;
     }
 
+    /**
+     * Just stets an error file (not working just now)
+     * @param String $page the filename
+     */
     public function error($page)
     {
         $this->request->add("ERROR", $page, '');
         return $this;
     }
+    /**
+     * This method only sets the request type to "POST" and 
+     * the procedure or method to be used, contained in the
+     * set endpoint.
+     * @param String $page the actual filename in the files folder
+     * @param String $procedure the method to be called when the route is requested
+     * @param Int $v is the version control, default is 2.
+     */
     public function post($page, $procedure, Int $v = 2)
     {
         $this->request->add("POST", $page, $procedure);
         return $this;
     }
-
+    /**
+     * This method only sets the request type to "PATCH" and 
+     * the procedure or method to be used, contained in the
+     * set endpoint.
+     * @param String $page the actual filename in the files folder
+     * @param String $procedure the method to be called when the route is requested
+     * @param Int $v is the version control, default is 2.
+     */
     public function patch($page, $procedure, Int $v = 2)
     {
         $this->request->add("PATCH", $page, $procedure);
         return $this;
     }
-
+    /**
+     * This method only sets the request type to "PUT" and 
+     * the procedure or method to be used, contained in the
+     * set endpoint.
+     * @param String $page the actual filename in the files folder
+     * @param String $procedure the method to be called when the route is requested
+     * @param Int $v is the version control, default is 2.
+     */
     public function put($page, $procedure, Int $v = 2)
     {
         $this->request->add("PUT", $page, $procedure);
         return $this;
     }
-
+    /**
+     * This method only sets the request type to "GET" and 
+     * the procedure or method to be used, contained in the
+     * set endpoint.
+     * @param String $page the actual filename in the files folder
+     * @param String $procedure the method to be called when the route is requested
+     * @param Int $v is the version control, default is 2.
+     */
     public function get($page, $procedure, Int $v = 2)
     {
         $this->request->add("GET", $page, $procedure);
         return $this;
     }
-
+    /**
+     * This method only sets the request type to "DELETE" and 
+     * the procedure or method to be used, contained in the
+     * set endpoint.
+     * @param String $page the actual filename in the files folder
+     * @param String $procedure the method to be called when the route is requested
+     * @param Int $v is the version control, default is 2.
+     */
     public function delete($page, $procedure, Int $v = 2)
     {
         $this->request->add("DELETE", $page, $procedure);
         return $this;
     }
 
-    private function getRequestParams($prepare = false)
+    /**
+     * This method gets the body params
+     */
+    private function getRequestParams()
     {
         global $body;
         $method = strtoupper($_SERVER['REQUEST_METHOD']);
-        if ($prepare && str_in($method, ['POST', 'PUT', 'PATCH'])) {
+        if (str_in($method, ['POST', 'PUT', 'PATCH'])) {
             $fn = strtolower($method) . '_params';
             $body = $fn();
         }
@@ -77,14 +146,15 @@ class Endpoint
 
 
     /**
-     * Este método renderiza a página principal de seu site, configurado em @method page()
-     * @return file
+     * Renders the file into an endpoint page including the requested params, url params or
+     * env params put into the router.
+     * @return file the required file
      */
     public function render()
     {
         global $params;
         global $procedure;
-        $method = $this->getRequestParams(true);
+        $method = $this->getRequestParams();
 
         if ($req = $this->request->get($method)) {
             $params = $this->getEnv();
@@ -97,12 +167,10 @@ class Endpoint
     }
 
     /**
-     * Este é o método responsável por armazenar as variáveis de ambiente utilizadas dinamicamente nas
-     * páginas as quais você as definiu. O vetor é extraído e cada uma de suas chaves é transformada em uma
-     * variável diferente para você usar como desejar.
-     * @param Array env vetor de variáveis, devem ter um rótulo.
-     * @example $l->setEnv(['motivo' => 'Esta é uma realização!', 'amor' => 'Desenvolver páginas lindas!']);
-     * --. Em sua página, basta inserir <?= $motivo ?> e <?= $amor ?> onde quiser e seus valores serão impressos :)
+     * Sets the environment variables that will be used in this endpoint.
+     * @param Array $env the indexed variables and its values.
+     * @example $e->setEnv(['name' => 'Jon Garret', 'age' => '32']); (in the router configurations)
+     * Then you can use it inside an endpoint just calling their names $name or $age.
      */
     public function setEnv(array $env)
     {
@@ -113,8 +181,8 @@ class Endpoint
     }
 
     /**
-     * Este método é responsável por retornar as variáveis criadas dinamicamente.
-     * @return array com as variáveis a serem extraidas.
+     * Gets all the environment variables set in @method setEnv().
+     * @return array of indexed variables => values. Usually extracted in the render() method.
      */
     public function getEnv()
     {
@@ -122,9 +190,10 @@ class Endpoint
     }
 
     /**
-     * Configura a página como uma página de requisições.
+     * Set or returns if this is an Endpoint page. Will be deprecated soon.
+     * @deprecated in v1.0.1
      */
-    public function isApi($bool = false)
+    public function isApi($bool = true)
     {
         if ($bool) {
             $this->api = true;
@@ -133,39 +202,46 @@ class Endpoint
     }
 
     /**
-     * Configura o tipo de usuário que pode acessar a página, sendo 'auth' para somente autenticado,
-     * 'any' para todos os usuários (padrão) e 'not' para somente usuários não autenticados.
+     * Sets the user permission to access the endpoint. If not set, default is "any".
+     * @param String $level auth|not|any 
      */
-    public function permission($level)
+    public function permission(String $level)
     {
         $this->access = $level;
         return $this;
     }
 
     /**
-     * Retorna o estado da necessidade de autenticação de uma página.
+     * Gets the type of access in this page, set in @method permission()
      */
     public function getAccessLevel()
     {
         return $this->access;
     }
 
+    /**
+     * Sets the route name to the endpoint
+     * @param String $route the actual route name
+     */
     public function setRouteName($route)
     {
         $this->route = $route;
         return $this;
     }
 
+    /**
+     * Gets the route name set in this page.
+     */
     public function getRouteName()
     {
         return $this->route;
     }
 
     /**
-     * Retorna o conteúdo de um arquivo localizado em 'app/partials/pieces' podendo ser integrado em outra
-     * página.
-     * @var file nome do arquivo sem extensão.
-     * @return string com o conteúdo do arquivo.
+     * Gets the file located in 'app/partials/pieces' that can be put to complement another endpoint.
+     * @deprecated in v1.0.1
+     * @var file filename with no extension.
+     * @return String the file contents
      */
     public function getFilePartial($file)
     {
