@@ -234,6 +234,20 @@ function patch_params($key = false)
 }
 
 /**
+ * Gets the patch variables or array
+ * @param String $key is the key
+ * @return mixed
+ */
+
+function put_params($key = false)
+{
+    if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PUT') {
+        parse_str(file_get_contents('php://input'), $_PUT);
+        return $_PUT;
+    }
+}
+
+/**
  * Returns a system message based in a code
  * @param Int $errcode the error code came fro mthe database
  * @return String an error message

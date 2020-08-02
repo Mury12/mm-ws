@@ -1,10 +1,10 @@
 <?php
-use MMWS\Model\Layout;
+use MMWS\Model\Endpoint;
 
 return [
     404 => [
         'body' =>
-        $l = new Layout,
-        $l->page('error/404')
+        $l = new Endpoint,
+        $l->error('error/404')
     ]
     ];

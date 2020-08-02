@@ -27,20 +27,20 @@ to add a new domain to this file.
 
 `app/routers/services.php` :
 
-The `MMWS\Model\Layout component` is very important. It is responsible for
+The `MMWS\Model\Endpoint component` is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
 
 ``` 
 <?php 
   /**
-   *  Loads the Layout Model
+   *  Loads the Endpoint Model
    */
-  use MMWS\Model\Layout;
+  use MMWS\Model\Endpoint;
 
   /**
    * Instantiates the layout.
    */
-  $l = new Layout();
+  $l = new Endpoint();
 
   /** 
    * Domain as the folder inside _ws/v2/domain and page is the actual php inside this folder 
@@ -54,23 +54,23 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
   $l->permission('auth');
 ```
 
-Of course there are other controls but its not needed. If you want to know more, check Layout model file. Fully documented.
+Of course there are other controls but its not needed. If you want to know more, check Endpoint model file. Fully documented.
 Just enjoy this following example about how to create a route:
 
 ``` 
 <?php 
-use MMWS\Model\Layout
+use MMWS\Model\Endpoint
 
 return [
   'route-name' => [
     'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
-    'body' => $jimmy = new Layout(),
+    'body' => $jimmy = new Endpoint(),
       $jimmy->page('band/yardbirds') // Function page creates a generic any-method request
       ->permission('auth')
   ],
   'route-get' => [
     'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
-    'body' => $jimmy = new Layout(),
+    'body' => $jimmy = new Endpoint(),
       $jimmy->get('band/led-zeppelin', 'getZoso') // Function post|patch|get|delete uses specific request method and procedure.
       ->permission('auth')
   ],
@@ -205,6 +205,6 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   ├── routes.php (Route handler)
 │   ├── functions.php (Global functions)
 │   └── System-messages.json (System messages definition used in get_sysmg($errCode). Not HTTP errors.)
-└── index.php (Layout renderer)
+└── index.php (Endpoint renderer)
 ```
  ### Thats all folks.

@@ -2,26 +2,22 @@
 
 namespace MMWS\Model;
 
-class Layout
+use MMWS\Model\Request;
+
+class Endpoint
 {
 
     private $_env = array();
     private $api = true;
     private $access = 'any';
     private $route;
-    private $params = array();
-    private $method = "POST";
+    private $request;
+    public $procedure;
     public $body = array();
 
-    /**
-     * Esta função é responsável por dizer qual é a página a ser carregada no corpo de seu site.
-     * @param $page é o diretório da página, já considerando estar na pasta correta app/pages.
-     * @param Int $v é a versão do webservice. Default 2
-     */
-    public function page($page, Int $v = 2)
+    function __construct()
     {
-        $this->page = 'app/_ws/v' . $v . '/' . $page . '.php';
-        return $this;
+        $this->request = new Request();
     }
 
     /**
@@ -33,44 +29,48 @@ class Layout
         return require_once $this->partials;
     }
 
+    public function error($page)
+    {
+        $this->request->add("ERROR", $page, '');
+        return $this;
+    }
     public function post($page, $procedure, Int $v = 2)
     {
-        $this->page($page, $v);
-        $this->method = "POST";
-        $this->procedure = $procedure;
+        $this->request->add("POST", $page, $procedure);
         return $this;
     }
 
     public function patch($page, $procedure, Int $v = 2)
     {
-        $this->page($page, $v);
-        $this->method = "PATCH";
-        $this->procedure = $procedure;
+        $this->request->add("PATCH", $page, $procedure);
+        return $this;
+    }
+
+    public function put($page, $procedure, Int $v = 2)
+    {
+        $this->request->add("PUT", $page, $procedure);
         return $this;
     }
 
     public function get($page, $procedure, Int $v = 2)
     {
-        $this->page($page, $v);
-        $this->method = "GET";
-        $this->procedure = $procedure;
+        $this->request->add("GET", $page, $procedure);
         return $this;
     }
 
     public function delete($page, $procedure, Int $v = 2)
     {
-        $this->page($page, $v);
-        $this->method = "DELETE";
-        $this->procedure = $procedure;
+        $this->request->add("DELETE", $page, $procedure);
         return $this;
     }
 
-    private function getRequestMethod($prepare = false)
+    private function getRequestParams($prepare = false)
     {
+        global $body;
         $method = strtoupper($_SERVER['REQUEST_METHOD']);
-        if ($prepare && str_in($method, ['POST', 'PATCH'])) {
+        if ($prepare && str_in($method, ['POST', 'PUT', 'PATCH'])) {
             $fn = strtolower($method) . '_params';
-            $this->body = $fn();
+            $body = $fn();
         }
         return $method;
     }
@@ -83,12 +83,14 @@ class Layout
     public function render()
     {
         global $params;
-        $method = $this->getRequestMethod(true);
+        global $procedure;
+        $method = $this->getRequestParams(true);
 
-        if ($method === $this->method) {
+        if ($req = $this->request->get($method)) {
             $params = $this->getEnv();
+            $procedure = $req['procedure'];
             extract($params);
-            return file_exists($this->page) ? require_once $this->page : die(send(error_message(500)));
+            return file_exists($req['page']) ? require_once $req['page'] : die(send(error_message(500)));
         } else {
             die(send(error_message(405)));
         }

@@ -6,7 +6,7 @@
  * index, such as:
  *  'route-name' => [
  *      'params' => ['param1', 'param2'],
- *      'body'   => $l = new Layout(),
+ *      'body'   => $l = new Endpoint(),
  *                  $l->page('domain/page')
  *                    ->permission('auth')
  *  ],
@@ -14,17 +14,17 @@
  * Params index MUST BE before body properties, otherwise, it will be lost.
  */
 
-use MMWS\Model\Layout;
+use MMWS\Model\Endpoint;
 
 return [
     'login' => [
-        'body' => $l = new Layout(),
+        'body' => $l = new Endpoint(),
         $l->post('user/login', 'auth_request')
             ->permission('any')
     ],
 
     'signup' => [
-        'body' => $l = new Layout,
+        'body' => $l = new Endpoint,
         $l->post('user/signup', 'create_user')
             ->permission('not')
     ]

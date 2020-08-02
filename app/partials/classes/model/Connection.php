@@ -1,4 +1,5 @@
 <?php
+
 namespace MMWS\Model;
 
 use \PDO;
@@ -20,18 +21,18 @@ class Connection
 
     function connectMysql()
     {
-        try{
-            $conn = new PDO
-                (
-                    'mysql:host='.$this->host.
-                    ';dbname='.$this->dbName, 
-                    $this->dbUser, $this->dbPass,
-                    
-                );
-        }catch(\PDOException $e){
-            print_r($e->getMessage());
-        }
+        try {
+            $conn = new PDO(
+                    'mysql:host=' . $this->host .
+                        ';dbname=' . $this->dbName,
+                    $this->dbUser,
+                    $this->dbPass,
 
-        return $conn;
+                );
+            return $conn;
+        } catch (\PDOException $e) {
+            report(['type' => 'Database error', 'msg' => $e->getMessage()]);
+        }
+        return false;
     }
 }

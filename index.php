@@ -4,9 +4,9 @@ require_once 'app/config.php';
 
 use MMWS\Middleware\Authentication;
 
-$procedure = $layout->procedure;
-$data = $layout->body;
-$params = null;
+$procedure;
+$body;
+$params;
 
 /** Allows options request to check server */
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
   /** Requires the authentication middleware */
   $permit = new Authentication();
   if ($permit) {
-    $layout->render();
+    $endpoint->render();
   }
 }
 
-$layout->render();
+$endpoint->render();
