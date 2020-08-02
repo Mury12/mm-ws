@@ -5,13 +5,23 @@ return array(
     'code' => 101,
     'at' => time()
   ],
+  304 => [
+    'msg' => 'Anything happened to update.',
+    'code' => $code,
+    'at' => time()
+  ],
+  200 => [
+    'msg' => 'Congrats! you finally did your job!',
+    'code' => $code,
+    'at' => time()
+  ],
   400 => [
     'msg' => 'Who\'s bad now, request?',
     'code' => $code,
     'at' => time()
   ],
   401 => [
-    'msg' => 'Sorry, your name is not in this list.',
+    'msg' => 'Sorry, your name isn\'t at the V.I.P. list.',
     'code' => $code,
     'at' => time()
   ],
@@ -21,7 +31,7 @@ return array(
     'at' => time()
   ],
   403 => [
-    'msg' => 'Don\'t.',
+    'msg' => 'If you keep trying, I\'ll call the police.',
     'code' => $code,
     'at' => time()
   ],
@@ -31,7 +41,7 @@ return array(
     'at' => time()
   ],
   405 => [
-    'msg' => 'Boy, I cannot do your dishes. This method is not allowed.',
+    'msg' => 'Boy, I cannot do your dishes. This method is not allowed: ' .$_SERVER['REQUEST_METHOD']. '.',
     'code' => $code,
     'at' => time()
   ],
@@ -42,6 +52,11 @@ return array(
   ],
   407 => [
     'msg' => 'Proxy authentication needed.',
+    'code' => $code,
+    'at' => time()
+  ],
+  409 => [
+    'msg' => 'Seems like this information already exist.',
     'code' => $code,
     'at' => time()
   ],

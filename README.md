@@ -27,26 +27,26 @@ to add a new domain to this file.
 
 `app/routers/services.php` :
 
-The `MMWS\Model\Layout component` is very important. It is responsible for
+The `MMWS\Model\Endpoint component` is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
 
 ``` 
 <?php 
   /**
-   *  Loads the Layout Model
+   *  Loads the Endpoint Model
    */
-  use MMWS\Model\Layout;
+  use MMWS\Model\Endpoint;
 
   /**
    * Instantiates the layout.
    */
-  $l = new Layout();
+  $l = new Endpoint();
 
   /** 
    * Domain as the folder inside _ws/v2/domain and page is the actual php inside this folder 
    * such as domain/login.php. Yes, you dont need ".php" extension in this parameter.
    */
-  $l->page('doimain/page');
+  $l->get('doimain/page', 'procedure');
 
   /**
    * When permission is called, the auth middleware makes a verification for authorization.
@@ -54,20 +54,21 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
   $l->permission('auth');
 ```
 
-Of course there are other controls but its not needed. If you want to know more, check Layout model file. Fully documented.
+Of course there are other controls but its not needed. If you want to know more, check Endpoint model file. Fully documented.
 Just enjoy this following example about how to create a route:
 
 ``` 
 <?php 
-use MMWS\Model\Layout
+use MMWS\Model\Endpoint
 
 return [
-  'route-name' => [
+  'route-get' => [
     'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
-    'body' => $jimmy = new Layout(),
-      $jimmy->page('band/yardbirds')
+    'body' => $jimmy = new Endpoint(),
+      $jimmy->get('band/led-zeppelin', 'getZoso')  // Function post|patch|put|get|delete uses specific request method and procedure. 
+      ->post('band/yardbirds', 'dazedAndConfused') // Yes, you can use multiple methods.
       ->permission('auth')
-  ]
+  ],
 ];
 
 ```
@@ -82,7 +83,7 @@ This project is MVC based using the following flow:
                                       ───────────── Handlers 
                                     /             /    \/    \
                                    / ── Controller -> Model -> Entity
-             renders()            /
+             renders()            /       
 index.php(root) -> Webservice Page ── Middlewares
                                   \
                                     Services, Handlers
@@ -93,7 +94,7 @@ Preserve this sequence to better workflow and..
 
 ``` 
 /**
- * Use DockBlox. 
+ * Use DocBlocks. 
  * As you see, documentation is more important than 
  * the project itself.
  */
@@ -194,11 +195,11 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   ├── \sql
 │   │   └── Put your sql files here
 │   ├── \util (Utilities files, templates, error definition, etc.)
-│   ├── autoload.php (Autoloads all files included in partials/classes. Not the composer autoload.)
+│   ├── autoload.php (Autoloads all files included in partials/classes. THIS IS NOT the composer autoload.)
 │   ├── config.php (Loads the global settings)
-│   ├── routes.php (Route handler)
+│   ├── routes.php (Root routes definition)
 │   ├── functions.php (Global functions)
 │   └── System-messages.json (System messages definition used in get_sysmg($errCode). Not HTTP errors.)
-└── index.php (Layout renderer)
+└── index.php (Endpoint renderer)
 ```
  ### Thats all folks.

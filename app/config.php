@@ -26,6 +26,9 @@ require_once 'config/db-conf.php';
 
 /** instantiates the router */
 $r = new Router();
+
+/** init param array */
+$param = array();
 /** Prints the page headers */
 $r->headers();
 /** Init session */
@@ -35,5 +38,5 @@ $routes = require_once('routes.php');
 /** Creates the routes */
 $r->createRoutes($routes);
 /** Loads the page content (JSON ONLY) */
-$layout  = $r->getPage();
+$endpoint  = $r->getPage();
 

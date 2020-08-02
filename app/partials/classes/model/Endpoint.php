@@ -2,28 +2,23 @@
 
 namespace MMWS\Model;
 
-class Layout
+use MMWS\Model\Request;
+
+class Endpoint
 {
 
     private $_env = array();
-    private $api = false;
+    private $api = true;
     private $access = 'any';
     private $route;
-    private $params = Array();
+    private $request;
+    public $procedure;
+    public $body = array();
 
-
-    /**
-     * Esta função é responsável por dizer qual é a página a ser carregada no corpo de seu site.
-     * @param $page é o diretório da página, já considerando estar na pasta correta app/pages.
-     * @param Int $v é a versão do webservice. Default 2
-     */
-    public function page($page, Int $v = 2)
+    function __construct()
     {
-        $this->page = 'app/_ws/v' . $v . '/' . $page . '.php';
-        return $this;
+        $this->request = new Request();
     }
-
-
 
     /**
      * Este método retorna os arquivos parciais que você inseriu em @method appendPartials()
@@ -34,15 +29,71 @@ class Layout
         return require_once $this->partials;
     }
 
+    public function error($page)
+    {
+        $this->request->add("ERROR", $page, '');
+        return $this;
+    }
+    public function post($page, $procedure, Int $v = 2)
+    {
+        $this->request->add("POST", $page, $procedure);
+        return $this;
+    }
+
+    public function patch($page, $procedure, Int $v = 2)
+    {
+        $this->request->add("PATCH", $page, $procedure);
+        return $this;
+    }
+
+    public function put($page, $procedure, Int $v = 2)
+    {
+        $this->request->add("PUT", $page, $procedure);
+        return $this;
+    }
+
+    public function get($page, $procedure, Int $v = 2)
+    {
+        $this->request->add("GET", $page, $procedure);
+        return $this;
+    }
+
+    public function delete($page, $procedure, Int $v = 2)
+    {
+        $this->request->add("DELETE", $page, $procedure);
+        return $this;
+    }
+
+    private function getRequestParams($prepare = false)
+    {
+        global $body;
+        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        if ($prepare && str_in($method, ['POST', 'PUT', 'PATCH'])) {
+            $fn = strtolower($method) . '_params';
+            $body = $fn();
+        }
+        return $method;
+    }
+
+
     /**
-     * Este método renderiza a página principal de seu site, configurado em @method setPage()
+     * Este método renderiza a página principal de seu site, configurado em @method page()
      * @return file
      */
     public function render()
     {
-        extract($this->getEnv());
-        
-        return file_exists($this->page) ? require_once $this->page : send(error_message(500));
+        global $params;
+        global $procedure;
+        $method = $this->getRequestParams(true);
+
+        if ($req = $this->request->get($method)) {
+            $params = $this->getEnv();
+            $procedure = $req['procedure'];
+            extract($params);
+            return file_exists($req['page']) ? require_once $req['page'] : die(send(error_message(500)));
+        } else {
+            die(send(error_message(405)));
+        }
     }
 
     /**
@@ -53,9 +104,9 @@ class Layout
      * @example $l->setEnv(['motivo' => 'Esta é uma realização!', 'amor' => 'Desenvolver páginas lindas!']);
      * --. Em sua página, basta inserir <?= $motivo ?> e <?= $amor ?> onde quiser e seus valores serão impressos :)
      */
-    public function setEnv(Array $env)
+    public function setEnv(array $env)
     {
-        foreach($env as $k => $v){
+        foreach ($env as $k => $v) {
             $this->_env[$k] = $v;
         }
         return $this;

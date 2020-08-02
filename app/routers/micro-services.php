@@ -1,12 +1,12 @@
 <?php
 
-use MMWS\Model\Layout;
+use MMWS\Model\Endpoint;
 
 return [
     'getUniqId' => [
         'params' => ['len', 'hash'],
         'body' =>
-        $l = new Layout,
-        $l->page('uniqid_gen')
+        $e = new Endpoint(),
+        $e->get('uniqid_gen', 'getUniqueId')
     ]
 ];

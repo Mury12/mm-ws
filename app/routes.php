@@ -16,6 +16,7 @@ $v2['ms'] = $ms;
 return [
     'ws' => [
         'v2' => $v2,
+        'ms' => $ms,
     ],
     'error' => $errors
 ];

@@ -5,5 +5,5 @@
  */
 
 use MMWS\Middleware\WSRP;
-require_once('../partials/classes/middleware/WSRP.php');
-return new WSRP();
+// require_once('../partials/classes/middleware/WSRP.php');
+// return new WSRP();

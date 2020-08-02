@@ -9,13 +9,22 @@
 
 use MMWS\Controller\UserController;
 
+
 /**
- * @var Array $data is the content extracted from the POST request
+ * @var string $procedure is the procedure to be called
  */
-$data = get_post();
+global $procedure;
+
 /**
- * @var String $procedure gets the procedure name to call from the POST request
+ * @var mixed $params are the URL request params
  */
+global $params;
+
+/**
+ * @var Array $data is the content extracted from the POST|PATCH request
+ */
+global $data;
+
 if (array_key_exists('_', $data)) {
     $procedure = $data['_'];
     unset($data['_']);
