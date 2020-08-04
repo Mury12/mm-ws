@@ -11,11 +11,13 @@ class Endpoint
      * @var Array $env are the environment variables that will be extracted to the page body.
      */
     private $_env = array();
+    
     /**
      * @var Bool $api sets if the page is an endpoint
      * @deprecated in v1.0.1
      */
     private $api = true;
+    
     /**
      * @var String $access sets the access type to the endpoint. 
      * - any means that anybody can request to this page
@@ -23,19 +25,23 @@ class Endpoint
      * - not means that only not authenticated requests can request
      */
     private $access = 'any';
+    
     /**
      * @var String $route is the URI to the endpoint, automatically set in the router configuration.
      */
     private $route;
+    
     /**
      * @var Request $request is the Request object that handles request configurations
      */
     private $request;
+    
     /**
      * @var String $procedure is the procedure that will be called in the mounted endpoint. 
      * This is set right after the URL is called and Endpoints tries to render.
      */
     public $procedure;
+    
     /**
      * @var Array $body is the body params catched from get_`reqmethod`() so it can be accessed like $endpoint->body params.
      */

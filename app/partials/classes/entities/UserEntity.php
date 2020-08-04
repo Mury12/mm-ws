@@ -19,7 +19,9 @@ class UserEntity
     }
 
 
-
+    /**
+     * Saves this user entity into the database
+     */
     function save()
     {
         global $conn;
@@ -54,6 +56,9 @@ class UserEntity
         return false;
     }
 
+    /**
+     * Performs a token removal from the database.
+     */
     function logout()
     {
         global $conn;
@@ -64,12 +69,15 @@ class UserEntity
         return perform_query_pdo($q) ? true : false;
     }
 
+    /**
+     * Verifies if the token is valid
+     */
     function verify()
     {
         global $conn;
         // $from_ip = ORIGIN_HTTP_ADDR;
         if (isset($this->u) && strlen($this->u->session_token) == 64) {
-            $q = $conn->prepare('select fn_verifica_token(?, ?)');
+            $q = $conn->prepare('select fn_verify_token(?, ?)');
             $q->bindParam(1, $this->u->session_token);
             $q->bindParam(2, $from_ip);
 
@@ -83,6 +91,10 @@ class UserEntity
         return false;
     }
 
+    /**
+     * Creates and attributes a new password to this user.
+     * There's no confirmation, but you can put it.
+     */
     function passwordRecovery()
     {
         global $conn;

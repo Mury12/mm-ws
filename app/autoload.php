@@ -8,7 +8,7 @@
 require_once 'functions.php';
 
 /**
- * This loads all the classes in the app/partials/class/  subfolders except for middlewares.
+ * This loads all the classes in the app/partials/class/  subfolders.
  * @var DirectoryIterator $dir 
  */
 $dir = new DirectoryIterator(dirname('app/partials/classes/index.php'));

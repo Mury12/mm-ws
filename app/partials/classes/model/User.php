@@ -3,7 +3,11 @@
 namespace MMWS\Model;
 
 use MMWS\Entity\UserEntity;
-
+/**
+ * It's a default user class
+ * @param Array $request the request array containing indexed Model\User properties
+ *      Make sure to write this props exaclty as the database or making a FromTo procedure in constructor.
+ */
 class User
 {
     /**
@@ -55,26 +59,42 @@ class User
         $this->password = hash('sha256', $this->password ?? '') ?? null;
     }
 
+    /**
+     * Verifies if the user is authenticated based in its token
+     */
     function verify()
     {
         return $this->entity->verify();
     }
 
+    /**
+     * Verifies if the user is logged in based in PHP session
+     */
     function isLoggedIn()
     {
         return SESSION::get('auth');
     }
 
+    /**
+     * Performs a token removal and session cleaning
+     */
     function logOut()
     {
         $this->entity->logout();
     }
 
+    /**
+     * Performs a user->password bind in database to authenticate
+     * and generate a new token
+     */
     function bindUserPassword()
     {
         return $this->entity->bindUserPassword();
     }
 
+    /**
+     * Calls the procedure to save an entity into the database
+     */
     public function save()
     {
         return $this->entity->save();

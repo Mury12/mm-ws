@@ -2,6 +2,10 @@
 
 namespace MMWS\Service;
 
+/**
+ * Do the emailing service using Mailgun's keys and CURL
+ * @param Array $data is the indexed array with 'name', 'targer', 'msg' and 'subject' properties
+ */
 class EmailService
 {
 
@@ -36,6 +40,9 @@ class EmailService
         }
     }
 
+    /**
+     * Sends the email with CURL method
+     */
     public function send()
     {
         $message = array();

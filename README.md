@@ -67,7 +67,7 @@ return [
     'body' => $jimmy = new Endpoint(),
       $jimmy->get('band/led-zeppelin', 'getZoso')  // Function post|patch|put|get|delete uses specific request method and procedure. 
       ->post('band/yardbirds', 'dazedAndConfused') // Yes, you can use multiple methods.
-      ->permission('auth')
+      ->permission('auth') // But not mixed route permission
   ],
 ];
 
@@ -137,18 +137,39 @@ SESSION::done();
 
 ```
 
+### Headers
+
+Its possible to easily change headers `content-type`, `http allowed methods`, `CORS` and `headers` simply
+modifying the following global variables in `variables.php`:
+
+```
+  /** Enable CORS to *EXACTLY* this URL */
+  define('HTTP_CORS_URI', '*');
+
+  /** Enable defined headers */
+  define('HTTP_ALLOW_HEADERS', 'content-type, user-addr, authorization');
+
+  /** Allow defined http methods to request */
+  define('HTTP_ALLOW_METHODS', 'GET, POST, PATCH, PUT, DELETE, HEAD, OPTIONS');
+
+  /** Sets the content type for the requests */
+  define('HTTP_CONTENT_TYPE', 'application/json');
+
+```
+
 ### General Functions
 
 In `functions.php` you can see a lot of useful functions, such as password generators,
 unique id generator, token generator, error handlers, etc., but the most used are:
 
- - `get_post()`: gets the POST request.
+ - `get_{$METHOD}()`: gets the POST|PATCH|PUT request body params. It's automatically done when the request comes and extracted to the page.
  - `send(Array $content)`: sends the response to the page. MUST BE array.
  - `error_message(Int $errCode)`: gets the corresponding http code error message you set.
  - `get_syserr(Int $errCode)`: gets the system errors you set in the json file. Useful for database returns or internal logging.
  - `perform_query_pdo(PDOStatement $q)`: Performs a query using PDO method. Note that you need to insert a prepared statement.
- - `make_array_from_query(PDOStatement $q)`: Turns the above return into an array. Is possible to use classes, check the file.
- - `set_error_code(Int $code)`: sends an http error.
+ - `make_array_from_query(PDOStatement $q, 'NAMESPACE\Class')`: Turns the above return into an array. Is possible to use classes, check the file.
+ - `set_error_code(Int $code)`: sends an http code.
+ - `report(Mixed $error)`: saves the error into a log in logs/error.log.
 
 ## Directory Tree
 
@@ -199,7 +220,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   ├── config.php (Loads the global settings)
 │   ├── routes.php (Root routes definition)
 │   ├── functions.php (Global functions)
-│   └── System-messages.json (System messages definition used in get_sysmg($errCode). Not HTTP errors.)
+│   └── System-messages.json (System messages definition used in get_sysmsg($errCode). Not HTTP errors.)
 └── index.php (Endpoint renderer)
 ```
  ### Thats all folks.

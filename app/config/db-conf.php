@@ -7,7 +7,7 @@ if (!file_exists('app/config/local/db-local.php')) {
     /** Cloud DB host IP */
     define('DB_HOST', 'localhost');
     /** Cloud DB NAME */
-    define('DB_NAME', 'shopoasis');
+    define('DB_NAME', 'mm_ws');
     /** Cloud DB username */
     define('DB_USER', 'root');
     /** Cloud DB password */

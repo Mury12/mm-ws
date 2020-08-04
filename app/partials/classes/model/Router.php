@@ -10,10 +10,10 @@ class Router
 
     function __construct()
     {
-        $this->headers['Access-Control-Allow-Headers'] = 'content-type, Content-Type, user-addr, authorization';
-        $this->headers['Access-Control-Allow-Methods'] = '*';
+        $this->headers['Access-Control-Allow-Headers'] = HTTP_ALLOW_HEADERS;
+        $this->headers['Access-Control-Allow-Methods'] = HTTP_ALLOW_METHODS;
         $this->headers['Access-Control-Allow-Origin'] = HTTP_CORS_URI;
-        $this->headers['Content-Type'] = 'application/json';
+        $this->headers['Content-Type'] = HTTP_CONTENT_TYPE;
     }
 
     /**

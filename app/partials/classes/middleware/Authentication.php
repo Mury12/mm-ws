@@ -30,6 +30,9 @@ class Authentication implements Middleware
         return $this->init();
     }
 
+    /**
+     * Acts as a verifier. Be sure to follow up the Interfaces\Middleware abstract class
+     */
     function action()
     {
         return $this->access === 'auth'
@@ -38,6 +41,10 @@ class Authentication implements Middleware
                     ? !$this->user->verify()
                     : true);
     }
+
+    /**
+     * Initiates the middleware
+     */
     function init()
     {
         if ($this->access) {

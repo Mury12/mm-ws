@@ -2,6 +2,11 @@
 
 namespace MMWS\Handler;
 
+/**
+ * Handler file operations.
+ * @param String $domain the folder domain
+ * @param String filename the name for the file
+ */
 class FileHandler
 {
     private $domain;
@@ -16,12 +21,21 @@ class FileHandler
         $this->filename = $filename ?? null;
     }
 
+    /**
+     * Gets a file using given domain and filename
+     * @return String file contents
+     */
     function getFile()
     {
         $path = DEFAULT_FILE_PATH . $this->domain . $this->domain . '_' . $this->filename;
         return file_get_contents($path);
     }
 
+    /**
+     * Writes a file based in the input params
+     * @param $file the file itself
+     * @return Bool|String False if unsuccessful or the filename
+     */
     function writeFile($file)
     {
         $this->file = $file;
@@ -42,6 +56,10 @@ class FileHandler
         return false;
     }
 
+    /**
+     * Removes a file from a path
+     * @param String $path the path for the file given in input params
+     */
     function removeFile($path = null)
     {
         $f = $path ?? $this->path;

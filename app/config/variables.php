@@ -5,15 +5,32 @@
  * Do not change it before analysis
  */
 
- require_once('app/util/ploader.php');
+// require_once('app/util/ploader.php');
 
 if (!\file_exists('./variables-local.php')) {
-    ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 
+    /** * Route protector use flag (not quite done...) */
     define('_WILL_IT_SMITH_', true);
 
-    /** Enable CORS to *EXACTLY* this URL */
+    /** * Global session save path */
+    ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
+
+    /**
+     * Use the defined globals below to set the request default headers.
+     * ---------------------------------
+     * Enable CORS to *EXACTLY* this URL 
+     */
     define('HTTP_CORS_URI', '*');
+
+    /** Enable defined headers */
+    define('HTTP_ALLOW_HEADERS', 'content-type, user-addr, authorization');
+
+    /** Allow defined http methods to request */
+    define('HTTP_ALLOW_METHODS', 'GET, POST, PATCH, PUT, DELETE, HEAD, OPTIONS');
+
+    /** Sets the content type for the requests */
+    define('HTTP_CONTENT_TYPE', 'application/json');
+
 
     /** Files */
     define('DEFAULT_FILE_PATH', 'app/_files/');
@@ -22,6 +39,7 @@ if (!\file_exists('./variables-local.php')) {
     define('DEFAULT_NOREPLY_EMAIL', 'noreply@YOUR_EMAIL.com');
     define('DEFAULT_MAILGUN_URL', 'https://api.mailgun.net/v3/mg.YOUR_DOMAIN.com.br/messages');
     define('DEFAULT_MAILGUN_PWD', 'MG SMTP PWD');
+
     /** MailGun Keys */
     define('DEFAULT_MAILGUN_KEY', 'MG KEY');
     define('DEFAULT_MAILGUN_VALIDATION_KEY', 'MG PUBLIC KEY');
@@ -29,9 +47,9 @@ if (!\file_exists('./variables-local.php')) {
 
     /** Consumer */
 
-    // Enable the headers below if needs permissioned page
-    
-    # define('ORIGIN_HTTP_ADDR', getallheaders()['User-Addr'] ?? null);
+    // Enable the headers below if it will need permissioned pages
+
+    // define('ORIGIN_HTTP_ADDR', getallheaders()['User-Addr'] ?? null);
     // define('USER_AUTHORIZATION_TOKEN', getallheaders()['Authorization'] ?? null);
     define('USER_AUTHORIZATION_TOKEN', 'AUTHORIZED');
 } else require_once './variables-local.php';
