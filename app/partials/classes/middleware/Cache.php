@@ -1,6 +1,5 @@
 <?php
 
-use MMWS\Interfaces\Middleware;
 use MMWS\Model\SESSION;
 
 /**
@@ -9,19 +8,19 @@ use MMWS\Model\SESSION;
  * @param Int $timeout time in seconds to REDO the request. Default is 10 seconds 
  * @param Int $interval interval between requests. Default is 1 second
  */
-class Cache implements Middleware
+class CACHE
 {
 
 
     /**
      * @var Int $timeout timeout to clean cache
      */
-    private static $timeout = 10;
+    public static $timeout = 10;
 
     /**
      * @var Int $interval interval between requests
      */
-    private static $interval = 1;
+    public static $interval = 1;
 
     /**
      * @var Array $cache is the cached content

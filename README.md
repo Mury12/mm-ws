@@ -40,18 +40,23 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
   /**
    * Instantiates the layout.
    */
-  $l = new Endpoint();
+  $e = new Endpoint();
 
   /** 
    * Domain as the folder inside _ws/v2/domain and page is the actual php inside this folder 
    * such as domain/login.php. Yes, you dont need ".php" extension in this parameter.
    */
-  $l->get('doimain/page', 'procedure');
+  $e->get('doimain/page', 'procedure');
 
   /**
    * When permission is called, the auth middleware makes a verification for authorization.
    */
-  $l->permission('auth');
+  $e->permission('auth');
+
+  /**
+   * Cache requests in this route. Default timeout to a new request is 10 seconds. Check `config.php`
+   */
+   $e->cache();
 ```
 
 Of course there are other controls but its not needed. If you want to know more, check Endpoint model file. Fully documented.
@@ -77,6 +82,7 @@ return [
       'body' => [
         $e = new Endpoint(),
         $e->post('page', 'method')
+        ->cache()
       ]
     ],
     

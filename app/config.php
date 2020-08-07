@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This page is used to set configurations to the webservice such as the session
  * and router loader, page loader and DB Connection
@@ -33,6 +34,8 @@ $param = array();
 $r->headers();
 /** Init session */
 SESSION::init();
+/** Sets requests caching interval */
+CACHE::$timeout = 10;
 /** Loads the Routes */
 $routes = require_once('routes.php');
 /** Creates the routes */

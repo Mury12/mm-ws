@@ -27,16 +27,16 @@ $procedures = array(
 if (array_key_exists($procedure, $procedures)) {
 
     if ($caching) {
-        $cached = Cache::check($procedure);
+        $cached = CACHE::check($procedure);
         /**
-         * Caches requests if caching is enabled
+         * CACHEs requests if caching is enabled
          */
         if (!$cached) {
             /**
              * @var mixed $m result from the procedure
              */
             $m = $procedures[$procedure]($params ?? null);
-            Cache::put($m, $procedure);
+            CACHE::put($m, $procedure);
         }
 
         $m = $m ?? $cached;
