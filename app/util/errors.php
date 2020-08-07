@@ -6,7 +6,7 @@ return array(
     'at' => time()
   ],
   304 => [
-    'msg' => 'Anything happened to update.',
+    'msg' => 'Nothing has changed in this meantime.',
     'code' => $code,
     'at' => time()
   ],

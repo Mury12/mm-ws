@@ -16,12 +16,6 @@ $procedures = array(
     'getUniqueId' => function ($d) {
         return unique_id($d['len'] ?? 6, $d['hash'] ?? 'sha256');
     },
-    'sayMyName' => function ($d) {
-        return ['msg' => 'My name'];
-    },
-    'session' => function () {
-        return ['session' => 'oi'];
-    }
 );
 
 if (array_key_exists($procedure, $procedures)) {
