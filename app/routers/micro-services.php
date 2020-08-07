@@ -15,7 +15,12 @@ return [
             'body' => 
             $e = new Endpoint(),
             $e->get('uniqid_gen', 'session')
-            ->addMiddleware(array([new Cache()]))
+            ->cache()
+        ],
+        'body' => [
+            $e = new Endpoint(),
+            $e->get('uniqid_gen', 'getUniqueId')
+            ->cache()
         ]
     ]
 ];

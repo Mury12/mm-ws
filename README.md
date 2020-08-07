@@ -67,8 +67,25 @@ return [
     'body' => $jimmy = new Endpoint(),
       $jimmy->get('band/led-zeppelin', 'getZoso')  // Function post|patch|put|get|delete uses specific request method and procedure. 
       ->post('band/yardbirds', 'dazedAndConfused') // Yes, you can use multiple methods.
+      ->addMiddleware([new MiddlewareClassName()]) // Ads a middleware to do promise queue
       ->permission('auth') // But not mixed route permission
   ],
+
+  'multi-route' => [
+    'route-1' => [
+      'params' => [],
+      'body' => [
+        $e = new Endpoint(),
+        $e->post('page', 'method')
+      ]
+    ],
+    
+    // You can also use the root URL without the `params` index
+    'body' => [
+      $e = new Endpoint(),
+      $e->get('page', 'method')
+    ]
+  ]
 ];
 
 ```

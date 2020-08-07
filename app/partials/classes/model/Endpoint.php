@@ -2,6 +2,8 @@
 
 namespace MMWS\Model;
 
+use MMWS\Handler\Queue;
+use MMWS\Middleware\Authentication;
 use MMWS\Model\Request;
 
 class Endpoint
@@ -52,6 +54,10 @@ class Endpoint
      */
     public $middlewares = array();
 
+    /**
+     * @var Bool $caching enables or disables request caching
+     */
+    public $caching = false;
 
     function __construct()
     {
@@ -164,17 +170,35 @@ class Endpoint
      */
     public function render()
     {
-        global $params;
-        global $procedure;
-        $method = $this->getRequestParams();
+        /**
+         * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed AFTER the page rendering
+         */
+        $middleware = new Queue(
+            'MMWS\Interfaces\Middleware',
+            array_merge(
+                array(
+                    [new Authentication()],
+                ),
+                $this->middlewares
+            )
+        );
+        $middleware->init();
 
-        if ($req = $this->request->get($method)) {
-            $params = $this->getEnv();
-            $procedure = $req['procedure'];
-            extract($params);
-            return file_exists($req['page']) ? require_once $req['page'] : die(send(error_message(500)));
-        } else {
-            die(send(error_message(405)));
+        if ($middleware->Authentication) {
+            global $params;
+            global $procedure;
+            $method = $this->getRequestParams();
+
+            if ($req = $this->request->get($method)) {
+                $params = $this->getEnv();
+                $procedure = $req['procedure'];
+                extract($params);
+                return file_exists($req['page']) ? require_once $req['page'] : die(send(error_message(500)));
+            } else {
+                die(send(error_message(405)));
+            }
+        }else{
+            die(send(error_message(403)));
         }
     }
 
@@ -264,5 +288,10 @@ class Endpoint
     {
         $this->middlewares = array_merge($this->middlewares, $middlewares);
         return $this;
+    }
+
+    public function cache(Bool $cache = true)
+    {
+        $this->caching = $cache;
     }
 }

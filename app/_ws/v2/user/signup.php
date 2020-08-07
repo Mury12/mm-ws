@@ -1,8 +1,7 @@
 <?php
 use MMWS\Controller\UserController;
 
-$data = get_post();
-$procedure = $data['_'];
+global $procedure;
 unset($data['_']);
 
 if($procedure == 'create_user'){

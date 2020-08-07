@@ -40,3 +40,7 @@ $r->createRoutes($routes);
 /** Loads the page content (JSON ONLY) */
 $endpoint  = $r->getPage();
 
+/**
+ * @var Bool $caching gets the caching param
+ */
+$caching = $endpoint->caching ?? $endpoint[0]->caching ?? false;

@@ -24,8 +24,11 @@ class Authentication implements Middleware
     function __construct()
     {
         global $endpoint;
-
-        $this->access = $endpoint->getAccessLevel();
+        if (is_array($endpoint)) {
+            $this->access = $endpoint[0]->getAccessLevel();
+        }else{
+            $this->access = $endpoint->getAccessLevel();
+        }
         $this->user = new UserController(['session_token' => self::TOKEN]);
         return $this->init();
     }
@@ -36,10 +39,10 @@ class Authentication implements Middleware
     function action()
     {
         return $this->access === 'auth'
-                ? $this->user->verify()
-                : ($this->access  === 'not'
-                    ? !$this->user->verify()
-                    : true);
+            ? $this->user->verify()
+            : ($this->access  === 'not'
+                ? !$this->user->verify()
+                : true);
     }
 
     /**
@@ -51,5 +54,4 @@ class Authentication implements Middleware
             return $this->action();
         }
     }
-
 }
