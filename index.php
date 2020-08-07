@@ -2,6 +2,7 @@
 
 require_once 'app/config.php';
 
+use MMWS\Handler\Queue;
 use MMWS\Middleware\Authentication;
 
 $procedure;
@@ -13,14 +14,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
   send(['Allowed']);
   return;
 } else {
-  /** Check for a valid IP. Could be better at checking. */
-  // if (!preg_match('/(\d){1,3}\.(\d){1,3}\.(\d){1,3}\.(\d){1,3}/', ORIGIN_HTTP_ADDR)) {
-  //   send(error_message(401));
-  //   die();
-  // }
-  /** Requires the authentication middleware */
-  $permit = new Authentication();
-  if ($permit) {
+
+  /**
+   * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed AFTER the page rendering
+   */
+  $middleware = new Queue(
+    'MMWS\Interfaces\Middleware',
+    array_merge(
+      array(
+        [new Authentication()],
+      ),
+      $endpoint->middlewares
+    )
+  );
+  $middleware->init();
+  if ($middleware->Authentication) {
     $endpoint->render();
   }
 }

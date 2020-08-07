@@ -51,4 +51,5 @@ class Authentication implements Middleware
             return $this->action();
         }
     }
+
 }

@@ -7,12 +7,13 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
- /**
+use MMWS\Model\SESSION;
+
+/**
   * @var string $procedure gets the route function procedure
   */
 global $procedure;
 global $params;
-
 /**
  * @var Array $procedures array of procedures to perform in the endpoint
  */
@@ -22,6 +23,9 @@ $procedures = array(
     },
     'sayMyName' => function($d) {
         return ['msg' => 'My name'];
+    },
+    'session' => function() {
+        return ['session' => $_SESSION, 'cookie' => $_COOKIE ];
     }
 );
 

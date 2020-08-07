@@ -33,6 +33,6 @@ class PostEntity
         $q->bindParam(1, $this->post->name);
         $q->bindParam(1, $this->post->content);
 
-        return !!perform_query_pdo($q)
+        return !!perform_query_pdo($q);
     }
 }
