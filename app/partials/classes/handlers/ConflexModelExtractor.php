@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
  * Generates controllers, models and entities based on the database name
  * given to this constructor.
  */
-class ModelExtractor
+class ConflexModelExtractor
 {
     /**
      * @var Array $tables transcribed schema
@@ -48,7 +48,7 @@ class ModelExtractor
         $this->MVCFolderPath = $MVCFolderPath;
         $this->snakeToCamel = $snakeToCamel;
         $this->vendor = $vendor;
-
+        $this->prefix = $prefix;
         $this->getRemoteTables();
     }
 
