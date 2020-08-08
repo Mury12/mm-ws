@@ -5,13 +5,13 @@ use MMWS\Model\Connection;
 /** Uses a local DB config to local db or dev */
 if (!file_exists('app/config/local/db-local.php')) {
     /** Cloud DB host IP */
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', $_ENV['DB_HOSt']);
     /** Cloud DB NAME */
-    define('DB_NAME', 'mm_ws');
+    define('DB_NAME', $_ENV['DB_NAME']);
     /** Cloud DB username */
-    define('DB_USER', 'root');
+    define('DB_USER', $_ENV['DB_USER']);
     /** Cloud DB password */
-    define('DB_PASS', 'root');
+    define('DB_PASS', $_ENV['DB_PASS']);
 } else require_once('app/config/local/db-local.php');
 
 /** Creates a connection into DB using PDO 

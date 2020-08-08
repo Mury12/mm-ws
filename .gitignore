@@ -5,7 +5,7 @@ node_modules
 /dist
 
 # local env files
-.env*
+.env
 
 # Editor directories and files
 .idea
