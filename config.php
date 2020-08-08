@@ -10,24 +10,29 @@
  * Less code is better.
  */
 
+use Dotenv\Dotenv;
 use MMWS\Model\{
     SESSION,
     Router
 };
 
+/** Composer autoload */
+require_once __DIR__.'/vendor/autoload.php';
+
 /** Autoloads all the classes */
-require_once 'autoload.php';
+require_once 'app/autoload.php';
 
 /** System defined variables */
-require_once 'config/variables.php';
+require_once 'app/config/variables.php';
 
 /** Database connection configuration file */
-require_once 'config/db-conf.php';
+require_once 'app/config/db-conf.php';
 
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 /** instantiates the router */
 $r = new Router();
-
 /** init param array */
 $param = array();
 /** Prints the page headers */
@@ -37,7 +42,7 @@ SESSION::init();
 /** Sets requests caching interval */
 CACHE::$timeout = 10;
 /** Loads the Routes */
-$routes = require_once('routes.php');
+$routes = require_once('app/routes.php');
 /** Creates the routes */
 $r->createRoutes($routes);
 /** Loads the page content (JSON ONLY) */

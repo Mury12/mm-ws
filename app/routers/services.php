@@ -27,5 +27,5 @@ return [
         'body' => $l = new Endpoint,
         $l->post('user/signup', 'create_user')
             ->permission('not')
-    ]
+    ],
 ];

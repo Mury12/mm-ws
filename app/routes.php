@@ -7,6 +7,8 @@
  * and so on
  */
 
+use MMWS\Model\Endpoint;
+
 $v2 = require_once('app/routers/services.php');
 $ms = require_once('app/routers/micro-services.php');
 $errors = require_once('app/routers/errors.php');
@@ -17,6 +19,13 @@ return [
     'ws' => [
         'v2' => $v2,
         'ms' => $ms,
+        'version' => [
+            'body' => [
+                $e = new Endpoint(),
+                $e->get('info', 'version'),
+                $e->cache()
+            ]
+        ],
     ],
     'error' => $errors
 ];

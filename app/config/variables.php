@@ -6,7 +6,10 @@
  */
 
 // require_once('app/util/ploader.php');
-
+if (!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
+if (!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
+if (!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
+    
 if (!\file_exists('./variables-local.php')) {
 
     /** * Route protector use flag (not quite done...) */

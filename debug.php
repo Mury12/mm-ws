@@ -2,13 +2,13 @@
 /**
  * This file is used to debug specific functionalities 
  */
+
+use MMWS\Model\Connection;
+
 require_once 'app/autoload.php';
 require_once 'app/functions.php';
 require_once('app/config/db-conf.php');
 define('DEFAULT_FILE_PATH', 'app/_files/');
-
-use Model\Connection;
-use Model\User;
 
 $c_db = new Connection(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 

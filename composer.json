@@ -1,10 +1,5 @@
 {
     "require": {
-        "react/event-loop": "^1.1.1",
-        "react/stream": "^0.7.7",
-        "react/socket": "^0.8.10",
-        "clue/buzz-react": "^2.3",
-        "clue/packagist-api-react": "^1.2",
-        "react/http": "^0.8.3"
+        "vlucas/phpdotenv": "^5.1",
     }
 }

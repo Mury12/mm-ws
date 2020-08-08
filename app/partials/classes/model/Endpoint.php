@@ -134,6 +134,16 @@ class Endpoint
         $this->request->add("GET", $page, $procedure);
         return $this;
     }
+
+    /**
+     * Adds a page that instantiates a socket
+     * @param String $page the actual filename in the files folder
+     */
+    public function socket($page)
+    {
+        $this->request->add("GET", $page, '');
+        return $this;
+    }
     /**
      * This method only sets the request type to "DELETE" and 
      * the procedure or method to be used, contained in the
@@ -197,7 +207,7 @@ class Endpoint
             } else {
                 die(send(error_message(405)));
             }
-        }else{
+        } else {
             die(send(error_message(403)));
         }
     }

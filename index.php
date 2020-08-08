@@ -1,10 +1,12 @@
 <?php
 
 /** Loads config.php */
-require_once 'app/config.php';
+require_once 'config.php';
 
 /** Sends 404 if no page is found */
 if (!$endpoint) die(send(error_message(404)));
+
+
 
 /**
  * @var String $procedure sets the global variable to catch the procedure to be executed
@@ -25,9 +27,10 @@ $params;
 
 /** Allows options request to check server */
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-  send(['Allowed']);
+  send(error_message(204));
   return;
 }
+
 if (is_array($endpoint)) {
   $endpoint[0]->render();
 } else {
