@@ -324,26 +324,44 @@ function str_in(string $source, array $cmp, bool $regEx = false, bool $getMatche
  * Changes the snake_case to camelCase from an array
  * @param String $var variable name
  */
-function snake_to_camel(array $arr, Bool $capitalize = false)
+function snake_to_camel($content, Bool $capitalize = false)
 {
-    $output = array();
-    /** Loops through the array to get the keys */
-    foreach ($arr as $key => $value) {
-        $parts = explode('_', $key);
-        
-        $outVarName = '';
-        /** Loops through every name part separated by underscore (_) */
-        $i = 0;
-        foreach ($parts as $part) {
-            if($i === 0 && !$capitalize) {
-                $outVarName = strtolower($part);
+    if (is_array($content)) {
+        $output = array();
+        /** Loops through the array to get the keys */
+        foreach ($content as $key => $value) {
+            $parts = explode('_', $key);
+
+            $outVarName = '';
+            /** Loops through every name part separated by underscore (_) */
+            $i = 0;
+            foreach ($parts as $part) {
+                if ($i === 0 && !$capitalize) {
+                    $outVarName = strtolower($part);
+                    $i++;
+                    continue;
+                }
+                $outVarName .= ucfirst(strtolower($part));
                 $i++;
-                continue;
             }
-            $outVarName .= ucfirst(strtolower($part));
-            $i++;
+            $output[$outVarName] = $value;
         }
-        $output[$outVarName] = $value;
+        return $output;
     }
-    return $output;
+
+    $parts = explode('_', $content);
+
+    $outVarName = '';
+    /** Loops through every name part separated by underscore (_) */
+    $i = 0;
+    foreach ($parts as $part) {
+        if ($i === 0 && !$capitalize) {
+            $outVarName = strtolower($part);
+            $i++;
+            continue;
+        }
+        $outVarName .= ucfirst(strtolower($part));
+        $i++;
+    }
+    return $outVarName;
 }
