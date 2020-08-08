@@ -8,6 +8,8 @@ informations about the way it works.
 
 ## Running
 
+`composer install` - to install dependencies
+
 Webservice can be initialized with PHP CLI or any bundler you want.
 `php -S localhost:8081` 
 
