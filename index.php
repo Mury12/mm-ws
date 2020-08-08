@@ -4,7 +4,7 @@
 require_once 'config.php';
 
 /** Sends 404 if no page is found */
-if (!$endpoint) die(send(error_message(404)));
+if (!$endpoint) die(send(http_message(404)));
 
 
 
@@ -27,7 +27,7 @@ $params;
 
 /** Allows options request to check server */
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-  send(error_message(204));
+  send(http_message(204));
   return;
 }
 

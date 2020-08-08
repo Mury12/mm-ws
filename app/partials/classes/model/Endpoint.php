@@ -203,12 +203,12 @@ class Endpoint
                 $params = $this->getEnv();
                 $procedure = $req['procedure'];
                 extract($params);
-                return file_exists($req['page']) ? require_once $req['page'] : die(send(error_message(500)));
+                return file_exists($req['page']) ? require_once $req['page'] : die(send(http_message(500)));
             } else {
-                die(send(error_message(405)));
+                die(send(http_message(405)));
             }
         } else {
-            die(send(error_message(403)));
+            die(send(http_message(403)));
         }
     }
 

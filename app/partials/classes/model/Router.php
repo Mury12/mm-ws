@@ -113,7 +113,7 @@ class Router
             // print_r($route);
             return $route['body'];
         } else {
-            setErrorCode(404);
+            set_http_code(404);
             return $this->getErrorPage('404');
         }
     }

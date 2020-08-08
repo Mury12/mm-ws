@@ -1,1 +1,1 @@
-<?php send(error_message(404));
+<?php send(http_message(404));

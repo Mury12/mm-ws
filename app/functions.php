@@ -4,15 +4,13 @@
  * This document is used to put the global functions
  */
 
-use Model\Router;
-
 /** @var $auth_enabled enable authentication ? */
 $auth_enabled = true;
 /**
- * Creates an error response based on code.
+ * Creates an http response based on code.
  * @param Int $code
  */
-function setErrorCode($code)
+function set_http_code($code)
 {
     header('HTTP/1.0 ' . $code);
 }
@@ -32,22 +30,22 @@ function report($error)
 }
 
 /**
- * Returns an Array error message based on the code.
+ * Returns an http message based on the code.
  * Every message must be set in util/errors.php -- Reserve HTTP Codes.
  * @param Int $code the error code such as 404, 500, etc.
  * @return Array error code, its message and current time.
  */
-function error_message(Int $code)
+function http_message(Int $code)
 {
     $error = require_once('app/util/errors.php');
-    setErrorCode($error[$code]['code']);
+    set_http_code($error[$code]['code']);
     report($error[$code]);
     return array_key_exists($code, $error) ? $error[$code] : $error[101];
 }
 /**
  * Gets the root host uri
  */
-function getRootUri()
+function get_root_uri()
 {
     return getenv('HTTP_HOST');
 }
@@ -61,7 +59,7 @@ function send(array $content)
     print_r(json_encode($content, JSON_INVALID_UTF8_IGNORE));
 }
 
-function authEnabled()
+function auth_enabled()
 {
     global $auth_enabled;
     return $auth_enabled;
@@ -131,7 +129,7 @@ function url_exists(String $url)
  * Swap accentuation to raw chars.
  * @param String $string string to swap
  */
-function swapChars(String $string)
+function swap_chars(String $string)
 {
     return preg_replace(array("/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"), explode(" ", "a A e E i I o O u U n N"), $string);
 }
@@ -308,16 +306,44 @@ function str_in(string $source, array $cmp, bool $regEx = false, bool $getMatche
 {
     $matches = array();
 
-    if(!$regEx){
-        foreach($cmp as $therm){
-            if(strpos(strtolower($source), strtolower($therm), 0) !== false) {
-                if($getMatches){
+    if (!$regEx) {
+        foreach ($cmp as $therm) {
+            if (strpos(strtolower($source), strtolower($therm), 0) !== false) {
+                if ($getMatches) {
                     array_push($matches, $therm);
-                }else{
+                } else {
                     return true;
                 }
             }
         }
         return sizeof($matches) > 0 ? $matches : false;
     }
+}
+
+/**
+ * Changes the snake_case to camelCase from an array
+ * @param String $var variable name
+ */
+function snake_to_camel(array $arr, Bool $capitalize = false)
+{
+    $output = array();
+    /** Loops through the array to get the keys */
+    foreach ($arr as $key => $value) {
+        $parts = explode('_', $key);
+        
+        $outVarName = '';
+        /** Loops through every name part separated by underscore (_) */
+        $i = 0;
+        foreach ($parts as $part) {
+            if($i === 0 && !$capitalize) {
+                $outVarName = strtolower($part);
+                $i++;
+                continue;
+            }
+            $outVarName .= ucfirst(strtolower($part));
+            $i++;
+        }
+        $output[$outVarName] = $value;
+    }
+    return $output;
 }

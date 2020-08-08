@@ -29,7 +29,7 @@ if (array_key_exists('_', $data)) {
     $procedure = $data['_'];
     unset($data['_']);
 } else {
-    send(error_message(400));
+    send(http_message(400));
     die();
 }
 
@@ -54,6 +54,6 @@ if (array_key_exists($procedure, $procedures)) {
     $m = $procedures[$procedure]($data);
     send(is_array($m) ? $m : ['res' => $m]);
 } else {
-    send(error_message(403));
+    send(http_message(403));
     die();
 }

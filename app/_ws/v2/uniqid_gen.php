@@ -40,6 +40,6 @@ if (array_key_exists($procedure, $procedures)) {
     }
     send(is_array($m) ? $m : ['res' => $m]);
 } else {
-    send(error_message(400));
+    send(http_message(400));
 }
 return;

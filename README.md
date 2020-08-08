@@ -189,11 +189,11 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 
  - `get_{$METHOD}()`: gets the POST|PATCH|PUT request body params. It's automatically done when the request comes and extracted to the page.
  - `send(Array $content)`: sends the response to the page. MUST BE array.
- - `error_message(Int $errCode)`: gets the corresponding http code error message you set.
+ - `http_message(Int $errCode)`: gets the corresponding http code error message you set.
  - `get_syserr(Int $errCode)`: gets the system errors you set in the json file. Useful for database returns or internal logging.
  - `perform_query_pdo(PDOStatement $q)`: Performs a query using PDO method. Note that you need to insert a prepared statement.
  - `make_array_from_query(PDOStatement $q, 'NAMESPACE\Class')`: Turns the above return into an array. Is possible to use classes, check the file.
- - `set_error_code(Int $code)`: sends an http code.
+ - `set_http_code(Int $code)`: sends an http code.
  - `report(Mixed $error)`: saves the error into a log in logs/error.log.
 
 ## Directory Tree

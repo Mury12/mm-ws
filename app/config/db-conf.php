@@ -23,6 +23,6 @@ try {
     /** @var PDO $conn This is the global variable to be used in DB queries */
     $conn = $c_db->connectMysql();
 } catch (PDOException $e) {
-    send(error_message(500));
+    send(http_message(500));
     die;
 }
