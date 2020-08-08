@@ -29,6 +29,7 @@ class {CLASS_NAME}
      */
     public function save()
     {
+        return $this->model->save();
     }
 
     /**
@@ -36,6 +37,7 @@ class {CLASS_NAME}
      */
     public function update()
     {
+        return $this->model->update();
     }
 
     /**
@@ -43,6 +45,7 @@ class {CLASS_NAME}
      */
     public function get()
     {
+        return $this->model->get();
     }
 
     /**
@@ -51,6 +54,7 @@ class {CLASS_NAME}
      */
     public function getAll()
     {
+        return $this->model->getAll();
     }
 
     /**
@@ -58,5 +62,6 @@ class {CLASS_NAME}
      */
     public function delete()
     {
+        return $this->model->delete();
     }
 }
