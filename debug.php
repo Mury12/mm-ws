@@ -3,6 +3,7 @@
  * This file is used to debug specific functionalities 
  */
 
+use MMWS\Handler\ModelExtractor;
 use MMWS\Model\Connection;
 
 require_once 'app/autoload.php';
@@ -20,14 +21,8 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 //     die;
 // }
 
-$arr = [
-    'user_name' => 'mury12',
-    'email_address' => 'mury@hotmail.com',
-    'alternative_email_address_for_user' => 'mury@hotmail.com'
-];
-
-$arr = snake_to_camel($arr, true);
+$dbm = new ModelExtractor('mm_dietacerta', 'app/partials/classes',1);
 
 echo "\n ----DEBUG START ----\n";
-    print_r($arr);
+    print_r($dbm->generateModels());
 echo "\n ----DEBUG RESULT END ----\n";
