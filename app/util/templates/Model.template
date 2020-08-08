@@ -23,7 +23,7 @@ class {CLASS_NAME}
     public $table = {TABLE_NAME}
 
     /**
-     * @var {VENDOR}\Entity\{USE_CLASS} $entity the entity for this model
+     * @var {VENDOR}\Entity\{ENTITY} $entity the entity for this model
      */
     public $entity;
 
