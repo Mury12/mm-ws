@@ -131,7 +131,7 @@ class DatabaseModelExtractor
         $template['controller'] = file_get_contents('app/util/templates/Controller.template');
         $count = 0;
         foreach ($this->tables as $model => $value) {
-            print_r("Generating MVC for " . $model . "...\n");
+            print_r("Generating MVCE for " . $model . "...\n");
 
             $className = $model;
             $m = $this->model($template['model'], $className, $value);

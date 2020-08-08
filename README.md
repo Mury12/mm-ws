@@ -185,25 +185,25 @@ modifying the following global variables in `variables.php`:
 ### Database Model Extractor
 
 No more worrying in creating the MVC files. In this environment, you have the
-Conflex Model Database Model Extractor. But well.. What does it mean??
+MMWS Database Model Extractor. But well.. What does it mean??
 
-In every project, you MUST HAVE to build your database first, right? So
+In every project, you MUST have to build your database first, right? So
 Once you've done it, you've already done the MVC files. Well, Its not an ORM,
-because I hate them but it converts every table in your remote database to 
-a Controller, a Model and an Entity so you only worry to program it.
+but it converts every table in your remote database to a Controller, a Model
+and an Entity so only lasts the business rules
 
 Maybe in future the CRUD functions are added but for now, only method
 definition and no function. To do this, you can run it separately
-with like `php debug.php`.
+like `php mvc-creator.php`.
 
 Usage:
 
 ```
 <?php
 
-use MMWS\Handler\ConflexModelExtractor;
+use MMWS\Handler\DatabaseModelExtractor;
 
-$gen = new ConflexModelExtractor('database_name', 'mvc_path', 1, 'VENDOR', 'Prefix');
+$gen = new DatabaseModelExtractor('database_name', 'mvc_path', 1, 'VENDOR', 'Prefix');
 $gen->generate();
 
 ```
