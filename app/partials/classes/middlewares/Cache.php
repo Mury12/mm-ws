@@ -1,6 +1,6 @@
 <?php
 
-use MMWS\Model\SESSION;
+use MMWS\Handler\SESSION;
 
 /**
  * Implements request caching with timeout

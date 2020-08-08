@@ -131,14 +131,14 @@ As any project, there are abstractions you should know before using it:
 
 ### Session
 
-Use the static class `MMWS\Model\SESSION` to handle PHP Sessions.
+Use the static class `MMWS\Handler\SESSION` to handle PHP Sessions.
 
 ```
 <?php
 /**
  * Loads the SESSION Class.
  */
-use MMWS\Model\SESSION;
+use MMWS\Handler\SESSION;
 
 /**
  * Starts the session.

@@ -1,7 +1,36 @@
 <?php
 
-namespace MMWS\Model;
+namespace MMWS\Handler;
 
+/**
+ * Manage the server routes
+ * This is the main router handling every route created
+ * in the router files
+ * 
+ * @param Array<Endpoint> $routes the indexed routes array with its properties
+ * 
+ * For examples see the router files in app/routers
+ * 
+ * ----------
+ * 
+ * Example Usage:
+ * 
+ * use MMWS\Handler\Router;
+ * 
+ * $router = new Router();
+ * 
+ * $router->init(require_once(app/routes.php));
+ * 
+ * $endpoint = $router->get();
+ * 
+ * $endpoint->render(); // will render the endpoint contained in the route
+ * 
+ * ----------
+ * 
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.0.1-alpha
+ */
 class Router
 {
     private $base_url = "/";
@@ -20,20 +49,27 @@ class Router
      * Creates the routes contained in the arrays
      * @param Array $routes route collection
      */
-    function createRoutes(array $routes)
+    function init(array $routes)
     {
         $this->_routes = $routes;
     }
 
+    /**
+     * Returns all the previously configured routes
+     * and its properties
+     * 
+     * @return Array<mixed> the routes
+     */
     function getRoutes()
     {
-        print_r($this->_routes);
+        return $this->_routes;
     }
 
     /**
      * Adds headers to the route.
      * @param mixed $rule can be both String containing the rule name or an array in format $arr['rulename'] = 'arg'
      * @param String $arg  is the value to the rule name such as 'application/json'
+     * 
      * @return Model/Router current instance
      */
 
@@ -47,6 +83,9 @@ class Router
         return $this;
     }
 
+    /**
+     * Add headers to the router
+     */
     function headers()
     {
         foreach ($this->headers as $rule => $arg) {
@@ -54,7 +93,13 @@ class Router
         }
     }
 
-
+    /**
+     * Bind url params
+     * @param Iterable $curRoute current analysed route
+     * @param Array<String> $matches the matched params found
+     * 
+     * @return Array<String>|false the indexed params or false if not succeed
+     */
     private function bindParams($curRoute, &$matches)
     {
         $params = array();
@@ -68,6 +113,11 @@ class Router
         return false;
     }
 
+    /**
+     * Maps the url params based on the matches
+     * 
+     * @param Array $matches the matched params
+     */
     private function bind(array $matches)
     {
         $curRoute = $this->_routes;
@@ -99,7 +149,12 @@ class Router
         return $this->_routes['error'][$err_code]['body'];
     }
 
-    function getPage($slug = null)
+    /**
+     * Returns the referred endpoint using the requested URI
+     * 
+     * @return MMWS\Handler\Endpoint the endpoint or error page
+     */
+    function get()
     {
         $route = substr($_SERVER['REQUEST_URI'], 1);
         // $route = explode('?', $slug)[0];

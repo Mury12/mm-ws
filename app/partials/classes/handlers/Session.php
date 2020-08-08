@@ -1,9 +1,25 @@
 <?php
 
-namespace MMWS\Model;
+namespace MMWS\Handler;
 
 /**
  * This is the class to be used into PHP Session management.
+ * 
+ * ----------
+ * 
+ * Example Usage:
+ * 
+ * SESSION::init();
+ * 
+ * SESSION::add('auth', true);
+ * 
+ * !SESSION::get('auth') ? SESSION::done() : $endpoint->render();
+ * 
+ * ----------
+ * 
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.0.1-alpha
  */
 class SESSION
 {
@@ -39,6 +55,7 @@ class SESSION
     /**
      * Gets the sessions value for its name
      * @param String $name the session index
+     * 
      * @return mixed session value
      */
     static function get(String $name)
@@ -48,6 +65,7 @@ class SESSION
 
     /**
      * Verifies if an authenticated session is registered.
+     * 
      * @return Bool
      */
     function verify()

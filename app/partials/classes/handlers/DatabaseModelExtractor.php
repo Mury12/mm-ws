@@ -2,20 +2,47 @@
 
 namespace MMWS\Handler;
 
-use PDO;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * Generates controllers, models and entities based on the database name
  * given to this constructor.
+ * 
+ * @param String $dbName database name 
+ * @param String $MVCFolderPath project folder containing the models, controllers and entities folders
+ * @param Int $snakeToCamel convert column names from snake_case to camelCase
+ * set 1 to camelCase, 2 to CamelCase and default 0 is none. Table names will
+ * be automatically converted to CamelCase
+ * @param String $vendor the "VENDOR" name to display in namespace and use class
+ * @param String $prefix the name prefix to put on filename PREFIX_ClassName.php
+ * 
+ * -------------
+ * 
+ * Example Usage:
+ * 
+ * use MMWS\Handler\DatabaseModelExtractor;
+ * 
+ * $dbm = new DatabaseModelExtractor('mm_dbname', 'app/partials/classes', 1);
+ * 
+ * $dbm->generate();
+ * 
+ * -------------
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.9.1-alpha
  */
-class ConflexModelExtractor
+class DatabaseModelExtractor
 {
     /**
-     * @var Array $tables transcribed schema
+     * @var Array<Array<String>> $tables transcribed schema
      */
     private $tables = array();
+
+    /**
+     * @var Array<String> $snaked raw table names
+     */
     private $snaked = array();
+
     /**
      * @var String $dbName the database name
      */
@@ -30,11 +57,13 @@ class ConflexModelExtractor
      * @var String $prefix the name prefix to put on filename PREFIX_ClassName.php
      */
     public $prefix;
+
     /**
      * @var String $MVCFolderPath the path to save the models. 
      * Must contain the folders models/ entities/ and controllers/.
      */
     private $MVCFolderPath;
+
     /**
      * @var Int $snakeToCamel convert column names from snake_case to camelCase
      * set 1 to camelCase, 2 to CamelCase and default 0 is none. Table names will
@@ -54,6 +83,7 @@ class ConflexModelExtractor
 
     /**
      * Get all the remote tables located on the given database
+     * 
      * @return Bool
      */
     private function getRemoteTables()
@@ -71,7 +101,7 @@ class ConflexModelExtractor
             $r = make_array_from_query($r);
 
             foreach ($r as $each => $value) {
-                
+
                 $className = snake_to_camel($value['TABLE_NAME'], true);
                 $this->snaked[$className] = $value['TABLE_NAME'];
 
@@ -87,6 +117,13 @@ class ConflexModelExtractor
         return false;
     }
 
+    /**
+     * Generates the models based on the tables
+     * returned in the main query using the given
+     * db_name.
+     * 
+     * @return void
+     */
     function generate()
     {
         $template['model'] = file_get_contents('app/util/templates/Model.template');
@@ -118,6 +155,15 @@ class ConflexModelExtractor
         print_r("Total files: " . $count);
     }
 
+    /**
+     * Generate the models based in the templates
+     * 
+     * @param String $template the template directory
+     * @param String $model the class name
+     * @param Array $values array of column names
+     * 
+     * @return String the fulfilled template content
+     */
     private function model($template, String $model, array $values)
     {
         $attributes = "";
@@ -131,7 +177,7 @@ class ConflexModelExtractor
         $constructor = trim($constructor, ', ');
         $output = str_replace('{CLASS_ATTRIBUTES}', $attributes, $template);
         $output = str_replace('{CLASS_NAME}', $model, $output);
-        $output = str_replace('{TABLE_NAME}', "'".$this->snaked[$model] . "';\n", $output);
+        $output = str_replace('{TABLE_NAME}', "'" . $this->snaked[$model] . "';\n", $output);
         $output = str_replace('{CONSTRUCTOR}', $constructor, $output);
         $output = str_replace('{ENTITY}', $model . "Entity", $output);
         $output = str_replace('{VENDOR}', $this->vendor, $output);
@@ -139,6 +185,14 @@ class ConflexModelExtractor
         return $output;
     }
 
+    /**
+     * Generate the entities based in the templates
+     * 
+     * @param String $template the template directory
+     * @param String $model the class name
+     * 
+     * @return String the fulfilled template content
+     */
     private function entity($template, String $model)
     {
         $output = str_replace('{CLASS_NAME}', $model . 'Entity', $template);
@@ -147,6 +201,14 @@ class ConflexModelExtractor
         return $output;
     }
 
+    /**
+     * Generate the controllers based in the templat
+     * 
+     * @param String $template the template directory
+     * @param String $model the class names
+     * 
+     * @return String the fulfilled template content
+     */
     private function controller($template, String $model)
     {
         $output = str_replace('{CLASS_NAME}', $model . 'Controller', $template);
@@ -155,7 +217,21 @@ class ConflexModelExtractor
         return $output;
     }
 
+    /**
+     * Return raw table names from the database
+     * @return Array<String>
+     */
     function getTables()
+    {
+        return $this->snaked;
+    }
+
+    /**
+     * Return indexed table names after conversion
+     * 
+     * @return Array<Array<String>>
+     */
+    function getConvertedTables()
     {
         return $this->tables;
     }

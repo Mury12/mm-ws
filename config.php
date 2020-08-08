@@ -5,19 +5,16 @@
  * and router loader, page loader and DB Connection
  * Any variable set here is available globally, so be wise in your choices.
  * 
- * ****** ONLY EDIT IF YOU KNOW WHAT YOU'RE DOING ******
- * 
  * Less code is better.
  */
 
 use Dotenv\Dotenv;
-use MMWS\Model\{
-    SESSION,
-    Router
-};
+use MMWS\Handler\Request;
+use MMWS\Handler\Router;
+use MMWS\Handler\SESSION;
 
 /** Composer autoload */
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * @var Dotenv\Dotenv $dotenv loads the environment variables in .env
@@ -36,23 +33,23 @@ require_once 'app/config/db-conf.php';
 
 
 /** instantiates the router */
-$r = new Router();
+$router = new Router();
 /** init param array */
 $param = array();
 /** Prints the page headers */
-$r->headers();
+$router->headers();
 /** Init session */
 SESSION::init();
-/** Sets requests caching interval */
+/** Sets request caching interval */
 CACHE::$timeout = 10;
 /** Loads the Routes */
 $routes = require_once('app/routes.php');
 /** Creates the routes */
-$r->createRoutes($routes);
+$router->init($routes);
 /** Loads the page content (JSON ONLY) */
-$endpoint  = $r->getPage();
+$endpoint  = $router->get();
 
 /**
- * @var Bool $caching gets the caching param
+ * @var Bool $caching gets if the endpoint is caching
  */
 $caching = $endpoint->caching ?? $endpoint[0]->caching ?? false;

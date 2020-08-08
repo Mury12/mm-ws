@@ -11,6 +11,21 @@ use MMWS\Interfaces\Middleware;
  * @param String $className the full class name that will be inserted into the queue in VENDOR\Namespace\ClassName
  * @param Array<$className> $promises are the classes and methods to be called. Must be in the following format:
  * array([new Class(), 'method']); If no method is given, 'init' will be called.
+ * 
+ * -------------
+ * 
+ * Example Usage:
+ * 
+ * use MMWS\Handler\Queue;
+ * 
+ * $queue = new Queue('MMWS\Interfaces\Middleware', array([new Authentication(), 'init']))
+ * 
+ * $queue->init();
+ * 
+ * -------------
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.9.1-alpha
  */
 class Queue
 {
@@ -39,6 +54,9 @@ class Queue
         }
     }
 
+    /**
+     * Starts the promise queue to execute
+     */
     function init()
     {
         foreach ($this->promises as $key => $promise) {
@@ -47,11 +65,21 @@ class Queue
         $this->promises = [];
     }
 
+    /**
+     * Show the catched errors
+     * 
+     * @return Array<String>
+     */
     function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * Show the promise queue
+     * 
+     * @return Array<{$className}>
+     */
     function getPromises()
     {
         return $this->promises;

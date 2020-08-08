@@ -1,10 +1,11 @@
 <?php
+
 /**
  * This file is used to debug specific functionalities 
  */
 
-use MMWS\Handler\ConflexModelExtractor;
-use MMWS\Model\Connection;
+use MMWS\Handler\DatabaseModelExtractor;
+use MMWS\Handler\Connection;
 
 require_once 'app/autoload.php';
 require_once 'app/functions.php';
@@ -21,8 +22,8 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 //     die;
 // }
 
-$dbm = new ConflexModelExtractor('mm_dietacerta', 'app/partials/classes',1,'MMWS', 'Conflex_');
+$dbm = new DatabaseModelExtractor('mm_dietacerta', 'app/partials/classes', 1);
 
 echo "\n ----DEBUG START ----\n";
-    print_r($dbm->generate());
+print_r($dbm->generate());
 echo "\n ----DEBUG RESULT END ----\n";

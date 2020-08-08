@@ -1,7 +1,18 @@
 <?php
 
-namespace MMWS\Model;
+namespace MMWS\Handler;
 
+
+/**
+ * Handles the HTTP requests
+ * 
+ * This handler is not done yet. DO NOT USE IT
+ * @ignore
+ * @deprecated MMWS^0.9.1
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.9.1-alpha
+ */
 class Request
 {
     /**

@@ -2,8 +2,8 @@
 
 namespace MMWS\Controller;
 
+use MMWS\Handler\SESSION;
 use MMWS\Model\{
-    SESSION,
     User
 };
 

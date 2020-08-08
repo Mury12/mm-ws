@@ -6,6 +6,25 @@ namespace MMWS\Handler;
  * Handler file operations.
  * @param String $domain the folder domain
  * @param String filename the name for the file
+ * 
+ * -------------
+ * 
+ * Example Usage:
+ * 
+ * use MMWS\Handler\FileHandler;
+ * 
+ * $fh = new FileHandler('pictures', 'no_user.png');
+ * 
+ * $fh->getFile();
+ * 
+ * $fh = new FileHandler('pictures');
+ * 
+ * $fh->writeFile('file_path_or_content');
+ * 
+ * -------------
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.6.1-alpha
  */
 class FileHandler
 {

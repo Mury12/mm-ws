@@ -4,7 +4,22 @@ namespace MMWS\Service;
 
 /**
  * Do the emailing service using Mailgun's keys and CURL
- * @param Array $data is the indexed array with 'name', 'targer', 'msg' and 'subject' properties
+ * @param Array $data is the indexed array with 'name', 'target', 'msg' and 'subject' properties
+ * 
+ * -------------
+ * 
+ * Example Usage:
+ * 
+ * use MMWS\Service\EmailService;
+ * 
+ * $es = new EmailService(['name' => 'Garry', 'target' => 'example@mail.com', 'msg' => 'How are you, Jon?', 'subject' => 'Hey there!']);
+ * 
+ * $es->send();
+ * 
+ * -------------
+ * @package MMWS
+ * @author Andre Mury <mury_gh@hotmail.com>
+ * @version MMWS^0.1.0-alpha
  */
 class EmailService
 {
@@ -42,6 +57,8 @@ class EmailService
 
     /**
      * Sends the email with CURL method
+     * 
+     * @return Bool the request result
      */
     public function send()
     {

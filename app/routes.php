@@ -22,8 +22,8 @@ return [
         'version' => [
             'body' => [
                 $e = new Endpoint(),
-                $e->get('info', 'version'),
-                $e->cache()
+                $e->get('info', 'version')
+                    ->cache()
             ]
         ],
     ],

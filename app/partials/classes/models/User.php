@@ -2,6 +2,7 @@
 
 namespace MMWS\Model;
 
+use MMWS\Handler\SESSION;
 use MMWS\Entity\UserEntity;
 /**
  * It's a default user class

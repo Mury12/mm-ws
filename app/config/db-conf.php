@@ -1,6 +1,6 @@
 <?php
 
-use MMWS\Model\Connection;
+use MMWS\Handler\Connection;
 
 /** Uses a local DB config to local db or dev */
 if (!file_exists('app/config/local/db-local.php')) {
@@ -15,13 +15,13 @@ if (!file_exists('app/config/local/db-local.php')) {
 } else require_once('app/config/local/db-local.php');
 
 /** Creates a connection into DB using PDO 
- * @var Connection $c_db prepared connection object
-*/
-$c_db = new Connection(DB_HOST, DB_NAME, DB_USER, DB_PASS);
+ * @var MMWS\Handler\Connection $db prepared connection object
+ */
+$db = new Connection(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 
 try {
     /** @var PDO $conn This is the global variable to be used in DB queries */
-    $conn = $c_db->connectMysql();
+    $conn = $db->mysql();
 } catch (PDOException $e) {
     send(http_message(500));
     die;
