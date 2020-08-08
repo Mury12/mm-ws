@@ -12,7 +12,7 @@
  */
  
 namespace {VENDOR}\Model;
-use {VENDOR}\Entity\{USE_CLASS};
+use {VENDOR}\Entity\{ENTITY};
 
 class {CLASS_NAME}
 {
@@ -20,7 +20,7 @@ class {CLASS_NAME}
     /**
      * @var String $table the table name for this model;
      */   
-    public $table = '{TABLE_NAME}';
+    public $table = {TABLE_NAME}
 
     /**
      * @var {VENDOR}\Entity\{USE_CLASS} $entity the entity for this model
@@ -32,7 +32,7 @@ class {CLASS_NAME}
     public function __construct({CONSTRUCTOR})
     {
         {ATTRIBUTE_SET}
-        $this->user = new {ENTITY}($this);
+        $this->entity = new {ENTITY}($this);
     }
 
     /**

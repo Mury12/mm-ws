@@ -11,7 +11,7 @@
  * 
  */
  
-namespace {VENDOR}\Entity;
+namespace {VENDOR}\Controller;
 use {VENDOR}\Model\{USE_CLASS};
 
 class {CLASS_NAME}

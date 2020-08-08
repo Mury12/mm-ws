@@ -21,8 +21,8 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 //     die;
 // }
 
-$dbm = new ModelExtractor('mm_dietacerta', 'app/partials/classes',1);
+$dbm = new ModelExtractor('mm_dietacerta', 'app/partials/classes',1,'MMWS', 'Conflex_');
 
 echo "\n ----DEBUG START ----\n";
-    print_r($dbm->generateModels());
+    print_r($dbm->generate());
 echo "\n ----DEBUG RESULT END ----\n";
