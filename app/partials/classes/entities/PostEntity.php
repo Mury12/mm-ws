@@ -6,6 +6,7 @@ use MMWS\Model\Post;
 
 /**
  * This is a default entity class
+ * @ignore
  */
 class PostEntity
 {

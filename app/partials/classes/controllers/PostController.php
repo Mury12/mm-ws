@@ -6,6 +6,7 @@ use MMWS\Model\Post;
 
 /**
  * This is a default controller class
+ * @ignore
  */
 class PostController
 {
