@@ -6,6 +6,7 @@ use Dotenv\Exception\InvalidFileException;
 use PDO;
 use PDOStatement;
 
+
 /**
  * Generates controllers, models and entities based on the database name
  * given to this constructor.
