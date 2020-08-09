@@ -70,7 +70,6 @@ function auth_enabled()
  * @param  PDOStatement $request the PDO prepared statement
  * @return PDOStatement|Bool unfetched result or false
  */
-
 function perform_query_pdo(PDOStatement $request, Bool $show_errors = false)
 {
     try {
