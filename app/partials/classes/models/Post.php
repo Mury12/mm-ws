@@ -2,6 +2,7 @@
 
 /**
  * It's a default model class
+ * @ignore
  */
 
 namespace MMWS\Model;

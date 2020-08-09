@@ -2,7 +2,7 @@
 
 namespace MMWS\Handler;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Dotenv\Exception\InvalidFileException;
 
 /**
  * Generates controllers, models and entities based on the database name
@@ -147,7 +147,7 @@ class DatabaseModelExtractor
                 fwrite($file['entity'], $e);
                 fwrite($file['controller'], $c);
                 $count += 3;
-            } catch (FileException $f) {
+            } catch (InvalidFileException $f) {
                 throw $f;
             }
         }
