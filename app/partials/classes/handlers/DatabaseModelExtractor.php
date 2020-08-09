@@ -3,6 +3,8 @@
 namespace MMWS\Handler;
 
 use Dotenv\Exception\InvalidFileException;
+use PDO;
+use PDOStatement;
 
 /**
  * Generates controllers, models and entities based on the database name
@@ -97,16 +99,16 @@ class DatabaseModelExtractor
 
         $q = $conn->prepare($query);
 
-        if ($r = perform_query_pdo($q)) {
-            $r = make_array_from_query($r);
+        if ($r = $this->perform_query_pdo($q)) {
+            $r = $this->make_array_from_query($r);
 
             foreach ($r as $each => $value) {
 
-                $className = snake_to_camel($value['TABLE_NAME'], true);
+                $className = $this->snake_to_camel($value['TABLE_NAME'], true);
                 $this->snaked[$className] = $value['TABLE_NAME'];
 
                 $this->tables[$className][] = $this->snakeToCamel > 0
-                    ? snake_to_camel(
+                    ? $this->snake_to_camel(
                         $value['COLUMN_NAME'],
                         $this->snakeToCamel === 2 ? true : false
                     ) : $value['COLUMN_NAME'];
@@ -126,9 +128,9 @@ class DatabaseModelExtractor
      */
     function generate()
     {
-        $template['model'] = file_get_contents('app/util/templates/Model.template');
-        $template['entity'] = file_get_contents('app/util/templates/Entity.template');
-        $template['controller'] = file_get_contents('app/util/templates/Controller.template');
+        $template['model'] = file_get_contents('app/util/templates/classes/Model.template');
+        $template['entity'] = file_get_contents('app/util/templates/classes/Entity.template');
+        $template['controller'] = file_get_contents('app/util/templates/classes/Controller.template');
         $count = 0;
         foreach ($this->tables as $model => $value) {
             print_r("Generating MVCE for " . $model . "...\n");
@@ -152,7 +154,7 @@ class DatabaseModelExtractor
             }
         }
         print_r("Done!\n");
-        print_r("Total files: " . $count);
+        print_r("Total files: " . $count."\n");
     }
 
     /**
@@ -234,5 +236,92 @@ class DatabaseModelExtractor
     function getConvertedTables()
     {
         return $this->tables;
+    }
+
+    /**
+     * Performs a try catch default request with PDO
+     * @param  PDOStatement $request the PDO prepared statement
+     * @return PDOStatement|Bool unfetched result or false
+     */
+    private function perform_query_pdo(PDOStatement $request, Bool $show_errors = false)
+    {
+        try {
+            if ($request->execute()) {
+                return $request;
+            }
+            $show_errors ? print_r($request->errorInfo()) : null;
+        } catch (\PDOException $e) {
+            //
+        }
+        return false;
+    }
+
+    /**
+     * Returns an Object Array or pure Array.
+     * @param PDOStatement $q is an unfetched PDO statement result.
+     * @param String $cls is the used Vendor/Class to append
+     * @param Bool $map encodes the strings
+     * @return Array 
+     */
+    private function make_array_from_query(PDOStatement $q, String $cls = null, Bool $map = false)
+    {
+        $r = array();
+
+        while ($ln = $q->fetch(PDO::FETCH_ASSOC)) {
+            if ($cls == null && !$map) {
+                $r[] = $ln;
+            } elseif ($cls != null && $map) {
+                $r[] = new $cls(array_map('utf8_encode', $ln));
+            } else {
+                $r[] = new $cls($ln);
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * Changes the snake_case to camelCase from an array
+     * @param String $var variable name
+     */
+    private function snake_to_camel($content, Bool $capitalize = false)
+    {
+        if (is_array($content)) {
+            $output = array();
+            /** Loops through the array to get the keys */
+            foreach ($content as $key => $value) {
+                $parts = explode('_', $key);
+
+                $outVarName = '';
+                /** Loops through every name part separated by underscore (_) */
+                $i = 0;
+                foreach ($parts as $part) {
+                    if ($i === 0 && !$capitalize) {
+                        $outVarName = strtolower($part);
+                        $i++;
+                        continue;
+                    }
+                    $outVarName .= ucfirst(strtolower($part));
+                    $i++;
+                }
+                $output[$outVarName] = $value;
+            }
+            return $output;
+        }
+
+        $parts = explode('_', $content);
+
+        $outVarName = '';
+        /** Loops through every name part separated by underscore (_) */
+        $i = 0;
+        foreach ($parts as $part) {
+            if ($i === 0 && !$capitalize) {
+                $outVarName = strtolower($part);
+                $i++;
+                continue;
+            }
+            $outVarName .= ucfirst(strtolower($part));
+            $i++;
+        }
+        return $outVarName;
     }
 }
