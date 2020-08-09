@@ -26,3 +26,5 @@ app/util/WillSmithTheRouteProtector.php
 composer.lock
 
 #files
+
+docs/phpdoc*
