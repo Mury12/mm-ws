@@ -55,4 +55,5 @@ if (!\file_exists('./variables-local.php')) {
     // define('ORIGIN_HTTP_ADDR', getallheaders()['User-Addr'] ?? null);
     // define('USER_AUTHORIZATION_TOKEN', getallheaders()['Authorization'] ?? null);
     define('USER_AUTHORIZATION_TOKEN', 'AUTHORIZED');
+    define('_JWT_PASSPHRASE_', hash('sha256', '{@@b357*s3h4sh#s.@{#}}'));
 } else require_once './variables-local.php';

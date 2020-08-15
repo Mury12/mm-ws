@@ -6,10 +6,12 @@
 
 use MMWS\Handler\DatabaseModelExtractor;
 use MMWS\Handler\Connection;
+use MMWS\Handler\JWT;
 
 require_once 'app/autoload.php';
 require_once 'app/functions.php';
 require_once('app/config/db-conf.php');
+require_once('app/config/variables.php');
 define('DEFAULT_FILE_PATH', 'app/_files/');
 
 // $c_db = new Connection(DB_HOST, DB_NAME, DB_USER, DB_PASS);
@@ -22,8 +24,10 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 //     die;
 // }
 
-$dbm = new DatabaseModelExtractor('mm_dietacerta', 'app/partials/classes', 1);
+// $dbm = new DatabaseModelExtractor('mm_dietacerta', 'app/partials/classes', 1);
+
+$jwt = new JWT();
 
 echo "\n ----DEBUG START ----\n";
-print_r($dbm->generate());
+print_r($jwt->jwt);
 echo "\n ----DEBUG RESULT END ----\n";
