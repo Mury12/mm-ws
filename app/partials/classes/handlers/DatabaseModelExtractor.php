@@ -3,6 +3,7 @@
 namespace MMWS\Handler;
 
 use Dotenv\Exception\InvalidFileException;
+use MMWS\Handler\CaseHandler;
 use PDO;
 use PDOStatement;
 
@@ -105,12 +106,13 @@ class DatabaseModelExtractor
 
             foreach ($r as $each => $value) {
 
-                $className = $this->snake_to_camel($value['TABLE_NAME'], true);
+                $className = CaseHandler::convert($value['TABLE_NAME'], 0, true);
                 $this->snaked[$className] = $value['TABLE_NAME'];
 
                 $this->tables[$className][] = $this->snakeToCamel > 0
-                    ? $this->snake_to_camel(
+                    ? CaseHandler::convert(
                         $value['COLUMN_NAME'],
+                        0,
                         $this->snakeToCamel === 2 ? true : false
                     ) : $value['COLUMN_NAME'];
             }
@@ -278,51 +280,5 @@ class DatabaseModelExtractor
             }
         }
         return $r;
-    }
-
-    /**
-     * Changes the snake_case to camelCase from an array
-     * @param String $var variable name
-     */
-    private function snake_to_camel($content, Bool $capitalize = false)
-    {
-        if (is_array($content)) {
-            $output = array();
-            /** Loops through the array to get the keys */
-            foreach ($content as $key => $value) {
-                $parts = explode('_', $key);
-
-                $outVarName = '';
-                /** Loops through every name part separated by underscore (_) */
-                $i = 0;
-                foreach ($parts as $part) {
-                    if ($i === 0 && !$capitalize) {
-                        $outVarName = strtolower($part);
-                        $i++;
-                        continue;
-                    }
-                    $outVarName .= ucfirst(strtolower($part));
-                    $i++;
-                }
-                $output[$outVarName] = $value;
-            }
-            return $output;
-        }
-
-        $parts = explode('_', $content);
-
-        $outVarName = '';
-        /** Loops through every name part separated by underscore (_) */
-        $i = 0;
-        foreach ($parts as $part) {
-            if ($i === 0 && !$capitalize) {
-                $outVarName = strtolower($part);
-                $i++;
-                continue;
-            }
-            $outVarName .= ucfirst(strtolower($part));
-            $i++;
-        }
-        return $outVarName;
     }
 }
