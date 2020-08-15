@@ -75,7 +75,7 @@ class JWT
     {
         $headers   = $this->parse($this->headers);
         $payload   = $this->parse($this->payload);
-        $signature = hash_hmac('sha256', $headers . $payload, _JWT_PASSPHRASE_ ?? 'jwt_passphrase');
+        $signature = hash_hmac('sha256', $headers . $payload, _JWT_PASSPHRASE_ ?? 'jwt_passphrase', true);
 
         return $headers.".".$payload.".".$signature;
     }
@@ -85,4 +85,12 @@ class JWT
         return str_replace('=','',base64_encode(json_encode(($arr))));
     }
 
-}
+    static function verify(string $jwt)
+    {
+        $parts = explode('.', $jwt);
+
+        return hash_hmac('sha256', "$parts[0].$parts[1]", _JWT_PASSPHRASE_ ?? 'jwt_passphrase', true) === $parts[3]
+
+    }
+
+} 
