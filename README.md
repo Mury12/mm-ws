@@ -1,4 +1,4 @@
-# PHP Webservice
+# MM-WS - PHP Webservice Template
 
 ## Before using
 
@@ -102,7 +102,7 @@ the `yardbirds.php` file you'll just use `$param1`
 
 ## MVC Model
 
-This project is MVC based using the following flow:
+This project is MVC (actually Model-Controller-Entity) based using the following flow:
 
 ``` 
                                       ───────────── Handlers 
@@ -210,6 +210,27 @@ $gen->generate();
 Simply as that, all of the database tables (excluding view tables) will be in its folder models, entities and controllers
 in the MVC path. The folders MUST ALREADY EXISTS.
 
+#### String Case Handler
+
+You can convert snake_case to camelCase -- or CameCase -- and vice-versa
+
+```
+$values = [
+    'userName' => 'Garry',
+    'userPassword' => 'M&UhanL2'
+];
+
+$str = MMWS\Handler\CaseHandler::convert($values, 1);
+```
+
+`$str` will result in:
+```
+[
+   'user_name' => 'Garry'
+   'user_password' => 'M&UhanL2'
+]
+```
+
 ### General Functions
 
 In `functions.php` you can see a lot of useful functions, such as password generators,
@@ -276,4 +297,4 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   └── System-messages.json (System messages definition used in get_sysmsg($errCode). Not HTTP errors.)
 └── index.php (Endpoint renderer)
 ```
- ### Thats all folks.
+ ### Simple as that.
