@@ -29,9 +29,9 @@ define('DEFAULT_INVOICE_PATH', 'app/_files/invoices');
 define('DEFAULT_FILE_PATH', 'app/_files/');
 
 /** MailGun */
-define('DEFAULT_NOREPLY_EMAIL', 'noreply@moneyright.com.br');
-define('DEFAULT_MAILGUN_KEY', '123456');
-define('DEFAULT_MAILGUN_URL', '123456');
+define('DEFAULT_NOREPLY_EMAIL', 'noreply@mydomain.com');
+define('DEFAULT_MAILGUN_KEY', 'mypassword');
+define('DEFAULT_MAILGUN_URL', 'myurl');
 
 // /** Consumer */
 // define('ORIGIN_HTTP_ADDR', getallheaders()['User-Addr'] ?? null);

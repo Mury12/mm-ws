@@ -35,10 +35,13 @@ function report($error)
  * @param Int $code the error code such as 404, 500, etc.
  * @return Array error code, its message and current time.
  */
-function http_message(Int $code)
+function http_message(Int $code, string $message = null)
 {
     $error = require_once('app/util/errors.php');
     set_http_code($error[$code]['code']);
+    if ($message) {
+        $error[$code]['status'] = $message;
+    }
     report($error[$code]);
     return array_key_exists($code, $error) ? $error[$code] : $error[101];
 }
@@ -78,7 +81,7 @@ function perform_query_pdo(PDOStatement $request, Bool $show_errors = false)
         }
         $show_errors ? print_r($request->errorInfo()) : null;
     } catch (\PDOException $e) {
-        //
+        throw $e;
     }
     return false;
 }
@@ -212,6 +215,7 @@ function pop_encrypt(String $str)
 function post_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
+        $_POST = json_decode(file_get_contents('php://input'), true);
         return $_POST;
     }
 }
@@ -225,7 +229,7 @@ function post_params($key = false)
 function patch_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PATCH') {
-        parse_str(file_get_contents('php://input'), $_PATCH);
+        $_PATCH = json_decode(file_get_contents('php://input'), true);
         return $_PATCH;
     }
 }
@@ -239,7 +243,7 @@ function patch_params($key = false)
 function put_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PUT') {
-        parse_str(file_get_contents('php://input'), $_PUT);
+        $_PUT = json_decode(file_get_contents('php://input'), true);
         return $_PUT;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace MMWS\Handler;
 
+use DateInterval;
+use DateTime;
+
 /**
  * This is the class to be used into PHP Session management.
  * 
@@ -29,6 +32,7 @@ class SESSION
     static function init()
     {
         session_start();
+        SESSION::loadCookies();
     }
 
     /**
@@ -61,6 +65,18 @@ class SESSION
     static function get(String $name)
     {
         return isset($_SESSION[pop_encrypt($name)]) ? pop_decode($_SESSION[pop_encrypt($name)]) : false;
+    }
+
+
+    static function loadCookies()
+    {
+        $cookies = $_COOKIE;
+        if ($cookies && array_key_exists('app-token', $cookies)) {
+            $jwt = $cookies['app-token'];
+            if (JWTHandler::verify($jwt) && !SESSION::get('@app:jwt')) {
+                SESSION::add('@app:jwt', $jwt);
+            }
+        }
     }
 
     /**

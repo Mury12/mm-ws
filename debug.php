@@ -4,10 +4,6 @@
  * This file is used to debug specific functionalities 
  */
 
-use MMWS\Handler\DatabaseModelExtractor;
-use MMWS\Handler\Connection;
-use MMWS\Handler\JWT;
-
 require_once 'app/autoload.php';
 require_once 'app/functions.php';
 require_once('app/config/db-conf.php');
@@ -26,8 +22,8 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 
 // $dbm = new DatabaseModelExtractor('mm_dietacerta', 'app/partials/classes', 1);
 
-$jwt = new JWT();
+// $jwt = new JWT();
 
 echo "\n ----DEBUG START ----\n";
-print_r($jwt->jwt);
+print_r(password_hash('123456', PASSWORD_BCRYPT, ['cost' => 12]));
 echo "\n ----DEBUG RESULT END ----\n";

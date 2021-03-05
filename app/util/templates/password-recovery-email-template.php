@@ -15,7 +15,7 @@
         </label>
         <p style="text-indent: 0">
             Atenciosamente,<br />
-            <strong style="margin-left: 10px">Suporte Money Right.</strong>
+            <strong style="margin-left: 10px">Company Name.</strong>
         </p>
     </div>
 </body>

@@ -33,7 +33,7 @@ class EmailService
         'domain' => DEFAULT_MAILGUN_URL,
         'apiKey' => DEFAULT_MAILGUN_KEY,
         'defPwd' => DEFAULT_MAILGUN_PWD,
-        'smtpLn' => 'postmaster@mg.moneyright.com.br',
+        'smtpLn' => 'postmaster@mg.mydomain.com.br',
         'smtpHn' => 'smtp.mailgun.org',
     );
 
@@ -63,7 +63,7 @@ class EmailService
     public function send()
     {
         $message = array();
-        $message['from'] = "Money Right <" . $this->email . ">";
+        $message['from'] = "My Company Name <" . $this->email . ">";
         $message['to'] = $this->target;
         $message['h:Reply-To'] = "<No Reply>";
         $message['subject'] = $this->subject;

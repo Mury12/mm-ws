@@ -19,9 +19,15 @@ class {CLASS_NAME}
     
     public $model;
 
-    public function __construct({USE_CLASS} $model)
+    public function __construct(array $model)
     {
-        $this->model = new {USE_CLASS}($model);
+        $model = new {USE_CLASS}();
+        foreach ($data as $key => $prop) {
+            if (property_exists($model, $key)) {
+                $user->{$key} = $prop;
+            }
+        }
+        $this->model = $model;
     }
 
     /**
