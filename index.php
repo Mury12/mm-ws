@@ -1,4 +1,7 @@
 <?php
+
+use MMWF\Factory\RequestFactory;
+
 try {
   /** Loads config.php */
   require_once 'config.php';
@@ -7,21 +10,10 @@ try {
   if (!$endpoint) die(send(http_message(404)));
 
   /**
-   * @var String $procedure sets the global variable to catch the procedure to be executed
+   * @var MMWS\Handler\Request contains the request data. If this is null, then the
+   * request wasn't succeed.
    */
-  $procedure;
-
-  /**
-   * @var Array $body sets the body variable to catch body request params
-   */
-  $body;
-
-  /**
-   * @var Array $params sets the param variable to catch URL params
-   */
-  $params;
-
-
+  $request = RequestFactory::create();
 
   /** Allows options request to check server */
   if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
