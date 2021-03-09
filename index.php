@@ -1,6 +1,7 @@
 <?php
 
 use MMWF\Factory\RequestFactory;
+use MMWS\Handler\RequestException;
 
 try {
   /** Loads config.php */
@@ -26,13 +27,13 @@ try {
   } else {
     $endpoint->render();
   }
-} catch (Exception $e) {
-  require './app/functions.php';
-  set_http_code(500);
+} catch (RequestException $e) {
+  require_once './app/functions.php';
+  set_http_code($e->getCode());
   header('content-type: application/json');
   die(send(
     http_message(
-      500,
+      $e->getCode(),
       $e->getMessage()
     )
   ));

@@ -232,6 +232,40 @@ $str = MMWS\Handler\CaseHandler::convert($values, 1);
 ]
 ```
 
+### Error Handling
+
+Every HTTP error that you want to send to the client should use `RequestException` class just like the following example.
+
+```php
+<?php
+
+$procedures = array(
+    'showMeAnError' => function ($d) {
+        if($error){
+          $ex = new RequestException();
+          $ex->setMessage(['error' => 'Cannot access this page', 'reason' => 'You are not allowed.']);
+          $ex->setCode(401);
+          throw $ex;
+        }
+    }
+);
+
+// Or either
+
+$procedures = array(
+    'showMeAnError' => function ($d) {
+        try{
+          // something
+        }catch(RequestExeption $ex)
+          $ex->setMessage(['error' => 'Cannot access this page', 'reason' => 'You are not allowed.']);
+          $ex->setCode(401);
+          throw $ex;
+        }
+    }
+);
+
+```
+
 ### General Functions
 
 In `functions.php` you can see a lot of useful functions, such as password generators,

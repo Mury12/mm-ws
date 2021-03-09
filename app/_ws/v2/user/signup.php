@@ -7,69 +7,53 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
-use MMWS\Controller\UserController;
-use MMWS\Model\User;
 
 /**
- * @var String $procedure the global variable to catch the procedure to be executed
+ * @var MMWS\Handler\Request contains the request data
  */
-global $procedure;
-
-/**
- * @var Array $body the body variable to catch body request params
- */
-global $body;
-
-/**
- * @var Array $params the param variable to catch URL params
- */
-global $params;
-
+global $request;
 /**
  * @var Bool $caching check if this endpoints caches requests
  */
 global $caching;
 
 /**
- * @var array $data the data catched from params and body request
- */
-$data = ["params" => $params, "body" => $body];
-
-
-/**
  * @var Array $procedures array of procedures to perform in the endpoint
  */
 $procedures = array(
-  'createUser' => function ($d) {
-    $data = $d['body'];
-    $uc = new UserController($data);
-    $uc->save();
-    return [$data];
-  },
+    'getUniqueId' => function ($d) {
+        return unique_id($d['len'] ?? 6, $d['hash'] ?? 'sha256');
+    },
+    'sayMyName' => function ($d) {
+        return ['msg' => 'My name'];
+    },
+    'session' => function () {
+        return ['session' => $_SESSION, 'cookie' => $_COOKIE];
+    }
 );
 
-if (array_key_exists($procedure, $procedures)) {
+if (array_key_exists($request->getProcedure(), $procedures)) {
 
-  /** Check if this endpoit is caching requests */
-  if ($caching) {
-    $cached = CACHE::check($procedure);
-    /**
-     * CACHEs requests if caching is enabled
-     */
-    if (!$cached) {
-      /**
-       * @var mixed $m result from the procedure
-       */
-      $m = $procedures[$procedure]($data);
-      CACHE::put($m, $procedure);
+    /** Check if this endpoit is caching requests */
+    if ($caching) {
+        $cached = CACHE::check($request->getProcedure());
+        /**
+         * CACHEs requests if caching is enabled
+         */
+        if (!$cached) {
+            /**
+             * @var mixed $m result from the procedure
+             */
+            $m = $procedures[$request->getProcedure()]($request->data() ?? null);
+            CACHE::put($m, $request->getProcedure());
+        }
+
+        $m = $m ?? $cached;
+    } else {
+        $m = $procedures[$request->getProcedure()]($request->data() ?? null);
     }
-
-    $m = $m ?? $cached;
-  } else {
-    $m = $procedures[$procedure]($data);
-  }
-  send(is_array($m) ? $m : ['res' => $m]);
+    send(is_array($m) ? $m : ['res' => $m]);
 } else {
-  send(http_message(400));
+    send(http_message(400));
 }
 return;

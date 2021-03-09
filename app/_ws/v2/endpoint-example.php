@@ -17,9 +17,6 @@ global $request;
  */
 global $caching;
 
-
-
-
 /**
  * @var Array $procedures array of procedures to perform in the endpoint
  */

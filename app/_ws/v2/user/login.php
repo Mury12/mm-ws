@@ -7,6 +7,7 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
+use MMWS\Handler\RequestException;
 
 /**
  * @var MMWS\Handler\Request contains the request data
@@ -16,9 +17,6 @@ global $request;
  * @var Bool $caching check if this endpoints caches requests
  */
 global $caching;
-
-
-
 
 /**
  * @var Array $procedures array of procedures to perform in the endpoint
@@ -31,7 +29,10 @@ $procedures = array(
         return ['msg' => 'My name'];
     },
     'shown' => function ($d) {
-        return $d;
+        $ex = new RequestException();
+        $ex->setMessage(['error' => 'Cannot access this page', 'reason' => 'You are not allowed.']);
+        $ex->setCode(409);
+        throw $ex;
     }
 );
 
