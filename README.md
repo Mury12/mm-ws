@@ -6,6 +6,8 @@ Ensure that you have read this documentation until the end
 before using this webservice. It contains very important
 informations about the way it works.
 
+Generate a SSH key at `./.ssh/ssh-name` in order to use JWT and set its name in `.env` file.
+
 ## Running
 
 `composer install` - to install dependencies
@@ -29,7 +31,7 @@ to add a new domain to this file.
 
 `app/routers/services.php` :
 
-The `MMWS\Model\Endpoint component` is very important. It is responsible for
+The `MMWS\Model\Endpoint` component is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
 
 ```php
@@ -66,7 +68,7 @@ Just enjoy this following example about how to create a route:
 
 ```php
 <?php 
-use MMWS\Model\Endpoint
+use MMWS\Model\Endpoint;
 
 return [
   'route-get' => [
