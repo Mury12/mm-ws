@@ -138,8 +138,10 @@ class Router
                 $curRoute = false;
                 break;
             }
-            unset($matches[$key]);
+            if (array_key_exists($key, $matches) && $matches[$key] === $match)
+                unset($matches[$key]);
         }
+        if (sizeof($matches) > 0) return false;
         $curRoute['body']->setEnv($params);
         return $curRoute;
     }
