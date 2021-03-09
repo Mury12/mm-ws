@@ -1,6 +1,7 @@
 <?php
 
 use MMWS\Handler\SESSION;
+use MMWS\Interfaces\Middleware;
 
 /**
  * Implements request caching with timeout
@@ -8,7 +9,7 @@ use MMWS\Handler\SESSION;
  * @param Int $timeout time in seconds to REDO the request. Default is 10 seconds 
  * @param Int $interval interval between requests. Default is 1 second
  */
-class CACHE
+class CACHE implements Middleware
 {
 
 

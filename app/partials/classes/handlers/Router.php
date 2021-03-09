@@ -2,6 +2,9 @@
 
 namespace MMWS\Handler;
 
+use MMWF\Factory\RequestFactory;
+use MMWS\Factory\RequestExceptionFactory;
+
 /**
  * Manage the server routes
  * This is the main router handling every route created
@@ -100,47 +103,65 @@ class Router
      * 
      * @return Array<String>|false the indexed params or false if not succeed
      */
-    private function bindParams($curRoute, &$matches)
+    private function bindParams(array $curRoute, &$matches)
     {
         $params = array();
-        if (sizeof($matches) <= sizeof($curRoute['params'])) {
-            foreach ($curRoute['params'] as $key => $param) {
-                $params[$param] = array_shift($matches);
-            }
-            $curRoute['body']->setEnv($params);
-            return $params;
+        $m = $matches;
+        while (sizeof($m) > sizeof($curRoute['params'])) {
+            array_pop($m);
         }
-        return false;
+
+        // if (sizeof($matches) <= sizeof($curRoute['params'])) {
+        foreach ($curRoute['params'] as $key => $param) {
+            $params[$param] = array_shift($m);
+            array_shift($matches);
+        }
+        return $params;
+        // }
+        // return false;
     }
 
     /**
      * Maps the url params based on the matches
      * 
      * @param Array $matches the matched params
+     * @return mixed
      */
     private function bind(array $matches)
     {
         $curRoute = $this->_routes;
         $params = [];
-        $skip = false;
         foreach ($matches as $key => $match) {
-            $i = 0;
-            $paramCount = 0;
+            if (array_key_exists('params', $curRoute)) {
+                $params = array_merge($this->bindParams($curRoute, $matches), $params);
 
-            if (array_key_exists('params', $curRoute) && !$skip) {
-                $curRoute['params'] = $this->bindParams($curRoute, $matches);
-                $skip = true;
-                if(sizeof($matches) == 0) break;
+                if (array_key_exists($match, $curRoute)) {
+                    $curRoute = $curRoute[$match];
+                }
+
+                if (!sizeof($matches)) break;
             }
-
             if (array_key_exists($match, $curRoute)) {
                 $curRoute = $curRoute[$match];
+            } elseif (!sizeof($matches)) {
+                throw RequestExceptionFactory::create(null, 404);
+            } elseif (
+                sizeof($matches) && !array_key_exists($match, $curRoute)
+            ) {
+                array_unshift($matches);
             } else {
-                $curRoute = false;
-                break;
+                throw RequestExceptionFactory::create(null, 404);
             }
-            unset($matches[$key]);
+            //                                                                                          V-- skipping after this
+            // It is skipping if more than 1 param is given to a middle route like /:company/:user/something/:soomethingId
+            if (array_key_exists($key, $matches) && $matches[$key] === $match)
+                unset($matches[$key]);
         }
+        if (sizeof($matches) > 0) {
+            throw RequestExceptionFactory::create(null, 404);
+        }
+
+        $curRoute['body']->setEnv($params);
         return $curRoute;
     }
 
@@ -168,8 +189,7 @@ class Router
             // print_r($route);
             return $route['body'];
         } else {
-            set_http_code(404);
-            return $this->getErrorPage('404');
+            throw RequestExceptionFactory::create(null, 404);
         }
     }
 }

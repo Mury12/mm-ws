@@ -53,6 +53,8 @@ if (!\file_exists('./variables-local.php')) {
     // Enable the headers below if it will need permissioned pages
 
     // define('ORIGIN_HTTP_ADDR', getallheaders()['User-Addr'] ?? null);
-    // define('USER_AUTHORIZATION_TOKEN', getallheaders()['Authorization'] ?? null);
-    define('USER_AUTHORIZATION_TOKEN', 'AUTHORIZED');
+    define('USER_AUTHORIZATION_TOKEN', getallheaders()['Authorization'] ?? null);
+    // define('USER_AUTHORIZATION_TOKEN', 'AUTHORIZED');
+    $key = file_get_contents($_ENV['JWT_KEY_PATH']);
+    define('_JWT_DEFINED_KEY_', $key);
 } else require_once './variables-local.php';

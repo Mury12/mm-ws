@@ -8,7 +8,6 @@ namespace MMWS\Handler;
  * 
  * This handler is not done yet. DO NOT USE IT
  * @ignore
- * @deprecated MMWS^0.9.1
  * @package MMWS
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.9.1-alpha
@@ -19,6 +18,11 @@ class Request
      * @var Array<Array> $request contains the endpoint [request_method] => ['page', 'procedure'] for each endpoint set to the same file.
      */
     private $request = [];
+
+    private $procedure = '';
+    private $body = [];
+    private $params = [];
+    private $method = null;
 
     function __construct()
     {
@@ -49,6 +53,84 @@ class Request
             return $this->request[strtoupper($method)];
         }
         return false;
+    }
+
+    /**
+     * Sets the Body of the request
+     */
+    function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    /**
+     * Returns the Body of the request
+     * @return mixed[]
+     */
+    function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * Sets the Params of the request
+     */
+    function setParams($params)
+    {
+        $this->params = $params;
+    }
+
+    /**
+     * Returns the Params of the request
+     * @return string[]
+     */
+    function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Sets the Procedure of the request
+     */
+    function setProcedure($procedure)
+    {
+        $this->procedure = $procedure;
+    }
+
+    /**
+     * Returns the Procedure of the request
+     * @return string
+     */
+    function getProcedure()
+    {
+        return $this->procedure;
+    }
+
+    /**
+     * Sets the current request method
+     */
+    function setMethod($method)
+    {
+        $this->method = $method;
+    }
+
+    /**
+     * Returns the method of the request
+     * @return string
+     */
+    function getMethod()
+    {
+        return $this->method;
+    }
+
+
+    /**
+     * Returns body and params from the request
+     * @return array[mixed[]]
+     */
+    function data()
+    {
+        return ['params' => $this->params, 'body' => $this->body];
     }
 
     /**

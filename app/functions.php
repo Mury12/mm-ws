@@ -33,12 +33,16 @@ function report($error)
  * Returns an http message based on the code.
  * Every message must be set in util/errors.php -- Reserve HTTP Codes.
  * @param Int $code the error code such as 404, 500, etc.
+ * @param mixed $status can be either a string or an array and will be shown as status.
  * @return Array error code, its message and current time.
  */
-function http_message(Int $code)
+function http_message(Int $code, $status = null)
 {
     $error = require_once('app/util/errors.php');
     set_http_code($error[$code]['code']);
+    if ($status) {
+        $error[$code]['status'] = $status;
+    }
     report($error[$code]);
     return array_key_exists($code, $error) ? $error[$code] : $error[101];
 }
@@ -208,10 +212,10 @@ function pop_encrypt(String $str)
  * @param String $key is the key
  * @return mixed
  */
-
 function post_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
+        $_POST = json_decode(file_get_contents('php://input'), true);
         return $_POST;
     }
 }
@@ -221,11 +225,10 @@ function post_params($key = false)
  * @param String $key is the key
  * @return mixed
  */
-
 function patch_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PATCH') {
-        parse_str(file_get_contents('php://input'), $_PATCH);
+        $_PATCH = json_decode(file_get_contents('php://input'), true);
         return $_PATCH;
     }
 }
@@ -235,21 +238,18 @@ function patch_params($key = false)
  * @param String $key is the key
  * @return mixed
  */
-
 function put_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PUT') {
-        parse_str(file_get_contents('php://input'), $_PUT);
+        $_PUT = json_decode(file_get_contents('php://input'), true);
         return $_PUT;
     }
 }
-
 /**
  * Returns a system message based in a code
  * @param Int $errcode the error code came fro mthe database
  * @return String an error message
  */
-
 function get_sysmsg(Int $msgCode)
 {
     if (file_exists('app/System-messages.json')) {
@@ -279,7 +279,6 @@ function pop_password(Int $length = 8)
  * @param String $template the template name
  * @return File|Bool the template or false if template file not found.
  */
-
 function get_part_template(String $template, array $data)
 {
     if (file_exists('app/util/templates/' . $template . '-template.php')) {

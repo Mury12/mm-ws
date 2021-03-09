@@ -1,59 +1,60 @@
 <?php
 
 /**
- * This is the request for the login system.
- * Authentication is database based.
+ * Here comes the description for this endpoint
+ * Ensure to do it, please.
  * 
- * *** ONLY EDIT IF YOU KNOW WHAT YOU'RE DOING ***
+ * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
-use MMWS\Controller\UserController;
-
+use MMWS\Handler\RequestException;
 
 /**
- * @var string $procedure is the procedure to be called
+ * @var MMWS\Handler\Request contains the request data
  */
-global $procedure;
+global $request;
+/**
+ * @var Bool $caching check if this endpoints caches requests
+ */
+global $caching;
 
 /**
- * @var mixed $params are the URL request params
+ * @var Array $procedures array of procedures to perform in the endpoint
  */
-global $params;
-
-/**
- * @var Array $data is the content extracted from the POST|PATCH request
- */
-global $data;
-
-if (array_key_exists('_', $data)) {
-    $procedure = $data['_'];
-    unset($data['_']);
-} else {
-    send(http_message(400));
-    die();
-}
-
 $procedures = array(
-    /**
-     * Makes a request to the Database for logging in
-     * @param $d the data from the POST
-     */
-    'auth_request' => function ($d) {
-        $u = new UserController($d);
-        if ($res = $u->login()) {
-            return ['res' => true, 'msg' => 'Logged in successfully.'];
-        } else {
-            return ['msg' => 'Incorrect user or password', 'res' => false];
-        }
+    'getUniqueId' => function ($d) {
+        return unique_id($d['len'] ?? 6, $d['hash'] ?? 'sha256');
     },
+    'sayMyName' => function ($d) {
+        return ['msg' => 'My name'];
+    },
+    'shown' => function ($d) {
+        return $d;
+    }
 );
 
+if (array_key_exists($request->getProcedure(), $procedures)) {
 
+    /** Check if this endpoit is caching requests */
+    if ($caching) {
+        $cached = CACHE::check($request->getProcedure());
+        /**
+         * CACHEs requests if caching is enabled
+         */
+        if (!$cached) {
+            /**
+             * @var mixed $m result from the procedure
+             */
+            $m = $procedures[$request->getProcedure()]($request->data() ?? null);
+            CACHE::put($m, $request->getProcedure());
+        }
 
-if (array_key_exists($procedure, $procedures)) {
-    $m = $procedures[$procedure]($data);
+        $m = $m ?? $cached;
+    } else {
+        $m = $procedures[$request->getProcedure()]($request->data() ?? null);
+    }
     send(is_array($m) ? $m : ['res' => $m]);
 } else {
-    send(http_message(403));
-    die();
+    send(http_message(400));
 }
+return;

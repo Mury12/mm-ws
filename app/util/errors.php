@@ -6,7 +6,7 @@ return array(
     'at' => time()
   ],
   304 => [
-    'msg' => 'Nothing has changed in this meantime.',
+    'msg' => 'Nothing has changed in this meantime',
     'code' => $code,
     'at' => time()
   ],
@@ -15,13 +15,18 @@ return array(
     'code' => $code,
     'at' => time()
   ],
+  200 => [
+    'msg' => 'No content',
+    'code' => $code,
+    'at' => time()
+  ],
   400 => [
-    'msg' => 'Who\'s bad now, request?',
+    'msg' => 'Bad request',
     'code' => $code,
     'at' => time()
   ],
   401 => [
-    'msg' => 'Sorry, your name isn\'t at the V.I.P. list.',
+    'msg' => 'Forbidden',
     'code' => $code,
     'at' => time()
   ],
@@ -31,37 +36,37 @@ return array(
     'at' => time()
   ],
   403 => [
-    'msg' => 'If you keep trying, I\'ll call the police.',
+    'msg' => 'Unauthorized',
     'code' => $code,
     'at' => time()
   ],
   404 => [
-    'msg' => 'Sorry, the requested service does not exist.',
+    'msg' => 'Sorry, the requested service does not exist',
     'code' => $code,
     'at' => time()
   ],
   405 => [
-    'msg' => 'Boy, I cannot do your dishes. This method is not allowed: ' .$_SERVER['REQUEST_METHOD']. '.',
+    'msg' => 'This method is not allowed: ' .$_SERVER['REQUEST_METHOD'],
     'code' => $code,
     'at' => time()
   ],
   406 => [
-    'msg' => 'I can\'t deal with this.',
+    'msg' => 'I can\'t deal with this',
     'code' => $code,
     'at' => time()
   ],
   407 => [
-    'msg' => 'Proxy authentication needed.',
+    'msg' => 'Proxy authentication needed',
     'code' => $code,
     'at' => time()
   ],
   409 => [
-    'msg' => 'Seems like this information already exist.',
+    'msg' => 'Seems like this information already exist',
     'code' => $code,
     'at' => time()
   ],
   500 => [
-    'msg' => 'We\'re fu*dup :S',
+    'msg' => 'Internal server error',
     'code' => $code,
     'at' => time()
   ]

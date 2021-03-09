@@ -9,7 +9,6 @@
  */
 
 use Dotenv\Dotenv;
-use MMWS\Handler\Request;
 use MMWS\Handler\Router;
 use MMWS\Handler\SESSION;
 
@@ -40,6 +39,7 @@ $param = array();
 $router->headers();
 /** Init session */
 SESSION::init();
+SESSION::loadCookies();
 /** Sets request caching interval */
 CACHE::$timeout = 10;
 /** Loads the Routes */
