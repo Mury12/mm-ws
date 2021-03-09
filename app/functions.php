@@ -212,10 +212,10 @@ function pop_encrypt(String $str)
  * @param String $key is the key
  * @return mixed
  */
-
 function post_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
+        $_POST = json_decode(file_get_contents('php://input'), true);
         return $_POST;
     }
 }
@@ -225,11 +225,10 @@ function post_params($key = false)
  * @param String $key is the key
  * @return mixed
  */
-
 function patch_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PATCH') {
-        parse_str(file_get_contents('php://input'), $_PATCH);
+        $_PATCH = json_decode(file_get_contents('php://input'), true);
         return $_PATCH;
     }
 }
@@ -239,21 +238,18 @@ function patch_params($key = false)
  * @param String $key is the key
  * @return mixed
  */
-
 function put_params($key = false)
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) === 'PUT') {
-        parse_str(file_get_contents('php://input'), $_PUT);
+        $_PUT = json_decode(file_get_contents('php://input'), true);
         return $_PUT;
     }
 }
-
 /**
  * Returns a system message based in a code
  * @param Int $errcode the error code came fro mthe database
  * @return String an error message
  */
-
 function get_sysmsg(Int $msgCode)
 {
     if (file_exists('app/System-messages.json')) {
@@ -283,7 +279,6 @@ function pop_password(Int $length = 8)
  * @param String $template the template name
  * @return File|Bool the template or false if template file not found.
  */
-
 function get_part_template(String $template, array $data)
 {
     if (file_exists('app/util/templates/' . $template . '-template.php')) {

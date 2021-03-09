@@ -29,12 +29,12 @@ return [
             ->permission('not')
     ],
     'company' => [
-        'params' => ['companyId'],
         'assign' => [
-            'params' => ['processId'],
+            'params' => ['processId', 'processName'],
             'body' => $e = new Endpoint(),
             $e->get('user/login', 'shown')
         ],
+        'params' => ['companyId'],
         'body' => $e = new Endpoint(),
         $e->get('user/login', 'shown')
     ],

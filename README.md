@@ -32,7 +32,7 @@ to add a new domain to this file.
 The `MMWS\Model\Endpoint component` is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
 
-``` 
+```php
 <?php 
   /**
    *  Loads the Endpoint Model
@@ -64,7 +64,7 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
 Of course there are other controls but its not needed. If you want to know more, check Endpoint model file. Fully documented.
 Just enjoy this following example about how to create a route:
 
-``` 
+```php
 <?php 
 use MMWS\Model\Endpoint
 
@@ -80,7 +80,7 @@ return [
 
   'multi-route' => [
     'route-1' => [
-      'params' => [],
+      'params' => ['param1', 'param2'],
       'body' => [
         $e = new Endpoint(),
         $e->post('page', 'method')
@@ -88,7 +88,8 @@ return [
       ]
     ],
     
-    // You can also use the root URL without the `params` index
+    // You can now use the root URL with the `params` index
+    'params' => ['param1'] // Allowed only one mid argument for a while
     'body' => [
       $e = new Endpoint(),
       $e->get('page', 'method')
@@ -117,7 +118,7 @@ index.php(root) -> Webservice Page ── Middlewares
 
 Preserve this sequence to better workflow and..
 
-``` 
+```php
 /**
  * Use DocBlocks. 
  * As you see, documentation is more important than 
@@ -133,7 +134,7 @@ As any project, there are abstractions you should know before using it:
 
 Use the static class `MMWS\Handler\SESSION` to handle PHP Sessions.
 
-```
+```php
 <?php
 /**
  * Loads the SESSION Class.
@@ -167,7 +168,7 @@ SESSION::done();
 Its possible to easily change headers `content-type`, `http allowed methods`, `CORS` and `headers` simply
 modifying the following global variables in `variables.php`:
 
-```
+```php
   /** Enable CORS to *EXACTLY* this URL */
   define('HTTP_CORS_URI', '*');
 
@@ -198,7 +199,7 @@ like `php mvc-creator.php`.
 
 Usage:
 
-```
+```php
 <?php
 
 use MMWS\Handler\DatabaseModelExtractor;
@@ -214,7 +215,7 @@ in the MVC path. The folders MUST ALREADY EXISTS.
 
 You can convert snake_case to camelCase -- or CameCase -- and vice-versa
 
-```
+```php
 $values = [
     'userName' => 'Garry',
     'userPassword' => 'M&UhanL2'
@@ -224,7 +225,7 @@ $str = MMWS\Handler\CaseHandler::convert($values, 1);
 ```
 
 `$str` will result in:
-```
+```php
 [
    'user_name' => 'Garry'
    'user_password' => 'M&UhanL2'
@@ -236,7 +237,7 @@ $str = MMWS\Handler\CaseHandler::convert($values, 1);
 In `functions.php` you can see a lot of useful functions, such as password generators,
 unique id generator, token generator, error handlers, etc., but the most used are:
 
- - `get_{$METHOD}()`: gets the POST|PATCH|PUT request body params. It's automatically done when the request comes and extracted to the page.
+ - `{$METHOD}_params()`: gets the POST|PATCH|PUT request body params. It's automatically done when the request comes and extracted to the page.
  - `send(Array $content)`: sends the response to the page. MUST BE array.
  - `http_message(Int $errCode)`: gets the corresponding http code error message you set.
  - `get_syserr(Int $errCode)`: gets the system errors you set in the json file. Useful for database returns or internal logging.
@@ -247,7 +248,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 
 ## Directory Tree
 
-``` 
+```
 ├── \app
 │   ├── \_files
 │   │   ├── File A.jpg

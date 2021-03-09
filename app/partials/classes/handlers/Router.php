@@ -138,6 +138,8 @@ class Router
                 $curRoute = false;
                 break;
             }
+            //                                                                                          V-- skipping after this
+            // It is skipping if more than 1 param is given to a middle route like /:company/:user/something/:soomethingId
             if (array_key_exists($key, $matches) && $matches[$key] === $match)
                 unset($matches[$key]);
         }
