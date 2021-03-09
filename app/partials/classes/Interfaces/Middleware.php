@@ -12,21 +12,20 @@ require_once('app/util/ploader.php');
  * ----------
  * 
  * Example Usage:
- * 
+ * ```php
  * use MMWS\Interfaces\Middleware;
  * 
  * class Authentication implements Middleware
  * 
  * {
- * 
- *   function action(){}
- * 
- *   function init(){}
- * 
- *   ... 
- *      
+ *   function action(){ 
+ *      // action code 
+ *   }
+ *   function init(){
+ *     // init code
+ *   }
  * }
- * 
+ * ```
  * ----------
  * @package MMWS
  * @author Andre Mury <mury_gh@hotmail.com>

@@ -28,6 +28,11 @@ global $params;
  */
 global $caching;
 
+/**
+ * @var array $data the data catched from params and body request
+ */
+$data = ["params" => $params, "body" => $body];
+
 
 /**
  * @var Array $procedures array of procedures to perform in the endpoint

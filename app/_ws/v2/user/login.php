@@ -1,59 +1,79 @@
 <?php
 
 /**
- * This is the request for the login system.
- * Authentication is database based.
+ * Here comes the description for this endpoint
+ * Ensure to do it, please.
  * 
- * *** ONLY EDIT IF YOU KNOW WHAT YOU'RE DOING ***
+ * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
-
-use MMWS\Controller\UserController;
 
 
 /**
- * @var string $procedure is the procedure to be called
+ * @var String $procedure the global variable to catch the procedure to be executed
  */
 global $procedure;
 
 /**
- * @var mixed $params are the URL request params
+ * @var Array $body the body variable to catch body request params
+ */
+global $body;
+
+/**
+ * @var Array $params the param variable to catch URL params
  */
 global $params;
 
 /**
- * @var Array $data is the content extracted from the POST|PATCH request
+ * @var Bool $caching check if this endpoints caches requests
  */
-global $data;
+global $caching;
 
-if (array_key_exists('_', $data)) {
-    $procedure = $data['_'];
-    unset($data['_']);
-} else {
-    send(http_message(400));
-    die();
-}
+/**
+ * @var array $data the data catched from params and body request
+ */
+$data = ["params" => $params, "body" => $body];
 
+
+/**
+ * @var Array $procedures array of procedures to perform in the endpoint
+ */
 $procedures = array(
-    /**
-     * Makes a request to the Database for logging in
-     * @param $d the data from the POST
-     */
-    'auth_request' => function ($d) {
-        $u = new UserController($d);
-        if ($res = $u->login()) {
-            return ['res' => true, 'msg' => 'Logged in successfully.'];
-        } else {
-            return ['msg' => 'Incorrect user or password', 'res' => false];
-        }
+    'getUniqueId' => function ($d) {
+        return unique_id($d['len'] ?? 6, $d['hash'] ?? 'sha256');
     },
+    'sayMyName' => function ($d) {
+        return ['msg' => 'My name'];
+    },
+    'session' => function () {
+        return ['session' => $_SESSION, 'cookie' => $_COOKIE];
+    },
+    'shown' => function ($d) {
+        return $d;
+    }
 );
 
-
-
 if (array_key_exists($procedure, $procedures)) {
-    $m = $procedures[$procedure]($data);
+
+    /** Check if this endpoit is caching requests */
+    if ($caching) {
+        $cached = CACHE::check($procedure);
+        /**
+         * CACHEs requests if caching is enabled
+         */
+        if (!$cached) {
+            /**
+             * @var mixed $m result from the procedure
+             */
+            $m = $procedures[$procedure]($params ?? null);
+            CACHE::put($m, $procedure);
+        }
+
+        $m = $m ?? $cached;
+    } else {
+        $m = $procedures[$procedure]($params ?? null);
+    }
     send(is_array($m) ? $m : ['res' => $m]);
 } else {
-    send(http_message(403));
-    die();
+    send(http_message(400));
 }
+return;

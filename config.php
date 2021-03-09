@@ -9,7 +9,6 @@
  */
 
 use Dotenv\Dotenv;
-use MMWS\Handler\Request;
 use MMWS\Handler\Router;
 use MMWS\Handler\SESSION;
 

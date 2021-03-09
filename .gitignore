@@ -28,3 +28,5 @@ composer.lock
 #files
 
 docs/phpdoc*
+.ssh/*
+!.ssh/.gitk*

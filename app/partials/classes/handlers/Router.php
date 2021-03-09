@@ -100,17 +100,22 @@ class Router
      * 
      * @return Array<String>|false the indexed params or false if not succeed
      */
-    private function bindParams($curRoute, &$matches)
+    private function bindParams(array $curRoute, &$matches)
     {
         $params = array();
-        if (sizeof($matches) <= sizeof($curRoute['params'])) {
-            foreach ($curRoute['params'] as $key => $param) {
-                $params[$param] = array_shift($matches);
-            }
-            $curRoute['body']->setEnv($params);
-            return $params;
+        $m = $matches;
+        while (sizeof($m) > sizeof($curRoute['params'])) {
+            array_pop($m);
         }
-        return false;
+
+        // if (sizeof($matches) <= sizeof($curRoute['params'])) {
+        foreach ($curRoute['params'] as $key => $param) {
+            $params[$param] = array_shift($m);
+            array_shift($matches);
+        }
+        return $params;
+        // }
+        // return false;
     }
 
     /**
@@ -122,25 +127,20 @@ class Router
     {
         $curRoute = $this->_routes;
         $params = [];
-        $skip = false;
         foreach ($matches as $key => $match) {
-            $i = 0;
-            $paramCount = 0;
-
-            if (array_key_exists('params', $curRoute) && !$skip) {
-                $curRoute['params'] = $this->bindParams($curRoute, $matches);
-                $skip = true;
-                if(sizeof($matches) == 0) break;
+            if (array_key_exists('params', $curRoute)) {
+                $params = array_merge($this->bindParams($curRoute, $matches), $params);
+                if (sizeof($matches) === 0) break;
             }
-
             if (array_key_exists($match, $curRoute)) {
                 $curRoute = $curRoute[$match];
-            } else {
+            } else if (sizeof($matches) === 0) {
                 $curRoute = false;
                 break;
             }
             unset($matches[$key]);
         }
+        $curRoute['body']->setEnv($params);
         return $curRoute;
     }
 

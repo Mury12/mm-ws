@@ -33,12 +33,16 @@ function report($error)
  * Returns an http message based on the code.
  * Every message must be set in util/errors.php -- Reserve HTTP Codes.
  * @param Int $code the error code such as 404, 500, etc.
+ * @param string $message the message to replace defaults
  * @return Array error code, its message and current time.
  */
-function http_message(Int $code)
+function http_message(Int $code, string $message = null)
 {
     $error = require_once('app/util/errors.php');
     set_http_code($error[$code]['code']);
+    if ($message) {
+        $error[$code]['status'] = $message;
+    }
     report($error[$code]);
     return array_key_exists($code, $error) ? $error[$code] : $error[101];
 }
