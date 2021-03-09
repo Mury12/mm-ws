@@ -4,6 +4,9 @@ namespace MMWS\Handler;
 
 use DateInterval;
 use DateTime;
+use Exception;
+use Firebase\JWT\SignatureInvalidException;
+use MMWS\Factory\RequestExceptionFactory;
 
 /**
  * This is the class to be used into PHP Session management.
@@ -73,8 +76,14 @@ class SESSION
         $cookies = $_COOKIE;
         if ($cookies && array_key_exists('app-token', $cookies)) {
             $jwt = $cookies['app-token'];
-            if (JWTHandler::verify($jwt) && !SESSION::get('@app:jwt')) {
-                SESSION::add('@app:jwt', $jwt);
+            try {
+
+                if (JWTHandler::verify($jwt) && !SESSION::get('@app:jwt')) {
+                    SESSION::add('@app:jwt', $jwt);
+                }
+            } catch (Exception $e) {
+                setcookie('app-token', $jwt, time());
+                throw RequestExceptionFactory::create('Token de acesso inválido.', 401);
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace MMWF\Factory;
+namespace MMWS\Factory;
 
 use MMWS\Handler\Request;
 

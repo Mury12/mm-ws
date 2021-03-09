@@ -111,10 +111,10 @@ This project is MVC (actually Model-Controller-Entity) based using the following
                                       ───────────── Handlers 
                                     /             /    \/    \
                                    / ── Controller -> Model -> Entity
-             renders()            /       
-index.php(root) -> Webservice Page ── Middlewares
+             renders()            /               \ 
+index.php(root) -> Webservice Page ── Middlewares   Factories
                                   \
-                                    Services, Handlers
+                                    Services, Handlers, Factories
 
 ```
 
@@ -244,10 +244,10 @@ Every HTTP error that you want to send to the client should use `RequestExceptio
 $procedures = array(
     'showMeAnError' => function ($d) {
         if($error){
-          $ex = new RequestException();
-          $ex->setMessage(['error' => 'Cannot access this page', 'reason' => 'You are not allowed.']);
-          $ex->setCode(401);
-          throw $ex;
+          throw RequestExceptionFactory::create(
+            ['error' => 'Cannot access this page', 'reason' => 'You are not allowed.'],
+            403
+          )
         }
     }
 );

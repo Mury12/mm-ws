@@ -1,6 +1,6 @@
 <?php
 
-use MMWF\Factory\RequestFactory;
+use MMWS\Factory\RequestFactory;
 use MMWS\Handler\RequestException;
 
 try {

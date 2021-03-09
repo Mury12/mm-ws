@@ -29,10 +29,7 @@ $procedures = array(
         return ['msg' => 'My name'];
     },
     'shown' => function ($d) {
-        $ex = new RequestException();
-        $ex->setMessage(['error' => 'Cannot access this page', 'reason' => 'You are not allowed.']);
-        $ex->setCode(409);
-        throw $ex;
+        return $d;
     }
 );
 

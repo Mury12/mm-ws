@@ -2,6 +2,9 @@
 
 namespace MMWS\Handler;
 
+use MMWF\Factory\RequestFactory;
+use MMWS\Factory\RequestExceptionFactory;
+
 /**
  * Manage the server routes
  * This is the main router handling every route created
@@ -122,6 +125,7 @@ class Router
      * Maps the url params based on the matches
      * 
      * @param Array $matches the matched params
+     * @return mixed
      */
     private function bind(array $matches)
     {
@@ -130,20 +134,33 @@ class Router
         foreach ($matches as $key => $match) {
             if (array_key_exists('params', $curRoute)) {
                 $params = array_merge($this->bindParams($curRoute, $matches), $params);
-                if (sizeof($matches) === 0) break;
+
+                if (array_key_exists($match, $curRoute)) {
+                    $curRoute = $curRoute[$match];
+                }
+
+                if (!sizeof($matches)) break;
             }
             if (array_key_exists($match, $curRoute)) {
                 $curRoute = $curRoute[$match];
-            } else if (sizeof($matches) === 0) {
-                $curRoute = false;
-                break;
+            } elseif (!sizeof($matches)) {
+                throw RequestExceptionFactory::create(null, 404);
+            } elseif (
+                sizeof($matches) && !array_key_exists($match, $curRoute)
+            ) {
+                array_unshift($matches);
+            } else {
+                throw RequestExceptionFactory::create(null, 404);
             }
             //                                                                                          V-- skipping after this
             // It is skipping if more than 1 param is given to a middle route like /:company/:user/something/:soomethingId
             if (array_key_exists($key, $matches) && $matches[$key] === $match)
                 unset($matches[$key]);
         }
-        if (sizeof($matches) > 0) return false;
+        if (sizeof($matches) > 0) {
+            throw RequestExceptionFactory::create(null, 404);
+        }
+
         $curRoute['body']->setEnv($params);
         return $curRoute;
     }
@@ -172,8 +189,7 @@ class Router
             // print_r($route);
             return $route['body'];
         } else {
-            set_http_code(404);
-            return $this->getErrorPage('404');
+            throw RequestExceptionFactory::create(null, 404);
         }
     }
 }
