@@ -1,4 +1,8 @@
 <?php
+
+use MMWS\Factory\RequestFactory;
+use MMWS\Handler\RequestException;
+
 try {
   /** Loads config.php */
   require_once 'config.php';
@@ -7,21 +11,10 @@ try {
   if (!$endpoint) die(send(http_message(404)));
 
   /**
-   * @var String $procedure sets the global variable to catch the procedure to be executed
+   * @var MMWS\Handler\Request contains the request data. If this is null, then the
+   * request wasn't succeed.
    */
-  $procedure;
-
-  /**
-   * @var Array $body sets the body variable to catch body request params
-   */
-  $body;
-
-  /**
-   * @var Array $params sets the param variable to catch URL params
-   */
-  $params;
-
-
+  $request = RequestFactory::create();
 
   /** Allows options request to check server */
   if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -34,13 +27,13 @@ try {
   } else {
     $endpoint->render();
   }
-} catch (Exception $e) {
-  require './app/functions.php';
-  set_http_code(500);
+} catch (RequestException $e) {
+  require_once './app/functions.php';
+  set_http_code($e->getCode());
   header('content-type: application/json');
   die(send(
     http_message(
-      500,
+      $e->getCode(),
       $e->getMessage()
     )
   ));

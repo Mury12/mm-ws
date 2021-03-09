@@ -39,6 +39,7 @@ $param = array();
 $router->headers();
 /** Init session */
 SESSION::init();
+SESSION::loadCookies();
 /** Sets request caching interval */
 CACHE::$timeout = 10;
 /** Loads the Routes */

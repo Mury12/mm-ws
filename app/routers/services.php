@@ -31,9 +31,9 @@ return [
     'company' => [
         'params' => ['companyId'],
         'assign' => [
-            'params' => ['processId'],
+            'params' => ['processName'],
             'body' => $e = new Endpoint(),
-            $e->get('user/login', 'shown')
+            $e->post('user/login', 'shown')
         ],
         'body' => $e = new Endpoint(),
         $e->get('user/login', 'shown')

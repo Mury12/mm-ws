@@ -198,11 +198,11 @@ class Endpoint
      */
     private function getRequestParams()
     {
-        global $body;
+        global $request;
         $method = strtoupper($_SERVER['REQUEST_METHOD']);
         if (str_in($method, ['POST', 'PUT', 'PATCH'])) {
             $fn = strtolower($method) . '_params';
-            $body = $fn();
+            $request->setBody($fn());
         }
         return $method;
     }
@@ -231,14 +231,13 @@ class Endpoint
         $middleware->init();
 
         if ($middleware->Authentication) {
-            global $params;
-            global $procedure;
+            global $request;
             $method = $this->getRequestParams();
 
             if ($req = $this->request->get($method)) {
-                $params = $this->getEnv();
-                $procedure = $req['procedure'];
-                extract($params);
+                $request->setMethod($method);
+                $request->setParams($this->getEnv());
+                $request->setProcedure($req['procedure']);
                 return file_exists($req['page']) ? require_once $req['page'] : die(send(http_message(500)));
             } else {
                 die(send(http_message(405)));
