@@ -297,7 +297,7 @@ class Endpoint
             $params = explode('&', $query);
             foreach ($params as $value) {
                 $queryParam = explode('=', $value);
-                if ($queryParam[1]) {
+                if (isset($queryParam[1])) {
                     $this->query[$queryParam[0]] = $queryParam[1];
                 }
             }
