@@ -187,7 +187,7 @@ class Router
 
         if ($route) {
             if(isset($uri[1])){
-                $route['body']->setQueryParams($uri[1]);
+                $route['body']->setQueryParams();
             }
             return $route['body'];
         } else {
