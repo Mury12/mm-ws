@@ -18,7 +18,7 @@ class Module extends View
      */
     function signup(): array
     {
-        return [$this->data['body']];
+        return [$this->data];
     }
 }
 

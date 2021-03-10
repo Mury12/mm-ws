@@ -22,6 +22,7 @@ class Request
     private $procedure = '';
     private $body = [];
     private $params = [];
+    private $query = [];
     private $method = null;
 
     function __construct()
@@ -58,7 +59,7 @@ class Request
     /**
      * Sets the Body of the request
      */
-    function setBody($body)
+    function setBody(array $body)
     {
         $this->body = $body;
     }
@@ -75,10 +76,11 @@ class Request
     /**
      * Sets the Params of the request
      */
-    function setParams($params)
+    function setParams(array $params)
     {
         $this->params = $params;
     }
+
 
     /**
      * Returns the Params of the request
@@ -89,6 +91,22 @@ class Request
         return $this->params;
     }
 
+    /**
+     * Sets the URL query of the request
+     */
+    function setQuery(array $query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Returns the Params of the request
+     * @return string[]
+     */
+    function getQuery()
+    {
+        return $this->query;
+    }
     /**
      * Sets the Procedure of the request
      */
@@ -130,7 +148,7 @@ class Request
      */
     function data()
     {
-        return ['params' => $this->params, 'body' => $this->body];
+        return ['params' => $this->params, 'body' => $this->body, 'query' => $this->query];
     }
 
     /**
