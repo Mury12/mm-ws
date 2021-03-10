@@ -3,18 +3,11 @@
 use MMWS\Model\Endpoint;
 
 return [
-    'getUniqId' => [
-        'uid' => [
+    'unique-id' => [
             'params' => ['len', 'hash'],
             'body' =>
             $e = new Endpoint(),
-            $e->get('uniqid_gen', 'getUniqueId')
+            $e->get('uniqid-gen', 'getUniqueId')
                 ->cache()
-        ],
-        'body' => [
-            $e = new Endpoint(),
-            $e->get('uniqid_gen', 'getUniqueId')
-                ->cache()
-        ]
     ],
 ];

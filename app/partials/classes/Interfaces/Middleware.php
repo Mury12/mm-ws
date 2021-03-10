@@ -31,7 +31,7 @@ require_once('app/util/ploader.php');
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.6.1-alpha
  */
-interface Middleware
+interface IMiddleware
 {
     /**
      * The action that will be called by initializer

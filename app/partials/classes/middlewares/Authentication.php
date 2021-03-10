@@ -10,15 +10,15 @@
 
 namespace MMWS\Middleware;
 
-use MMWS\Interfaces\Middleware;
-use MMWS\Controller\UserController;
+use Exception;
+use MMWS\Interfaces\IMiddleware;
+use MMWS\Handler\JWTHandler;
 
 // require_once('app/util/ploader.php');
 
-class Authentication implements Middleware
+class Authentication implements IMiddleware
 {
     private $access;
-    private $user;
     const TOKEN = USER_AUTHORIZATION_TOKEN;
 
     function __construct()
@@ -26,10 +26,9 @@ class Authentication implements Middleware
         global $endpoint;
         if (is_array($endpoint)) {
             $this->access = $endpoint[0]->getAccessLevel();
-        }else{
+        } else {
             $this->access = $endpoint->getAccessLevel();
         }
-        $this->user = new UserController(['session_token' => self::TOKEN]);
         return $this->init();
     }
 
@@ -38,11 +37,15 @@ class Authentication implements Middleware
      */
     function action()
     {
-        return $this->access === 'auth'
-            ? $this->user->verify()
-            : ($this->access  === 'not'
-                ? !$this->user->verify()
-                : true);
+        try {
+            return $this->access === 'auth'
+                ? JWTHandler::verify(self::TOKEN)
+                : ($this->access  === 'not'
+                    ? !JWTHandler::verify(self::TOKEN)
+                    : true);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**

@@ -1,7 +1,9 @@
 <?php
 
+namespace MMWS\Middleware;
+
 use MMWS\Handler\SESSION;
-use MMWS\Interfaces\Middleware;
+use MMWS\Interfaces\IMiddleware;
 
 /**
  * Implements request caching with timeout
@@ -9,7 +11,7 @@ use MMWS\Interfaces\Middleware;
  * @param Int $timeout time in seconds to REDO the request. Default is 10 seconds 
  * @param Int $interval interval between requests. Default is 1 second
  */
-class CACHE implements Middleware
+class CACHE implements IMiddleware
 {
 
 
@@ -50,9 +52,9 @@ class CACHE implements Middleware
         if (SESSION::get($cachedName)) {
             $cached = json_decode(SESSION::get($cachedName), true);
 
-            $now = new DateTime();
+            $now = new \DateTime();
 
-            $diff = date_diff($now, new DateTime($cached['time']['date']))->format('%s');
+            $diff = date_diff($now, new \DateTime($cached['time']['date']))->format('%s');
             if ($diff < self::$timeout) {
                 return $cached['result'];
             }
@@ -66,7 +68,7 @@ class CACHE implements Middleware
     static function put($result, $name)
     {
         $cachedName = $name . '_cache';
-        $now = new DateTime();
+        $now = new \DateTime();
         $request = array(
             'time' => $now,
             'result' => $result

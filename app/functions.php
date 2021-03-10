@@ -56,11 +56,13 @@ function get_root_uri()
 
 /**
  * Spits the requested content
- * @param Array $content is the formatted array to put on the response message
+ * @param Array|null $content is the formatted array to put on the response message
  */
-function send(array $content)
+function send($content = null)
 {
-    print_r(json_encode($content, JSON_INVALID_UTF8_IGNORE));
+    if ($content) {
+        print_r(json_encode($content, JSON_INVALID_UTF8_IGNORE));
+    }
 }
 
 function auth_enabled()

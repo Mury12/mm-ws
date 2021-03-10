@@ -7,18 +7,17 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
-use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Interfaces\View;
-
 
 class Module extends View
 {
     /**
      * Creates an user
      */
-    function login(): array
+    function getUniqueId(): array
     {
-        return [$this->data['body']];
+        $params = $this->data['params'];
+        return unique_id($params['len'] ?? 6, $params['hash'] ?? 'sha256');
     }
 }
 
