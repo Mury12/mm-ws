@@ -241,22 +241,25 @@ Every HTTP error that you want to send to the client should use `RequestExceptio
 ```php
 <?php
 
-$procedures = array(
-    'showMeAnError' => function ($d) {
-        if($error){
+global $request;
+
+class Module extends View
+{
+    /**
+     * Creates an user
+     */
+    function showMeAnError(): array
+    {
+       if($error){
           throw RequestExceptionFactory::create(
             ['error' => 'Cannot access this page', 'reason' => 'You are not allowed.'],
             403
           )
         }
     }
-);
-
-// Or either
-
-$procedures = array(
-    'showMeAnError' => function ($d) {
-        try{
+    function showMeAnotherError(): array
+    {
+       try{
           // something
         }catch(RequestExeption $ex)
           $ex->setMessage(['error' => 'Cannot access this page', 'reason' => 'You are not allowed.']);
@@ -264,8 +267,8 @@ $procedures = array(
           throw $ex;
         }
     }
-);
-
+}
+return new View($request);
 ```
 
 ### General Functions
