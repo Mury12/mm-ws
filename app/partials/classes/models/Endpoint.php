@@ -2,10 +2,12 @@
 
 namespace MMWS\Model;
 
+use MMWS\Middleware\CACHE;
+use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Queue;
 use MMWS\Middleware\Authentication;
 use MMWS\Handler\Request;
-
+use MMWS\Interfaces\View;
 
 /**
  * Creates endpoints and configure it.
@@ -220,7 +222,7 @@ class Endpoint
          * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed AFTER the page rendering
          */
         $middleware = new Queue(
-            'MMWS\Interfaces\Middleware',
+            'MMWS\Interfaces\IMiddleware',
             array_merge(
                 array(
                     [new Authentication()],
@@ -230,7 +232,10 @@ class Endpoint
         );
         $middleware->init();
 
-        if ($middleware->Authentication) {
+        if (
+            property_exists($middleware, 'Authentication') &&
+            $middleware->Authentication
+        ) {
             global $request;
             $method = $this->getRequestParams();
 
@@ -238,13 +243,46 @@ class Endpoint
                 $request->setMethod($method);
                 $request->setParams($this->getEnv());
                 $request->setProcedure($req['procedure']);
-                return file_exists($req['page']) ? require_once $req['page'] : die(send(http_message(500)));
+
+                if (file_exists($req['page'])) {
+                    $view = require_once $req['page'];
+                } else {
+                    throw RequestExceptionFactory::create('The requested file does\'not exist.', 404);
+                };
+                return $this->checkAndRender($request, $view);
             } else {
                 die(send(http_message(405)));
             }
         } else {
-            die(send(http_message(403)));
+            die(send(http_message(401)));
         }
+    }
+
+    private function checkAndRender(Request $request, View $view)
+    {
+        /** Check if this endpoit is caching requests */
+        if ($this->caching) {
+            global $cached;
+            try {
+                $cached = CACHE::check($request->getProcedure());
+                /**
+                 * CACHEs requests if caching is enabled
+                 */
+                if (!$cached) {
+                    /**
+                     * @var mixed $m result from the procedure
+                     */
+                    $m = $view->call();
+                    CACHE::put($m, $request->getProcedure());
+                }
+                $m = $m ?? $cached;
+            } catch (\Exception $e) {
+                throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
+            }
+        } else {
+            $m = $view->call();
+        }
+        return $m;
     }
 
     /**

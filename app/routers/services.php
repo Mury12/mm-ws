@@ -19,24 +19,14 @@ use MMWS\Model\Endpoint;
 return [
     'login' => [
         'body' => $e = new Endpoint(),
-        $e->post('user/login', 'auth_request')
+        $e->post('user/login', 'login')
             ->permission('any')
     ],
 
     'signup' => [
-        'body' => $e = new Endpoint,
-        $e->get('user/signup', 'create_user')
-            ->permission('not')
-    ],
-    'company' => [
-        'params' => ['companyId'],
-        'assign' => [
-            'params' => ['processName'],
-            'body' => $e = new Endpoint(),
-            $e->post('user/login', 'shown')
-        ],
         'body' => $e = new Endpoint(),
-        $e->get('user/login', 'shown')
+        $e->post('user/signup', 'signup')
+            ->permission('not')
     ],
 
 ];

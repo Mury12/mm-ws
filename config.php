@@ -11,6 +11,7 @@
 use Dotenv\Dotenv;
 use MMWS\Handler\Router;
 use MMWS\Handler\SESSION;
+use MMWS\Middleware\CACHE;
 
 /** Composer autoload */
 require_once __DIR__ . '/vendor/autoload.php';

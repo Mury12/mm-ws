@@ -23,18 +23,19 @@ try {
   }
 
   if (is_array($endpoint)) {
-    $endpoint[0]->render();
-  } else {
-    $endpoint->render();
+    $endpoint = $endpoint[0];
   }
+  return send($endpoint->render());
 } catch (RequestException $e) {
   require_once './app/functions.php';
   set_http_code($e->getCode());
   header('content-type: application/json');
-  die(send(
-    http_message(
-      $e->getCode(),
-      $e->getMessage()
-    )
-  ));
+
+  die(send(http_message($e->getCode(), $e->getMessage())));
+} catch (Error $te) {
+  require_once './app/functions.php';
+  set_http_code(500);
+  header('content-type: application/json');
+
+  die(send(http_message(500, $te->getMessage())));
 }

@@ -2,10 +2,10 @@
 
 namespace MMWS\Middleware;
 
-use MMWS\Interfaces\Middleware;
+use MMWS\Interfaces\IMiddleware;
 // require_once(explode('app/', __DIR__)[0].'app/partials/classes/interfaces/Middleware.php');
 
-class WSRP implements Middleware
+class WSRP implements IMiddleware
 {
     function __construct()
     {
