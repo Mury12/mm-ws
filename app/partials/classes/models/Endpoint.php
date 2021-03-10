@@ -73,6 +73,11 @@ class Endpoint
     public $body = array();
 
     /**
+     * @var Array $query the query params in the url
+     */
+    public $query = array();
+
+    /**
      * @var Array<Middleware> $middlewares middlewares injected to the page. This will be executed strictly after the default middlewares.
      */
     public $middlewares = array();
@@ -242,6 +247,7 @@ class Endpoint
             if ($req = $this->request->get($method)) {
                 $request->setMethod($method);
                 $request->setParams($this->getEnv());
+                $request->setQuery($this->query);
                 $request->setProcedure($req['procedure']);
 
                 if (file_exists($req['page'])) {
@@ -283,6 +289,19 @@ class Endpoint
             $m = $view->call();
         }
         return $m;
+    }
+
+    function setQueryParams(string $query)
+    {
+        if ($query) {
+            $params = explode('&', $query);
+            foreach ($params as $value) {
+                $queryParam = explode('=', $value);
+                if ($queryParam[1]) {
+                    $this->query[$queryParam[0]] = $queryParam[1];
+                }
+            }
+        }
     }
 
     /**

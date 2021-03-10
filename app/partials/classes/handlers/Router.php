@@ -164,7 +164,7 @@ class Router
         $curRoute['body']->setEnv($params);
         return $curRoute;
     }
-
+    
     function getErrorPage(String $err_code)
     {
         return $this->_routes['error'][$err_code]['body'];
@@ -177,16 +177,18 @@ class Router
      */
     function get()
     {
-        $route = substr($_SERVER['REQUEST_URI'], 1);
-        // $route = explode('?', $slug)[0];
+        $uri = substr($_SERVER['REQUEST_URI'], 1);
+        $uri = explode('?', $uri);
+        $route = $uri[0];
         $route = rtrim($route, "/");
         $matches = explode('/', $route);
-
 
         $route = $this->bind($matches);
 
         if ($route) {
-            // print_r($route);
+            if(isset($uri[1])){
+                $route['body']->setQueryParams($uri[1]);
+            }
             return $route['body'];
         } else {
             throw RequestExceptionFactory::create(null, 404);
