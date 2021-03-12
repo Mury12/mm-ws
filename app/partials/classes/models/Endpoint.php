@@ -122,9 +122,9 @@ class Endpoint
      * 
      * @return MMWS\Handler\Endpoint self
      */
-    public function post($page, $procedure, Int $v = 2)
+    public function post($page, $procedure, array $opts = [])
     {
-        $this->request->add("POST", $page, $procedure);
+        $this->request->add("POST", $page, $procedure, $opts);
         return $this;
     }
     /**
@@ -137,9 +137,9 @@ class Endpoint
      * 
      * @return MMWS\Handler\Endpoint self
      */
-    public function patch($page, $procedure, Int $v = 2)
+    public function patch($page, $procedure, array $opts = [])
     {
-        $this->request->add("PATCH", $page, $procedure);
+        $this->request->add("PATCH", $page, $procedure, $opts);
         return $this;
     }
     /**
@@ -152,9 +152,9 @@ class Endpoint
      * 
      * @return MMWS\Handler\Endpoint self
      */
-    public function put($page, $procedure, Int $v = 2)
+    public function put($page, $procedure, array $opts = [])
     {
-        $this->request->add("PUT", $page, $procedure);
+        $this->request->add("PUT", $page, $procedure, $opts);
         return $this;
     }
     /**
@@ -167,9 +167,9 @@ class Endpoint
      * 
      * @return MMWS\Handler\Endpoint self
      */
-    public function get($page, $procedure, Int $v = 2)
+    public function get($page, $procedure, array $opts = [])
     {
-        $this->request->add("GET", $page, $procedure);
+        $this->request->add("GET", $page, $procedure, $opts);
         return $this;
     }
 
@@ -181,7 +181,7 @@ class Endpoint
      */
     public function socket($page)
     {
-        $this->request->add("GET", $page, '');
+        $this->request->add("GET", $page, '', []);
         return $this;
     }
     /**
@@ -194,9 +194,9 @@ class Endpoint
      * 
      * @return MMWS\Handler\Endpoint self
      */
-    public function delete($page, $procedure, Int $v = 2)
+    public function delete($page, $procedure, array $opts = [])
     {
-        $this->request->add("DELETE", $page, $procedure);
+        $this->request->add("DELETE", $page, $procedure, $opts);
         return $this;
     }
 
@@ -223,15 +223,14 @@ class Endpoint
      */
     public function render()
     {
+        global $request, $middlewares;
         /**
          * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed AFTER the page rendering
          */
         $middleware = new Queue(
             'MMWS\Interfaces\IMiddleware',
             array_merge(
-                array(
-                    [new Authentication()],
-                ),
+                $middlewares,
                 $this->middlewares
             )
         );
@@ -241,7 +240,6 @@ class Endpoint
             property_exists($middleware, 'Authentication') &&
             $middleware->Authentication
         ) {
-            global $request;
             $method = $this->getRequestParams();
 
             if ($req = $this->request->get($method)) {
@@ -267,7 +265,7 @@ class Endpoint
     private function checkAndRender(Request $request, View $view)
     {
         /** Check if this endpoit is caching requests */
-        if ($this->caching) {
+        if ($this->caching && $_SERVER['REQUEST_METHOD'] === 'GET') {
             global $cached;
             try {
                 $cached = CACHE::check($request->getProcedure());
@@ -324,7 +322,7 @@ class Endpoint
 
     /**
      * Set or returns if this is an Endpoint page. Will be deprecated soon.
-     * @deprecated in v1.0.1
+     * @deprecated in v0.9.1 
      */
     public function isApi($bool = true)
     {

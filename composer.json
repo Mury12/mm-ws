@@ -2,5 +2,8 @@
     "require": {
         "vlucas/phpdotenv": "^5.1",
         "firebase/php-jwt": "^5.2"
+    },
+    "scripts": {
+        "create-module": "php create-module.php"
     }
 }

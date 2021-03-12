@@ -9,12 +9,13 @@
 if (!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if (!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
 if (!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
-    
-if (!\file_exists('./variables-local.php')) {
+
+if (!\file_exists('app/config/local/variables-local.php')) {
 
     /** * Route protector use flag (not quite done...) */
     define('_WILL_IT_SMITH_', true);
-
+    /** Enabling debug mode will throw all errors to the server response */
+    define('DEBUG_MODE', 0);
     /** * Global session save path */
     ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 
@@ -57,4 +58,4 @@ if (!\file_exists('./variables-local.php')) {
     // define('USER_AUTHORIZATION_TOKEN', 'AUTHORIZED');
     $key = file_get_contents($_ENV['JWT_KEY_PATH']);
     define('_JWT_DEFINED_KEY_', $key);
-} else require_once './variables-local.php';
+} else require_once 'app/config/local/variables-local.php';

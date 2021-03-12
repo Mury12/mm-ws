@@ -16,7 +16,7 @@ class Module extends View
     /**
      * Creates an user
      */
-    function returnRequestData(): array
+    function exampleMethod(): array
     {
 
         if (sizeof($this->data['body']) || sizeof($this->data['params'])) {

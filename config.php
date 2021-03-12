@@ -11,7 +11,10 @@
 use Dotenv\Dotenv;
 use MMWS\Handler\Router;
 use MMWS\Handler\SESSION;
+use MMWS\Middleware\Authentication;
 use MMWS\Middleware\CACHE;
+use MMWS\Middleware\Throttle;
+use MMWS\Middleware\Trottle;
 
 /** Composer autoload */
 require_once __DIR__ . '/vendor/autoload.php';
@@ -40,7 +43,9 @@ $param = array();
 $router->headers();
 /** Init session */
 SESSION::init();
-SESSION::loadCookies();
+/** Sets up Too many request middleware. 100 requests in 60 minutes max. Timeout 10 min */
+$tmr = new Throttle(100, 60, 600);
+$tmr->init();
 /** Sets request caching interval */
 CACHE::$timeout = 10;
 /** Loads the Routes */
@@ -49,7 +54,8 @@ $routes = require_once('app/routes.php');
 $router->init($routes);
 /** Loads the page content (JSON ONLY) */
 $endpoint  = $router->get();
-
+/** Sets default middlewares that will be used in every page */
+$middlewares = [[new Authentication()]];
 /**
  * @var Bool $caching gets if the endpoint is caching
  */

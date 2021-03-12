@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * USING MMWS v0.9.5
+ * @see https://github.com/mury12/mm-ws for more information
+ * and updates.
+ */
+
 use MMWS\Factory\RequestFactory;
 use MMWS\Handler\RequestException;
 
@@ -33,9 +39,13 @@ try {
 
   die(send(http_message($e->getCode(), $e->getMessage())));
 } catch (Error $te) {
+  require_once './app/config/variables.php';
   require_once './app/functions.php';
   set_http_code(500);
   header('content-type: application/json');
 
-  die(send(http_message(500, $te->getMessage())));
+  if (defined('DEBUG_MODE') && DEBUG_MODE === 1) {
+    die(send(http_message(500, (array) $te)));
+  }
+  die(send(http_message(500, 'Houve um erro inesperado em nosso servidor, mas nossos desenvolvedores já estão resolvendo.')));
 }

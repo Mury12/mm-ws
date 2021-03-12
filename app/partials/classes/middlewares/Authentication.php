@@ -56,5 +56,6 @@ class Authentication implements IMiddleware
         if ($this->access) {
             return $this->action();
         }
+        return true;
     }
 }

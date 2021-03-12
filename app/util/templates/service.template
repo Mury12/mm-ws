@@ -15,16 +15,6 @@
  */
 
 use MMWS\Factory\EndpointFactory;
+use MMWS\Model\Request;
 
-return [
-    'login' => [
-        'body' => EndpointFactory::create()
-            ->post('user/login', 'login')
-            ->permission('any')
-    ],
-    'signup' => [
-        'body' => EndpointFactory::create()
-            ->post('user/signup', 'signup')
-            ->permission('not')
-    ],
-];
+{RETURN_ROUTE_ARRAY}

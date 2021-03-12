@@ -35,7 +35,6 @@ class SESSION
     static function init()
     {
         session_start();
-        SESSION::loadCookies();
     }
 
     /**
