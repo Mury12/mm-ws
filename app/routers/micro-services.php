@@ -1,13 +1,12 @@
 <?php
 
-use MMWS\Model\Endpoint;
+use MMWS\Factory\EndpointFactory;
 
 return [
     'unique-id' => [
-            'params' => ['len', 'hash'],
-            'body' =>
-            $e = new Endpoint(),
-            $e->get('uniqid-gen', 'getUniqueId')
-                ->cache()
+        'params' => ['len', 'hash'],
+        'body' => $e = EndpointFactory::create()
+            ->get('uniqid-gen', 'getUniqueId')
+            ->cache()
     ],
 ];

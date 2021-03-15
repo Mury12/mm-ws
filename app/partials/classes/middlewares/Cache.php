@@ -47,8 +47,7 @@ class CACHE implements IMiddleware
      */
     static function check($name)
     {
-
-        $cachedName = $name . '_' . $_SERVER['REQUEST_URI'] . '_cache';
+        $cachedName = $name . '_cache';
         if (SESSION::get($cachedName)) {
             $cached = json_decode(SESSION::get($cachedName), true);
 
@@ -67,7 +66,7 @@ class CACHE implements IMiddleware
      */
     static function put($result, $name)
     {
-        $cachedName = $name . '_' . $_SERVER['REQUEST_URI'] . '_cache';
+        $cachedName = $name . '_cache';
         $now = new \DateTime();
         $request = array(
             'time' => $now,
