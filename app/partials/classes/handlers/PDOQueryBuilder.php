@@ -17,7 +17,7 @@ use ValueError;
  * 
  * Note that the UPDATE and DELETE statements MUST BE followed by a `WHERE` parameter.
  * 
- * To add a `WHERE` parameter, call `$stmt->and($field, $value)` function.
+ * To add a `WHERE` parameter, call `$stmt->where($field, $value)` function.
  * 
  * -------------
  * 
@@ -32,16 +32,16 @@ use ValueError;
  * 
  * // Select John
  * $stmt->select(['id as userId', 'name']);
- * $stmt->and('name', 'jon');
+ * $stmt->where('name', 'jon');
  * $result = $stmt->run();
  * 
  * $stmt->update(['email' => 'john@mail.com', 'name' => 'john'])
- * $stmt->and('id', 1);
+ * $stmt->where('id', 1);
  * $result = $stmt->run();
  * 
  * // Delete Jogn
  * $stmt->delete();
- * $stmt->and('id', 1);
+ * $stmt->where('id', 1);
  * $result = $stmt->run();
  * 
  * // Raw query
@@ -320,10 +320,13 @@ class PDOQueryBuilder
 
     /**
      * Creates a DELETE statement
-     * @param array $fields the fields to be selected. If none is set, then will select *. Aliases can be used.
+     * To run a delete statement, a WHERE Must be placed in order to avoid
+     * catastrophic mass deletions accidentaly.
      * 
      * ```php
-     * $stmt->select(['id as userId', 'name', 'email']);
+     * $stmt->delete();
+     * $stmt->and('id', 2);
+     * $stmt->run();
      * ```
      * 
      * @return PDOQueryBuilder
@@ -338,10 +341,15 @@ class PDOQueryBuilder
 
     /**
      * Creates an UPDAYE statement
-     * @param array $fields the fields to be selected. If none is set, then will select *. Aliases can be used.
+     * To eprform an update statement, a WHERE must be placed in order to avoid
+     * accidental unwanted updates.
+     * 
+     * @param array $fields the fields to be updated with its values, as below
      * 
      * ```php
      * $stmt->update(['name'=> 'John', 'email'=>'john@mail.com']);
+     * $stmt->and('id', 1);
+     * $stmt->run();
      * ```
      * 
      * @return PDOQueryBuilder
@@ -414,6 +422,28 @@ class PDOQueryBuilder
                 ? $this->query .= " OR `$field` $op NULL"
                 : $this->query .= " AND `$field` $op '" . $braces . $value . $braces . "'";
         return $this;
+    }
+
+    /**
+     * Adds a WHERE operator to the string.
+     * If it is the first call, a WHERE clause will be added, combined to the `PDOQueryBuilder::or` method.
+     * If it's not, an AND operator will be added.
+     * 
+     * Alias to the `and` method.
+     * 
+     * @param string $field the column name 
+     * @param string $val the value to be matched
+     * @param string $op optional operator.
+     * Supports SQL operators (<,>,<=,>=,<>,=,!=,LIKE,NOT LIKE) to simulate IS NULL, use value = NULL and operador = IS;
+     * 
+     * ```php
+     * $stmt->where('name', 'John', 'LIKE');
+     * ```
+     * @return PDOQueryBuilder
+     */
+    function where(string $column, string $val, string $op = '=')
+    {
+        return $this->and($column, $val, $op);
     }
 
     /**
