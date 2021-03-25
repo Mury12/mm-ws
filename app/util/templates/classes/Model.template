@@ -75,4 +75,36 @@ class {CLASS_NAME}
     {
         return $this->entity->delete();
     }
+
+    /**
+     * Returns an instance of the object in an array format,
+     * the NULL values will not be contained in this array.
+     *
+     * This is an useful method when desired to obtain the
+     * database column names in the right format and its values,
+     * when using the built-in PDOQueryBuilder.
+     *
+     * ```php
+     *  $fields = $model->toArray();
+     *  $stmt = new PDOQueryBuilder($model->table);
+     *  $stmt->insert($fields);
+     *  $stmt->run();
+     * ```
+     *
+     * @param bool $snake if should convert to snake_case.
+     * @return string[]
+     */
+    public function toArray($snake = true): array
+    {
+        $arr = [];
+        foreach ((array) $this as $key => $prop) {
+            if (!($key === 'entity' || $key === 'table') && $prop) {
+                $k = $snake
+                    ? CaseHandler::convert($key, 1)
+                    : $key;
+                $arr[$k] = $prop;
+            }
+        }
+        return $arr;
+    }
 }
