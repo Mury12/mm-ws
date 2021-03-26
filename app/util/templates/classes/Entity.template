@@ -13,6 +13,10 @@
  
 namespace {VENDOR}\Entity;
 use {VENDOR}\Model\{USE_CLASS};
+use {VENDOR}\Controller\{USE_CLASS}Controller;
+use MMWS\Handler\PDOQueryBuilder;
+use MMWS\Factory\RequestExceptionFactory;
+use PDOException;
 
 class {CLASS_NAME}
 {
@@ -21,14 +25,35 @@ class {CLASS_NAME}
 
     public function __construct({USE_CLASS} $model)
     {
-        $this->model = new {USE_CLASS}($model);
+        $this->model = $model;
     }
 
     /**
      * Saves this instance to the database
      */
-    public function save()
+    public function save(): array
     {
+        try {
+                $fields = $this->model->toArray();
+                /**
+                 * Checks if an instance with the same data already exists.
+                 * Change this $fields to the wanted keys.
+                 */
+                $instanceExists = $this->get(['filters' => $fields], false, false);
+
+                if(!sizeof($instanceExists)){
+                    $stmt = new PDOQueryBuilder($this->model->table);
+                    $stmt->insert($fields);
+
+                    // stmt->run returns last insert id.
+                    $id = $stmt->run();
+                    return ['id' => $id['id']];
+                }else{
+                    throw RequestExceptionFactory::create("Data already exists", 409);
+                }
+        } catch (PDOException $e) {
+            throw RequestExceptionFactory::create("Something bad happened while performing this action", 500);
+        }
     }
 
     /**
@@ -36,27 +61,119 @@ class {CLASS_NAME}
      */
     public function update()
     {
+        /**
+         * @var {USE_CLASS} $has{USE_CLASS};
+         */
+        $has{USE_CLASS} = $this->getOne(['*'], true);
+        if ($has{USE_CLASS}) {
+            $fields = $this->model->toArray();
+            $stmt = new PDOQueryBuilder($this->model->table);
+            $stmt->update($fields);
+            $stmt->where('id', $this->model->id);
+
+            $stmt->run();
+            return [];
+        } else {
+            throw RequestExceptionFactory::create("Request doesn't contains a valid id", 422);
+        }
     }
 
     /**
-     * Get one instance from the database
+     * Get one or a set of instances of the database.
+     * @param array $filters the filters to apply. If it is single, filters will be
+     * seen as return fields.
+     * @param bool $asobj if true, will return an object instead of array.
+     * 
+     * @return array|{USE_CLASS}
      */
-    public function get()
+    public function get(array $filters = [], bool $asobj = false, string $aggregator = 'AND')
     {
+        if ($this->model->id) {
+            return $this->getOne($filters, $asobj);
+        } else {
+            return $this->getAll($filters, $asobj, $aggregator);
+        }
+    }
+
+    /**
+     * Get one instance from the database and returns 
+     * as a SELF::CLASS
+     * @param array $fields fields to return.
+     * @param array $asobj returns as YooUser Object
+     * 
+     * @return array|{USE_CLASS}
+     */
+    private function getOne(array $fields = [], bool $asobj = false)
+    {
+        $columns = sizeof($fields) ? $fields : ['*'];
+        try {
+            $stmt = new PDOQueryBuilder($this->model->table, 1);
+            $stmt->select($columns);
+            $stmt->where('id', $this->model->id);
+
+            $instance = $stmt->run();
+            if (sizeof($instance))
+                return $asobj
+                    ? (new {USE_CLASS}Controller($instance[0]))->model
+                    : $instance[0];
+            else throw RequestExceptionFactory::create('Object not found', 422);
+        } catch (\PDOException $e) {
+            throw RequestExceptionFactory::create('Something bad happened while performing this action', 500);
+        }
     }
 
     /**
      * Get all the instances from the database and returns 
-     * as an SELF::CLASS array
+     * as a SELF::CLASS array or a pure indexed array
+     * @param array $fields fields to return.
+     * @param array $asobj returns as {USE_CLASS} Object
+     * @param bool $and sets if the filter sould be put with AND or OR
+
+     * @return array|Array<{USE_CLASS}>
      */
-    public function getAll()
+    public function getAll(array $filters = [], bool $asobj = false, bool $and = true)
     {
+        $fields  = $filters['fields'] ?? [];
+        $columns = sizeof($fields) ? $fields : ['*'];
+        try {
+            $rowLimit = $filters['amount'] ?? null;
+            $page = $filters['page'] ?? null;
+
+            $stmt = new PDOQueryBuilder($this->model->table, $rowLimit, $page);
+
+            $stmt->select($columns);
+            if (isset($filters['filters'])) {
+                $stmt->setFilters($filters['filters'], false);
+            }
+            // $stmt->order(['name' => 'ASC']);
+            $instances = $stmt->run();
+            if ($asobj) {
+                return array_map(function ($instance) {
+                    return (new {USE_CLASS}Controller($instance))->model;
+                }, $instances);
+            } else return $instances;
+        } catch (\PDOException $e) {
+            throw RequestExceptionFactory::create('Something bad happened while performing this action', 500);
+        }
+        return [];
     }
+
 
     /**
      * Removes this instance from the database
      */
     public function delete()
     {
+        try {
+            $this->get();
+            $stmt = new PDOQueryBuilder($this->model->table);
+            $stmt->delete();
+            $stmt->where('id', $this->model->id);
+
+            // By standarization, DELETE method should return an empty body either if success or not.
+            return $stmt->run();
+        } catch (PDOException $e) {
+            throw RequestExceptionFactory::create("Something bad happened while performing this action", 500);
+        }
     }
 }

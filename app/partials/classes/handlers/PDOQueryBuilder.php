@@ -85,12 +85,12 @@ class PDOQueryBuilder
     const QUERY_DELETE = 4;
     const QUERY_RAW = 5;
 
-    function __construct(string $tableName, int $limit = 3, int $page = 1)
+    function __construct(string $tableName, $limit = 3, $page = 1)
     {
         $this->table = $tableName;
         $this->limit = $limit >= 1 ? $limit : 1;
         $this->page = $page >= 1 ? $page - 1 : 0;
-        $offset = (($this->page) * $this->limit) - 1;
+        $offset = (($this->page) * $this->limit);
         $this->offset = $offset >= 0 ? $offset : 0;
     }
 
@@ -487,7 +487,7 @@ class PDOQueryBuilder
      * $stmt->([])
      * ```
      */
-    function setFilters(array $filters, bool $and = false): PDOQueryBuilder
+    function setFilters(array $filters, bool $and = true): PDOQueryBuilder
     {
         $aggregator = $and ? 'AND' : 'OR';
         $and = [];
@@ -495,7 +495,7 @@ class PDOQueryBuilder
             $value = $this->sanitize($val);
             if (stripos($value, '|')) {
                 $values = explode('|', $value);
-                $str = " (`$filter` LIKE '%" . implode("%' $aggregator `$filter` LIKE '%", $values) . "%')";
+                $str = " (`$filter` LIKE '%" . implode("%' OR `$filter` LIKE '%", $values) . "%')";
             } else $str = "`$filter` LIKE '%$value%'";
             $and[] = $str;
         }

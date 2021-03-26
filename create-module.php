@@ -79,12 +79,12 @@ if ($argc === 3) {
 
         // Text to be added to the end of the array
         $text = "\t'$uri' => [\n";
-        $text .= "\t\t'params' => ['param1','param2'],\n";
+        $text .= "\t\t'params' => ['" . $folder . "Id'],\n";
         $text .= "\t\t'body' => EndpointFactory::create()\n";
-        $text .= "\t\t\t->post('$folder/$name', 'exampleMethod')\n";
-        $text .= "\t\t\t->get('$folder/$name', 'exampleMethod')\n";
-        $text .= "\t\t\t->put('$folder/$name', 'exampleMethod')\n";
-        $text .= "\t\t\t->delete('$folder/$name', 'exampleMethod'),\n";
+        $text .= "\t\t\t->post('$folder/$name', 'create')\n";
+        $text .= "\t\t\t->get('$folder/$name', 'get')\n";
+        $text .= "\t\t\t->put('$folder/$name', 'update')\n";
+        $text .= "\t\t\t->delete('$folder/$name', 'delete'),\n";
         $text .= "\t\t// Add children routes calling the http methods from endpoint\n";
         $text .= "\t\t'another-children-route' => [\n";
         $text .= "\t\t\t'body' => EndpointFactory::create()\n";

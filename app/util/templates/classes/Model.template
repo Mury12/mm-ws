@@ -13,6 +13,7 @@
  
 namespace {VENDOR}\Model;
 use {VENDOR}\Entity\{ENTITY};
+use MMWS\Handler\CaseHandler;
 
 class {CLASS_NAME}
 {
@@ -54,18 +55,18 @@ class {CLASS_NAME}
     /**
      * Get one instance from the database
      */
-    public function get()
+    public function get(array $filters = [], bool $asobj = false)
     {
-        return $this->entity->get();
+        return $this->entity->get($filters, $asobj);
     }
 
     /**
      * Get all the instances from the database and returns 
      * as an SELF::CLASS array
      */
-    public function getAll()
+    public function getAll(array $filters = [], bool $asobj = false)
     {
-        return $this->entity->getAll();
+        return $this->entity->getAll($filters, $asobj);
     }
 
     /**
@@ -77,7 +78,7 @@ class {CLASS_NAME}
     }
 
     /**
-     * Returns an instance of the object in an array format,
+     * Returns an instance of the object as an array format,
      * the NULL values will not be contained in this array.
      *
      * This is an useful method when desired to obtain the
@@ -91,14 +92,15 @@ class {CLASS_NAME}
      *  $stmt->run();
      * ```
      *
+     * @param string[] $skip props to skip when converting
      * @param bool $snake if should convert to snake_case.
      * @return string[]
      */
-    public function toArray($snake = true): array
+    public function toArray(array $skip = [], $snake = true): array
     {
         $arr = [];
         foreach ((array) $this as $key => $prop) {
-            if (!($key === 'entity' || $key === 'table') && $prop) {
+            if (!($key === 'entity' || $key === 'table' || array_search($key, $skip) !== false) && $prop) {
                 $k = $snake
                     ? CaseHandler::convert($key, 1)
                     : $key;

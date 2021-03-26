@@ -17,18 +17,59 @@ use MMWS\Interfaces\View;
 
 class Module extends View
 {
-    /**
-     * Method description
+     /**
+     * Call the create method to create a new user into
+     * the database.
      */
-    function exampleMethod()
+    function create(): array
     {
-        if($this->data['body']['exampleProp']){
-            // Logic
+        $hasErrors = keys_match($this->data['body'], ['prop1', 'prop2']);
+        if (!$hasErrors) {
+            $controller = new ExampleController($this->data['body']);
+            // Checks if the generated instance is the right user type
+            $result = $controller->save();
+            
+            set_http_code(201);
+            return $result;
         } else {
-            throw RequestExceptionFactory::create([
-                'error' => 'Example error of wrong parameter',
-                'fields' => ['exampleParam']
-            ], 400);
+            throw RequestExceptionFactory::field($hasErrors);
+        }
+    }
+
+    /**
+     * Call the GET method to GET a single user or a set of users
+     */
+    function get(): array
+    {
+        $controller = new ExampleController($this->data['params']);
+        return $controller->get($this->data['query']);
+    }
+
+    /**
+     * Call the update method to update a single user
+     * in the database
+     */
+    function update()
+    {
+        if (array_key_exists('id', $this->data['params'])) {
+            $controller = new ExampleController($this->data['body']);
+            $controller->model->id = $this->data['params']['id'];
+            return $controller->update();
+        } else {
+            throw RequestExceptionFactory::field(['id']);
+        }
+    }
+
+    /**
+     * Call the delete method to delete a single user in the database.
+     */
+    function delete()
+    {
+        if (array_key_exists('id', $this->data['params'])) {
+            $controller = new ExampleController($this->data['params']);
+            return $controller->delete();
+        } else {
+            throw RequestExceptionFactory::field(['id']);
         }
     }
 }

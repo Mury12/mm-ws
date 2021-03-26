@@ -82,12 +82,15 @@ function perform_query_pdo(PDOStatement $request, Bool $show_errors = false)
         if ($request->execute()) {
             return $request;
         }
-        $show_errors ? print_r($request->errorInfo()) : null;
+        if ($show_errors) {
+            print_r($request->errorInfo());
+            $request->debugDumpParams();
+        }
     } catch (\PDOException $e) {
-        //
+        throw $e;
     }
-    return false;
 }
+
 /**
  * Returns an Object Array or pure Array.
  * @param PDOStatement $q is an unfetched PDO statement result.
@@ -364,4 +367,26 @@ function snake_to_camel($content, Bool $capitalize = false)
         $i++;
     }
     return $outVarName;
+}
+
+/**
+ * Checks if the data given matches with the given keys (props)
+ * @param array $data the data to verify
+ * @param string[] $keys array of keys to validate
+ * @param string $instanceOf class to instantiate and check for properties
+ * @return string[]|false Array of field errors or false if no errors.
+ */
+function keys_match($data, array $keys, string $instanceOf = null)
+{
+    $errors = [];
+    foreach ($keys as $key => $value) {
+        if ($instanceOf && $data instanceof $instanceOf) {
+            if (!property_exists($data, $value) || !$data->{$value} || $data->{$value} === '') {
+                $errors[] = $value;
+            }
+        } else if (!array_key_exists($value, $data) || !$data[$value] || $data[$value] === '') {
+            $errors[] = $value;
+        }
+    }
+    return sizeof($errors) ? $errors : false;
 }
