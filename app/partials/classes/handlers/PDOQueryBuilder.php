@@ -17,7 +17,7 @@ use ValueError;
  * 
  * Note that the UPDATE and DELETE statements MUST BE followed by a `WHERE` parameter.
  * 
- * To add a `WHERE` parameter, call `$stmt->and($field, $value)` function.
+ * To add a `WHERE` parameter, call `$stmt->where($field, $value)` function.
  * 
  * -------------
  * 
@@ -32,16 +32,16 @@ use ValueError;
  * 
  * // Select John
  * $stmt->select(['id as userId', 'name']);
- * $stmt->and('name', 'jon');
+ * $stmt->where('name', 'jon');
  * $result = $stmt->run();
  * 
  * $stmt->update(['email' => 'john@mail.com', 'name' => 'john'])
- * $stmt->and('id', 1);
+ * $stmt->where('id', 1);
  * $result = $stmt->run();
  * 
  * // Delete Jogn
  * $stmt->delete();
- * $stmt->and('id', 1);
+ * $stmt->where('id', 1);
  * $result = $stmt->run();
  * 
  * // Raw query
@@ -85,13 +85,13 @@ class PDOQueryBuilder
     const QUERY_DELETE = 4;
     const QUERY_RAW = 5;
 
-    function __construct(string $tableName, int $limit = 3, int $page = 0)
+    function __construct(string $tableName, $limit = 3, $page = 1)
     {
         $this->table = $tableName;
-        $this->limit = $limit;
-        $this->page = $page;
-
-        $this->offset = ($page * $limit);
+        $this->limit = $limit >= 1 ? $limit : 1;
+        $this->page = $page >= 1 ? $page - 1 : 0;
+        $offset = (($this->page) * $this->limit);
+        $this->offset = $offset >= 0 ? $offset : 0;
     }
 
     /**
@@ -126,27 +126,29 @@ class PDOQueryBuilder
      */
     function run(int $fetchStyle = \PDO::FETCH_NAMED): array
     {
-
-
         try {
             if ($this->queryType !== self::QUERY_RAW) {
                 $this->check();
-                $this->query = str_replace("  ", " ", $this->query);
+                $this->query = preg_replace("/[ ]+/im", " ", $this->query);
 
                 $stmt = PDOQueryFactory::transaction(['query' => $this->query], $this->trx);
 
-                $this->stmt = perform_query_pdo($stmt);
-                if ($this->queryType === self::QUERY_SELECT) {
-                    if ($this->autoCommit) $this->commit();
-                    return $this->stmt->fetchAll($fetchStyle);
-                } else if ($this->queryType === self::QUERY_INSERT) {
-                    $id  = $this->trx->lastInsertId();
-                    if ($this->autoCommit) $this->commit();
-                    return ['id' => $id];
-                } else {
-                    if ($this->autoCommit) $this->commit();
-                    return [];
+                $result = [];
+                $this->stmt = perform_query_pdo($stmt, DEBUG_MODE);
+                if ($this->stmt) {
+                    if ($this->queryType === self::QUERY_SELECT) {
+                        if ($this->autoCommit) $this->commit();
+                        $result = $this->stmt->fetchAll($fetchStyle);
+                    } else if ($this->queryType === self::QUERY_INSERT) {
+                        $id  = $this->trx->lastInsertId();
+                        if ($this->autoCommit) $this->commit();
+                        $result = ['id' => $id];
+                    } elseif ($this->autoCommit) {
+                        $this->commit();
+                    }
+                    return $result;
                 }
+                $this->restart();
             } else {
                 $this->rollBack();
                 throw new TypeError("Trying to run an undefined RAW QUERY. Please choose another type of query to perform a run.");
@@ -255,7 +257,6 @@ class PDOQueryBuilder
         if (sizeof($fields)) {
             $columns = [];
             $values = [];
-
             foreach ($fields as $field => $value) {
                 $columns[] =  $this->sanitize(preg_replace('/[^a-zA-Z0-9\-_]+/im', '', $field));
                 $values[] = $this->sanitize($value);
@@ -310,15 +311,22 @@ class PDOQueryBuilder
                 $stmt->bindParam($index, $bindParams[$i]);
             }
         }
-        return perform_query_pdo($stmt);
+        $result = perform_query_pdo($stmt);
+        if ($result) {
+            return $result;
+        }
+        throw RequestExceptionFactory::create("Houve um erro ao processar esta requisição.", 500);
     }
 
     /**
      * Creates a DELETE statement
-     * @param array $fields the fields to be selected. If none is set, then will select *. Aliases can be used.
+     * To run a delete statement, a WHERE Must be placed in order to avoid
+     * catastrophic mass deletions accidentaly.
      * 
      * ```php
-     * $stmt->select(['id as userId', 'name', 'email']);
+     * $stmt->delete();
+     * $stmt->and('id', 2);
+     * $stmt->run();
      * ```
      * 
      * @return PDOQueryBuilder
@@ -333,10 +341,15 @@ class PDOQueryBuilder
 
     /**
      * Creates an UPDAYE statement
-     * @param array $fields the fields to be selected. If none is set, then will select *. Aliases can be used.
+     * To eprform an update statement, a WHERE must be placed in order to avoid
+     * accidental unwanted updates.
+     * 
+     * @param array $fields the fields to be updated with its values, as below
      * 
      * ```php
      * $stmt->update(['name'=> 'John', 'email'=>'john@mail.com']);
+     * $stmt->and('id', 1);
+     * $stmt->run();
      * ```
      * 
      * @return PDOQueryBuilder
@@ -386,6 +399,7 @@ class PDOQueryBuilder
 
     /**
      * Adds an AND operator to the string.
+     * If it is the first call, a WHERE clause will be added, combined to the `PDOQueryBuilder::or` method.
      * @param string $field the column name 
      * @param string $val the value to be matched
      * @param string $op optional operator.
@@ -404,12 +418,38 @@ class PDOQueryBuilder
             $this->query .= " WHERE `$field` $op '" . $braces . $value . $braces . "'";
             $this->hasWhere = true;
         } else
-            $this->query .= " AND `$field` $op '" . $braces . $value . $braces . "'";
+            $val === 'NULL'
+                ? $this->query .= " OR `$field` $op NULL"
+                : $this->query .= " AND `$field` $op '" . $braces . $value . $braces . "'";
         return $this;
     }
 
     /**
+     * Adds a WHERE operator to the string.
+     * If it is the first call, a WHERE clause will be added, combined to the `PDOQueryBuilder::or` method.
+     * If it's not, an AND operator will be added.
+     * 
+     * Alias to the `and` method.
+     * 
+     * @param string $field the column name 
+     * @param string $val the value to be matched
+     * @param string $op optional operator.
+     * Supports SQL operators (<,>,<=,>=,<>,=,!=,LIKE,NOT LIKE) to simulate IS NULL, use value = NULL and operador = IS;
+     * 
+     * ```php
+     * $stmt->where('name', 'John', 'LIKE');
+     * ```
+     * @return PDOQueryBuilder
+     */
+    function where(string $column, string $val, string $op = '=')
+    {
+        return $this->and($column, $val, $op);
+    }
+
+    /**
      * Adds an OR operator to the string.
+     * If it is the first call, a WHERE clause will be added, combined to the `PDOQueryBuilder::and` method.
+
      * @param string $field the column name 
      * @param string $val the value to be matched
      * @param string $op optional operator.
@@ -431,7 +471,9 @@ class PDOQueryBuilder
             $this->query .= " WHERE ($or)";
             $this->hasWhere = true;
         } else
-            $this->query = " ($or)";
+            $val === 'NULL'
+                ? $this->query .= " OR `$field` $op NULL"
+                : $this->query .= " AND `$field` $op '" . $braces . $value . $braces . "'";
         return $this;
     }
 
@@ -445,7 +487,7 @@ class PDOQueryBuilder
      * $stmt->([])
      * ```
      */
-    function setFilters(array $filters, bool $and = false): PDOQueryBuilder
+    function setFilters(array $filters, bool $and = true): PDOQueryBuilder
     {
         $aggregator = $and ? 'AND' : 'OR';
         $and = [];
@@ -453,11 +495,11 @@ class PDOQueryBuilder
             $value = $this->sanitize($val);
             if (stripos($value, '|')) {
                 $values = explode('|', $value);
-                $str = " (`$filter` LIKE '%" . implode("%' $aggregator `$filter` LIKE '%", $values) . "%')";
+                $str = " (`$filter` LIKE '%" . implode("%' OR `$filter` LIKE '%", $values) . "%')";
             } else $str = "`$filter` LIKE '%$value%'";
             $and[] = $str;
         }
-        $this->query .= " WHERE " . implode(" $aggregator ", $and);
+        $this->query .= ($this->hasWhere ? ' AND ' : ' WHERE ') . '(' . implode(" $aggregator ", $and) . ')';
         return $this;
     }
 
@@ -477,5 +519,22 @@ class PDOQueryBuilder
     function sanitize($val): string
     {
         return addslashes(filter_var($val, FILTER_SANITIZE_STRIPPED));
+    }
+    /**
+     * Resets the PDOQueryBuilder instance in order to
+     * avoid query string conflicts.
+     */
+    function restart()
+    {
+        $this->filters = [];
+        $this->and = "";
+        $this->or = "";
+        $this->offset = 0;
+        $this->stmt = null;
+        $this->query = "";
+        $this->queryType = null;
+        $this->queryEnd = "";
+        $this->orderBy = false;
+        $this->hasWhere = false;
     }
 }
