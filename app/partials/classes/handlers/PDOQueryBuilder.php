@@ -449,6 +449,7 @@ class PDOQueryBuilder
     /**
      * Adds an OR operator to the string.
      * If it is the first call, a WHERE clause will be added, combined to the `PDOQueryBuilder::and` method.
+
      * @param string $field the column name 
      * @param string $val the value to be matched
      * @param string $op optional operator.
@@ -473,7 +474,6 @@ class PDOQueryBuilder
             $val === 'NULL'
                 ? $this->query .= " OR `$field` $op NULL"
                 : $this->query .= " AND `$field` $op '" . $braces . $value . $braces . "'";
-
         return $this;
     }
 
@@ -520,7 +520,10 @@ class PDOQueryBuilder
     {
         return addslashes(filter_var($val, FILTER_SANITIZE_STRIPPED));
     }
-
+    /**
+     * Resets the PDOQueryBuilder instance in order to
+     * avoid query string conflicts.
+     */
     function restart()
     {
         $this->filters = [];
