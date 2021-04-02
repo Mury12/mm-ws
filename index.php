@@ -34,18 +34,26 @@ try {
   return send($endpoint->render());
 } catch (RequestException $e) {
   require_once './app/functions.php';
+
+  report(['error' => $e->getRequest()]);
+
   set_http_code($e->getCode());
   header('content-type: application/json');
 
-  die(send(http_message($e->getCode(), $e->getMessage())));
+  die(send(http_message($e->getCode(), json_decode($e->getMessage(), true))));
 } catch (Error $te) {
   require_once './app/config/variables.php';
   require_once './app/functions.php';
+
+  report(['error' => json_decode($te, true)]);
+
   set_http_code(500);
   header('content-type: application/json');
 
   if (defined('DEBUG_MODE') && DEBUG_MODE === 1) {
-    die(send(http_message(500, (array) $te)));
+    die(send(http_message(500, $te)));
   }
+  
+  throw $te;
   die(send(http_message(500, 'Houve um erro inesperado em nosso servidor, mas nossos desenvolvedores já estão resolvendo.')));
 }

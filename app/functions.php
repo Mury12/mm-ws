@@ -4,6 +4,8 @@
  * This document is used to put the global functions
  */
 
+use MMWS\Factory\RequestExceptionFactory;
+
 /** @var $auth_enabled enable authentication ? */
 $auth_enabled = true;
 /**
@@ -12,7 +14,7 @@ $auth_enabled = true;
  */
 function set_http_code($code)
 {
-    header('HTTP/1.0 ' . $code);
+    header('HTTP/1.1 ' . $code);
 }
 
 /**
@@ -24,9 +26,10 @@ function report($error)
     // $error['FROM_IP'] = ORIGIN_HTTP_ADDR;
     $error['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
     $error['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
-    if (file_exists('app/logs/error.log')) {
-        error_log(json_encode($error) . "\n", 3, 'app/logs/error.log');
+    if (!file_exists('app/logs/error.log')) {
+        file_put_contents('app/logs/error.log', '');
     }
+    error_log(json_encode($error) . "\n", 3, 'app/logs/error.log');
 }
 
 /**
@@ -56,13 +59,16 @@ function get_root_uri()
 
 /**
  * Spits the requested content
- * @param Array|null $content is the formatted array to put on the response message
+ * @param Array $content is the formatted array to put on the response message
  */
-function send($content = null)
+function send(array $content)
 {
-    if ($content) {
-        print_r(json_encode($content, JSON_INVALID_UTF8_IGNORE));
+    if (!sizeof($content)) {
+        set_http_code(204);
+        return;
     }
+    print_r(json_encode($content, JSON_INVALID_UTF8_IGNORE));
+    return;
 }
 
 function auth_enabled()
@@ -90,7 +96,6 @@ function perform_query_pdo(PDOStatement $request, Bool $show_errors = false)
         throw $e;
     }
 }
-
 /**
  * Returns an Object Array or pure Array.
  * @param PDOStatement $q is an unfetched PDO statement result.
@@ -368,7 +373,6 @@ function snake_to_camel($content, Bool $capitalize = false)
     }
     return $outVarName;
 }
-
 /**
  * Checks if the data given matches with the given keys (props)
  * @param array $data the data to verify

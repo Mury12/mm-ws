@@ -7,7 +7,8 @@ use Exception;
 class RequestException extends Exception
 {
     protected $code = 500;
-    protected $message = '';
+    protected $message = "";
+    protected $request = null;
 
     /**
      * Sets the message to send in a request.
@@ -15,7 +16,7 @@ class RequestException extends Exception
      */
     function setMessage($message)
     {
-        $this->message = $message;
+        $this->message = json_encode($message);
     }
 
     /**
@@ -25,5 +26,14 @@ class RequestException extends Exception
     function setCode(int $code)
     {
         $this->code = $code;
+    }
+
+    /**
+     * Gets the request content
+     */
+    function getRequest()
+    {
+        global $request;
+        return [$request ? $request->data() : ''];
     }
 }

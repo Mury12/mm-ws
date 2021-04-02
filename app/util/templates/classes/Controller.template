@@ -12,9 +12,11 @@
  */
  
 namespace {VENDOR}\Controller;
-use {VENDOR}\Model\{USE_CLASS};
 
-class {CLASS_NAME}
+use {VENDOR}\Model\{USE_CLASS};
+use {VENDOR}\Interface\AbstractController
+
+class {CLASS_NAME} extends AbstractController
 {
     public $model;
 
@@ -29,44 +31,4 @@ class {CLASS_NAME}
         $this->model = $model;
     }
 
-    /**
-     * Saves this instance to the database
-     */
-    public function save()
-    {
-        return $this->model->save();
-    }
-
-    /**
-     * Updates this instance to the database
-     */
-    public function update()
-    {
-        return $this->model->update();
-    }
-
-    /**
-     * Get one instance from the database
-     */
-    public function get(array $filters = [], bool $asobj = false)
-    {
-        return $this->entity->get($filters, $asobj);
-    }
-
-    /**
-     * Get all the instances from the database and returns 
-     * as an SELF::CLASS array
-     */
-    public function getAll(array $filters = [], bool $asobj = false)
-    {
-        return $this->entity->getAll($filters, $asobj);
-    }
-
-    /**
-     * Removes this instance from the database
-     */
-    public function delete()
-    {
-        return $this->model->delete();
-    }
 }

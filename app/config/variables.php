@@ -15,7 +15,7 @@ if (!\file_exists('app/config/local/variables-local.php')) {
     /** * Route protector use flag (not quite done...) */
     define('_WILL_IT_SMITH_', true);
     /** Enabling debug mode will throw all errors to the server response */
-    define('DEBUG_MODE', 0);
+    define('DEBUG_MODE', 1);
     /** * Global session save path */
     ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 

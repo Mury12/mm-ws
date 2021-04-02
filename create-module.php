@@ -29,7 +29,7 @@ if ($argc === 3) {
         }
         $className = "ExampleController";
         echo "\nPlease type the default controller name to use in this module or leave blank for ExampleController: ";
-        fscanf(STDIN, "%c", $className);
+        fscanf(STDIN, "%s", $className);
 
         // Loads the template file
         $template = file_get_contents(__DIR__ . '/app/util/templates/classes/Module.template');

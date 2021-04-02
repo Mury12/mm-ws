@@ -31,7 +31,7 @@ to add a new domain to this file.
 
 `app/routers/services.php` :
 
-The `MMWS\Model\Endpoint` component is very important. It is responsible for
+The `MMWS\Handler\Endpoint` component is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
 
 ```php
@@ -39,7 +39,7 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
   /**
    *  Loads the Endpoint Model
    */
-  use MMWS\Model\Endpoint;
+  use MMWS\Handler\Endpoint;
 
   /**
    * Instantiates the layout.
@@ -68,7 +68,7 @@ Just enjoy this following example about how to create a route:
 
 ```php
 <?php 
-use MMWS\Model\Endpoint;
+use MMWS\Handler\Endpoint;
 
 return [
   'route-get' => [

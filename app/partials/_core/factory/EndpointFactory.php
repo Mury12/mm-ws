@@ -3,11 +3,11 @@
 namespace MMWS\Factory;
 
 use MMWS\Interfaces\IFactory;
-use MMWS\Model\Endpoint;
+use MMWS\Handler\Endpoint;
 
 /**
  * Instantiates an endpoint
- * @return MMWS\Model\Endpoint
+ * @return MMWS\Handler\Endpoint
  */
 class EndpointFactory implements IFactory {
     static function create(array $args = null) {

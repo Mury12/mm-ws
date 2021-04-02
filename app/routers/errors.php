@@ -1,5 +1,5 @@
 <?php
-use MMWS\Model\Endpoint;
+use MMWS\Handler\Endpoint;
 
 return [
     404 => [
