@@ -281,6 +281,7 @@ class Endpoint
                 }
                 $m = $m ?? $cached;
             } catch (\Exception $e) {
+                if ($e instanceof RequestException) throw $e;
                 throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
             }
         } else {

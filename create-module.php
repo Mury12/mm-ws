@@ -86,7 +86,7 @@ if ($argc === 3) {
 
         // Text to be added to the end of the array
         $text = "\t'$uri' => [\n";
-        $text .= "\t\t'params' => ['" . $folder . "Id'],\n";
+        $text .= "\t\t'params' => ['id'],\n";
         $text .= "\t\t'body' => EndpointFactory::create()\n";
         $text .= "\t\t\t->post('$folder/$name', 'create')\n";
         $text .= "\t\t\t->get('$folder/$name', 'get')\n";

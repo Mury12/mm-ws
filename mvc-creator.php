@@ -19,6 +19,6 @@ $dotenv->load();
 
 require_once 'app/config/db-conf.php';
 
-$dbm = new DatabaseModelExtractor(DB_NAME, 'app/partials/classes', 0);
+$dbm = new DatabaseModelExtractor(DB_NAME, 'app/partials/classes', 1);
 
 $dbm->generate();

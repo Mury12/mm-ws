@@ -17,18 +17,18 @@
 use MMWS\Factory\EndpointFactory;
 
 return [
-
 	'wine' => [
-		'params' => ['manageId'],
+		'params' => ['codigo'],
 		'body' => EndpointFactory::create()
-			->post('manage/wine', 'create')
-			->get('manage/wine', 'get')
-			->put('manage/wine', 'update')
-			->delete('manage/wine', 'delete'),
+			->post('wine/manage', 'create')
+			->get('wine/manage', 'get')
+			->put('wine/manage', 'update')
+			->delete('wine/manage', 'delete')
+			->cache(),
 		// Add children routes calling the http methods from endpoint
 		'another-children-route' => [
 			'body' => EndpointFactory::create()
-				->get('manage/wine', 'exampleMethod'),
+				->get('wine/manage', 'exampleMethod'),
 		]
 	],
 ];

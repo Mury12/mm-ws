@@ -4,7 +4,7 @@ namespace MMWS\Interfaces;
 
 class AbstractController 
 {
-    private $model;
+    public $model;
 
     /**
      * Saves this instance to the database

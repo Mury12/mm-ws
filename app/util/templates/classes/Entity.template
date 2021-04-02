@@ -136,7 +136,7 @@ class {CLASS_NAME}
         $fields  = $filters['fields'] ?? [];
         $columns = sizeof($fields) ? $fields : ['*'];
         try {
-            $rowLimit = $filters['amount'] ?? null;
+            $rowLimit = $filters['amount'] ?? 100;
             $page = $filters['page'] ?? null;
 
             $stmt = new PDOQueryBuilder($this->model->table, $rowLimit, $page);

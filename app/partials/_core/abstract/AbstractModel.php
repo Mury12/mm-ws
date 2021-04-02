@@ -4,9 +4,9 @@ namespace MMWS\Interfaces;
 
 use MMWS\Handler\CaseHandler;
 
-abstract class AbstractModel
+class AbstractModel
 {
-    private $entity;
+    public $entity;
 
     /**
      * @var String $table the table name for this model;

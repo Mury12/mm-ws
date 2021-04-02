@@ -14,7 +14,7 @@
 namespace {VENDOR}\Controller;
 
 use {VENDOR}\Model\{USE_CLASS};
-use {VENDOR}\Interface\AbstractController
+use {VENDOR}\Interfaces\AbstractController;
 
 class {CLASS_NAME} extends AbstractController
 {
