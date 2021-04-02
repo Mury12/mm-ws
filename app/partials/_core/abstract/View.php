@@ -27,7 +27,7 @@ use MMWS\Handler\Request;
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.6.1-alpha
  */
-class View
+abstract class View
 {
     /**
      * @var Request $request the request object

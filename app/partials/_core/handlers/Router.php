@@ -160,9 +160,12 @@ class Router
         if (sizeof($matches) > 0) {
             throw RequestExceptionFactory::create(null, 404);
         }
-
-        $curRoute['body']->setEnv($params);
-        return $curRoute;
+        if(array_key_exists('body', $curRoute)){
+            $curRoute['body']->setEnv($params);
+            return $curRoute;
+        }else{
+            RequestExceptionFactory::create(null, 404);
+        }
     }
     
     function getErrorPage(String $err_code)
