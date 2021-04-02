@@ -27,11 +27,15 @@ if ($argc === 3) {
                 } elseif ('y' === strtolower($choice)) $done = true;
             }
         }
+        $className = "ExampleController";
+        echo "\nPlease type the default controller name to use in this module or leave blank for ExampleController: ";
+        fscanf(STDIN, "%c", $className);
 
         // Loads the template file
         $template = file_get_contents(__DIR__ . '/app/util/templates/classes/Module.template');
         // Replaces the keywords
         $output = str_replace('{ENDPOINT_NAME}', ucfirst(preg_replace('/[\-]/im', ' ', $name)), $template);
+        $output = str_replace('{CONTROLLER_NAME}', $className, $output);
         // Writes the file
         file_put_contents($path . $folder . '/' . $name . '.php', $output);
         print_r("\nModule successfully created at $path$folder/$name.php ");
@@ -49,11 +53,21 @@ if ($argc === 3) {
             }
         }
 
-        // Asks for the url to create the service route
-        $done = false;
 
+        // Explodes the URI to get the keywords to the path
+
+        // Loads the current service routes array
+        $routes = require_once __DIR__ . '/app/routers/services.php';
+        // Loads the template
+        // $template = file_get_contents(__DIR__ . '/app/util/templates/service.template');
+        $template = file_get_contents(__DIR__ . '/app/routers/services.php');
+
+        $current = $routes;
+
+        // Asks for the url to create the service route
         // Do not do this in your coding lmao
         pathname:
+        $done = false;
         while (!$done) {
             print_r("\nOk. Type the URI (user or user/profile note that the 2nd option will not nest routes): ");
             $str = "";
@@ -62,16 +76,9 @@ if ($argc === 3) {
             if (strlen($str)) $done = true;
         }
 
-        // Explodes the URI to get the keywords to the path
         // $uri = explode('/', $str);
         $uri = $str;
-        // Loads the current service routes array
-        $routes = require_once __DIR__ . '/app/routers/services.php';
-        // Loads the template
-        // $template = file_get_contents(__DIR__ . '/app/util/templates/service.template');
-        $template = file_get_contents(__DIR__ . '/app/routers/services.php');
 
-        $current = $routes;
         if (array_key_exists($uri, $current)) {
             print_r("\nSorry, the path chosen is already taken. Please choose another.");
             goto pathname;

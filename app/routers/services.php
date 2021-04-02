@@ -17,30 +17,5 @@
 use MMWS\Factory\EndpointFactory;
 
 return [
-	'user' => [
-		'params' => ['userId'],
-		'body' => EndpointFactory::create()
-			->post('user/manage', 'create')
-			->get('user/manage', 'get')
-			->put('user/manage', 'update')
-			->delete('user/manage', 'delete'),
-		// Add children routes calling the http methods from endpoint
-		'another-children-route' => [
-			'body' => EndpointFactory::create()
-				->get('user/manage', 'exampleMethod'),
-		]
-	],
-	'user' => [
-		'params' => ['userId'],
-		'body' => EndpointFactory::create()
-			->post('user/manage', 'create')
-			->get('user/manage', 'get')
-			->put('user/manage', 'update')
-			->delete('user/manage', 'delete'),
-		// Add children routes calling the http methods from endpoint
-		'another-children-route' => [
-			'body' => EndpointFactory::create()
-				->get('user/manage', 'exampleMethod'),
-		]
-	],
+
 ];
