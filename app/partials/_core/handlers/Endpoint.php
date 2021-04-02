@@ -1,6 +1,6 @@
 <?php
 
-namespace MMWS\Model;
+namespace MMWS\Handler;
 
 use MMWS\Middleware\CACHE;
 use MMWS\Factory\RequestExceptionFactory;
@@ -19,7 +19,7 @@ use MMWS\Interfaces\View;
  * 
  * Example Usage:
  * 
- * use MMWS\Model\Endpoint;
+ * use MMWS\Handler\Endpoint;
  * 
  * return ['ws' => ['body' => $e = new Endpoint(), $e->get('domain/file', 'method')->permission('auth')]]
  * 
@@ -281,6 +281,7 @@ class Endpoint
                 }
                 $m = $m ?? $cached;
             } catch (\Exception $e) {
+                if ($e instanceof RequestException) throw $e;
                 throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
             }
         } else {

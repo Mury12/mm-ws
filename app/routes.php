@@ -7,7 +7,7 @@
  * and so on
  */
 
-use MMWS\Model\Endpoint;
+use MMWS\Handler\Endpoint;
 
 $v2 = require_once('app/routers/services.php');
 $ms = require_once('app/routers/micro-services.php');

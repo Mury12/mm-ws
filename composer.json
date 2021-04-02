@@ -6,7 +6,7 @@
     "scripts": {
         "create-module": "php create-module.php",
         "create-mvc": "php mvc-creator.php",
-        "restore-endpoint": "cp ./app/util/templates/classes/EndpointModel.template ./app/partials/classes/models/Endpoint.php",
+        "restore-endpoint": "cp ./app/util/templates/classes/EndpointModel.template ./app/partials/_core/handlers/Endpoint.php",
         "start": "php -S localhost:8081"
     }
 }
