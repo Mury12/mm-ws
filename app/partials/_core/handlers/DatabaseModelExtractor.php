@@ -69,6 +69,11 @@ class DatabaseModelExtractor
     private $MVCFolderPath;
 
     /**
+     * @var string[] $tablesIncluded if set, will only migrate this tables
+     */
+    private $tablesIncluded = array();
+
+    /**
      * @var Int $snakeToCamel convert column names from snake_case to camelCase
      * set 1 to camelCase, 2 to CamelCase and default 0 is none. Table names will
      * be automatically converted to CamelCase
@@ -82,7 +87,18 @@ class DatabaseModelExtractor
         $this->snakeToCamel = $snakeToCamel;
         $this->vendor = $vendor;
         $this->prefix = $prefix;
-        $this->getRemoteTables();
+    }
+
+    /**
+     * Set tables to extract. If this method is called, it will only
+     * extract the set tables.
+     * 
+     * @return DatabaseModelExtract the instance itself
+     */
+    function setTables(array $tables): DatabaseModelExtractor
+    {
+        $this->tablesIncluded = $tables;
+        return $this;
     }
 
     /**
@@ -98,6 +114,10 @@ class DatabaseModelExtractor
         $query .= " FROM `INFORMATION_SCHEMA`.`COLUMNS` ";
         $query .= " WHERE `TABLE_SCHEMA` = '" . $this->dbName . "'";
         $query .= " AND `TABLE_NAME` NOT LIKE '%view%'";
+
+        if (sizeof($this->tablesIncluded)) {
+            $query .= " AND TABLE_NAME in ('" . implode("','", $this->tablesIncluded) . "')";
+        }
 
         $q = $conn->prepare($query);
 
@@ -131,6 +151,7 @@ class DatabaseModelExtractor
      */
     function generate()
     {
+        $this->getRemoteTables();
         $template['model'] = file_get_contents('app/util/templates/classes/Model.template');
         $template['entity'] = file_get_contents('app/util/templates/classes/Entity.template');
         $template['controller'] = file_get_contents('app/util/templates/classes/Controller.template');
@@ -157,7 +178,7 @@ class DatabaseModelExtractor
             }
         }
         print_r("Done!\n");
-        print_r("Total files: " . $count."\n");
+        print_r("Total files: " . $count . "\n");
     }
 
     /**
