@@ -77,7 +77,7 @@ class AbstractModel
     {
         $arr = [];
         foreach ((array) $this as $key => $prop) {
-            if (!($key === 'entity' || $key === 'table' || array_search($key, $skip) !== false) && $prop) {
+            if (!(preg_match('/entity/im', $key) || $key === 'table' || array_search($key, $skip) !== false) && $prop) {
                 $k = $snake
                     ? CaseHandler::convert($key, 1)
                     : $key;
