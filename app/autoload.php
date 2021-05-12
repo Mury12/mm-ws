@@ -7,28 +7,27 @@
 /** Global functions*/
 require_once 'functions.php';
 
+
 /**
  * This loads all the classes in the app/partials/class/  subfolders.
- * @var DirectoryIterator $dir 
+ * @var string[] $dir 
  */
-$dir[] = new DirectoryIterator(dirname('app/partials/_core/index.php'));
-$dir[] = new DirectoryIterator(dirname('app/partials/classes/index.php'));
+$dir[] = 'app/partials/_core/';
+$dir[] = 'app/partials/classes/';
+
 foreach ($dir as $directory) {
-    foreach ($directory as $fileinfo) {
-        if (
-            $fileinfo->getFilename() == "."  ||
-            $fileinfo->getFilename() == ".." ||
-            $fileinfo->getType() == "file"
-        )
-            continue;
-        else {
-            if ($handle = opendir($fileinfo->getPathname()))
+    $folders = scandir($directory);
+    foreach ($folders as $folder) {
+        if (!preg_match('/(\.\.)|(\.)|(.\.php)/im', $folder)) {
+            if ($handle = opendir($directory . $folder)) {
                 while ($file = readdir($handle)) {
                     if ($file == "." || $file == "..") continue;
                     else {
-                        require_once $fileinfo->getPathname() . '/' . $file;
+                        $pathname = $directory . $folder . '/' . $file;
+                        require_once $pathname;
                     }
                 }
+            }
         }
     }
 }
