@@ -68,13 +68,13 @@ Just enjoy this following example about how to create a route:
 
 ```php
 <?php 
-use MMWS\Handler\Endpoint;
+use MMWS\Factory\EndpointFactory;
 
 return [
   'route-get' => [
     'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
-    'body' => $jimmy = new Endpoint(),
-      $jimmy->get('band/led-zeppelin', 'getZoso')  // Function post|patch|put|get|delete uses specific request method and procedure. 
+    'body' => new EndpointFactory::create()
+      ->get('band/led-zeppelin', 'getZoso')  // Function post|patch|put|get|delete uses specific request method and procedure. 
       ->post('band/yardbirds', 'dazedAndConfused') // Yes, you can use multiple methods.
       ->addMiddleware([new MiddlewareClassName()]) // Ads a middleware to do promise queue
       ->permission('auth') // But not mixed route permission
@@ -83,18 +83,15 @@ return [
   'multi-route' => [
     'route-1' => [
       'params' => ['param1', 'param2'],
-      'body' => [
-        $e = new Endpoint(),
-        $e->post('page', 'method')
+      'body' => EndpointFactory::create()
+        ->post('page', 'method')
         ->cache()
-      ]
     ],
     
     // You can now use the root URL with the `params` index
     'params' => ['param1'] // Allowed only one mid argument for a while
-    'body' => [
-      $e = new Endpoint(),
-      $e->get('page', 'method')
+      'body' => EndpointFactory::create()
+      ->get('page', 'method')
     ]
   ]
 ];
@@ -127,12 +124,12 @@ Preserve this sequence to better workflow and..
  * the project itself.
  */
 ```
-
+---
 ## Must Know Functions
 
 As any project, there are abstractions you should know before using it:
 
-### Session
+## Session
 
 Use the static class `MMWS\Handler\SESSION` to handle PHP Sessions.
 
@@ -164,8 +161,8 @@ SESSION::add('sessionName', 'value');
 SESSION::done();
 
 ```
-
-### Headers
+---
+## Headers
 
 Its possible to easily change headers `content-type`, `http allowed methods`, `CORS` and `headers` simply
 modifying the following global variables in `variables.php`:
@@ -184,8 +181,8 @@ modifying the following global variables in `variables.php`:
   define('HTTP_CONTENT_TYPE', 'application/json');
 
 ```
-
-### Database Model Extractor
+---
+## Database Model Extractor
 
 No more worrying in creating the MVC files. In this environment, you have the
 MMWS Database Model Extractor. But well.. What does it mean??
@@ -213,7 +210,8 @@ $gen->generate();
 Simply as that, all of the database tables (excluding view tables) will be in its folder models, entities and controllers
 in the MVC path. The folders MUST ALREADY EXISTS.
 
-#### String Case Handler
+---
+## String Case Handler
 
 You can convert snake_case to camelCase -- or CameCase -- and vice-versa
 
@@ -233,8 +231,8 @@ $str = MMWS\Handler\CaseHandler::convert($values, 1);
    'user_password' => 'M&UhanL2'
 ]
 ```
-
-### Error Handling
+---
+## Endpoints and Error Handling
 
 Every HTTP error that you want to send to the client should use `RequestException` class just like the following example.
 
@@ -270,8 +268,8 @@ class Module extends View
 }
 return new View($request);
 ```
-
-### General Functions
+---
+## General Functions
 
 In `functions.php` you can see a lot of useful functions, such as password generators,
 unique id generator, token generator, error handlers, etc., but the most used are:
@@ -285,6 +283,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
  - `set_http_code(Int $code)`: sends an http code.
  - `report(Mixed $error)`: saves the error into a log in logs/error.log.
 
+---
 ## Directory Tree
 
 ```
@@ -303,16 +302,19 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   │       │    └── yardbirds.php
 │   │       └── anyservice.php
 │   ├── \config
-│   │   ├── local (Local hosting files)
+│   │   ├── local (Local hosting configuration files files)
 │   │   ├── db-conf.php (DB Configuration file)
 │   │   └── variables.php (CONST Variables definition file)
 │   ├── \logs
 │   │   └── You know what 'log' means, right?
+│   ├── partials ── _core <-- Core classes, don't touch :)
 │   ├── partials ── classes
 │   │   ├── \controller
 │   │   │   └── Controller classes
 │   │   ├── \entities
 │   │   │   └── Database manipulation classes
+│   │   ├── \factory
+│   │   │   └── Factory classes
 │   │   ├── \handlers
 │   │   │   └── File handlers, exception, whatever
 │   │   ├── \interfaces
@@ -326,7 +328,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   ├── \routers
 │   │   ├── errors.php (Error router file)
 │   │   ├── micro-services.php (General services router)
-│   │   └── variables.php (Webservice application services router)
+│   │   └── servoices.php (Webservice application services router)
 │   ├── \sql
 │   │   └── Put your sql files here
 │   ├── \util (Utilities files, templates, error definition, etc.)
