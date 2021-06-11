@@ -31,4 +31,21 @@ return [
 				->get('wine/manage', 'exampleMethod'),
 		]
 	],
+	'manage' => [
+		'params' => ['userId'],
+		'body' => EndpointFactory::create()
+			->post('user/manage', 'create')
+			->get('user/manage', 'get')
+			->put('user/manage', 'update')
+			->delete('user/manage', 'delete'),
+		// Add children routes calling the http methods from endpoint
+		'another-children-route' => [
+			'params' => ['id'],
+			'body' => EndpointFactory::create()
+				->post('user/manage', 'create')
+				->get('user/manage', 'get')
+				->put('user/manage', 'update')
+				->delete('user/manage', 'delete'),
+		]
+	],
 ];

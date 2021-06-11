@@ -15,9 +15,9 @@ class Module extends View
     /**
      * Creates an user
      */
-    function version()
+    function me(): array
     {
-        return $_ENV['APP_NAME'] . '^' . $_ENV['APP_VERSION'];
+        return ['I am running :D'];
     }
 }
 

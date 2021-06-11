@@ -1,4 +1,4 @@
-# MM-WS - PHP Webservice Template
+# MM-WS - PHP Webservice Template @v0.10.0-beta
 
 ## Before using
 
@@ -33,6 +33,7 @@ to add a new domain to this file.
 
 The `MMWS\Handler\Endpoint` component is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
+> Note that is more effective to use `EndpointFactory::create()->{methodA}->{methodB}->..` to create endpoints.
 
 ```php
 <?php 
@@ -184,17 +185,17 @@ modifying the following global variables in `variables.php`:
 ---
 ## Database Model Extractor
 
-No more worrying in creating the MVC files. In this environment, you have the
-MMWS Database Model Extractor. But well.. What does it mean??
+This module is responsible for creating the base files for working.
+Ensure to use it to develop faster.
 
-In every project, you MUST have to build your database first, right? So
-Once you've done it, you've already done the MVC files. Well, Its not an ORM,
-but it converts every table in your remote database to a Controller, a Model
-and an Entity so only lasts the business rules
+This extractor gets all the selected tables in a database and turns it 
+in to 3 files: Model, Controler and Entity and they're all linked, so
+you'll only need to use them. The `AbstractModel` and `AbstractController` classes
+will do most of the job, letting you only with the Entity classes that you'll put
+your CRUD business rules. Note that relation tables are possible but you will surely
+need to adjust them in order to get the expected results.
 
-Maybe in future the CRUD functions are added but for now, only method
-definition and no function. To do this, you can run it separately
-like `php mvc-creator.php`.
+To use it, just type `composer create-mvc` in your terminal.
 
 Usage:
 
@@ -204,11 +205,53 @@ Usage:
 use MMWS\Handler\DatabaseModelExtractor;
 
 $gen = new DatabaseModelExtractor('database_name', 'mvc_path', 1, 'VENDOR', 'Prefix');
+// It is now possible to set the tables to extract using the method below
+$gen->setTables(['table_1', 'table_2']);
+// If no table is set, it will get the whole database not including view tables.
 $gen->generate();
 
 ```
 Simply as that, all of the database tables (excluding view tables) will be in its folder models, entities and controllers
-in the MVC path. The folders MUST ALREADY EXISTS.
+in the MVC path. The folders MUST ALREADY EXIST.
+Note that you can of course count on `PDOQueryBuilder` class to build queries easily.
+
+## The Query Builder
+
+This template counts on simple query builder that counts on all the basic functions of a query.
+It is auto-implemented when you use the db extractor, but you may also want to create your own
+queries.
+
+Note that when you use the method `AbstractModel::toArray`, this will turn the props into snake_case 
+unless you specify that you dont want setting `$snake = false` on `MyModel::toArray([], false)`. Check 
+the method description for further information.
+
+Example of usage:
+```php
+$stmt = new PDOQueryBuilder('my_table');
+
+// Insert John
+$stmt->insert(['name' => 'jon']);
+$result = $stmt->run();
+
+// Select John
+$stmt->select(['id as userId', 'name']);
+$stmt->where('name', 'jon');
+$result = $stmt->run();
+
+$stmt->update(['email' => 'john@mail.com', 'name' => 'john'])
+// If where is not set, it will throw an error
+$stmt->where('id', 1);
+$result = $stmt->run();
+
+// Delete John
+$stmt->delete();
+// If where is not set, it will throw an error
+$stmt->where('id', 1);
+$result = $stmt->run();
+
+// Raw query
+$result = $stmt->raw('SELECT * FROM my_table WHERE id = ? OR name = ?', [1, 'john']);
+```
 
 ---
 ## String Case Handler
@@ -307,7 +350,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   │   └── variables.php (CONST Variables definition file)
 │   ├── \logs
 │   │   └── You know what 'log' means, right?
-│   ├── partials ── _core <-- Core classes, don't touch :)
+│   ├── partials ── _core <-- Core files, don't touch :)
 │   ├── partials ── classes
 │   │   ├── \controller
 │   │   │   └── Controller classes
@@ -331,11 +374,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   │   └── servoices.php (Webservice application services router)
 │   ├── \sql
 │   │   └── Put your sql files here
-│   ├── \util (Utilities files, templates, error definition, etc.)
-│   ├── autoload.php (Autoloads all files included in partials/classes. THIS IS NOT the composer autoload.)
-│   ├── config.php (Loads the global settings)
-│   ├── routes.php (Root routes definition)
-│   ├── functions.php (Global functions)
+│   ├── \util (Utility files, templates, error definition, etc.)
 │   └── System-messages.json (System messages definition used in get_sysmsg($errCode). Not HTTP errors.)
 └── index.php (Endpoint renderer)
 ```

@@ -7,7 +7,7 @@
  * and so on
  */
 
-use MMWS\Handler\Endpoint;
+use MMWS\Factory\EndpointFactory;
 
 $v2 = require_once('app/routers/services.php');
 $ms = require_once('app/routers/micro-services.php');
@@ -16,15 +16,17 @@ $errors = require_once('app/routers/errors.php');
 $v2['ms'] = $ms;
 
 return [
+    '' => [
+        'body' => EndpointFactory::create()
+            ->get('amaze', 'me')
+    ],
     'ws' => [
         'v2' => $v2,
         'ms' => $ms,
         'version' => [
-            'body' => [
-                $e = new Endpoint(),
-                $e->get('info', 'version')
-                    ->cache()
-            ]
+            'body' => EndpointFactory::create()
+                ->get('info', 'version')
+                ->cache()
         ],
     ],
     'error' => $errors

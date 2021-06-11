@@ -87,7 +87,7 @@ class CURLRequestHandler
         $ctx = stream_context_create(['http' => $this->conf]);
         $res = file_get_contents($this->uri, false, $ctx);
 
-        if (!$res) return ['res' => false, 'msg' => 'Request result is null.'];
+        if (!$res) return ['res' => false, 'message' => 'Request result is null.'];
 
         $res = json_decode($res, true);
 

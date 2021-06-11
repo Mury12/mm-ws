@@ -18,7 +18,7 @@ $dir[] = 'app/partials/classes/';
 foreach ($dir as $directory) {
     $folders = scandir($directory);
     foreach ($folders as $folder) {
-        if (!preg_match('/(\.\.)|(\.)|(.\.php)/im', $folder)) {
+        if (!preg_match('/(\.\.)|(\.)|(.\.php)|(application)/im', $folder)) {
             if ($handle = opendir($directory . $folder)) {
                 while ($file = readdir($handle)) {
                     if ($file == "." || $file == "..") continue;
