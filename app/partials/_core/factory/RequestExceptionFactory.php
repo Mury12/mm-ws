@@ -2,6 +2,7 @@
 
 namespace MMWS\Factory;
 
+use Exception;
 use MMWS\Handler\RequestException;
 
 class RequestExceptionFactory
@@ -63,7 +64,7 @@ class RequestExceptionFactory
                 'error' => $message
             ];
         } else $error = $message;
-        $ex = new RequestException();
+            $ex = new RequestException();
         if ($code)
             $ex->setCode($code);
         if ($message)

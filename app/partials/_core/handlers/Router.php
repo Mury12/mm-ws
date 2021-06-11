@@ -144,13 +144,13 @@ class Router
             if (array_key_exists($match, $curRoute)) {
                 $curRoute = $curRoute[$match];
             } elseif (!sizeof($matches)) {
-                throw RequestExceptionFactory::create(null, 404);
+                $this->send404();
             } elseif (
                 sizeof($matches) && !array_key_exists($match, $curRoute)
             ) {
                 array_unshift($matches);
             } else {
-                throw RequestExceptionFactory::create(null, 404);
+                $this->send404();
             }
             //                                                                                          V-- skipping after this
             // It is skipping if more than 1 param is given to a middle route like /:company/:user/something/:soomethingId
@@ -158,19 +158,28 @@ class Router
                 unset($matches[$key]);
         }
         if (sizeof($matches) > 0) {
-            throw RequestExceptionFactory::create(null, 404);
+            $this->send404();
         }
-        if(array_key_exists('body', $curRoute)){
+        if (array_key_exists('body', $curRoute)) {
             $curRoute['body']->setEnv($params);
             return $curRoute;
-        }else{
-            RequestExceptionFactory::create(null, 404);
+        } else {
+            $this->send404();
         }
     }
-    
+
     function getErrorPage(String $err_code)
     {
         return $this->_routes['error'][$err_code]['body'];
+    }
+
+    /**
+     * Sends a 404 error and exits the app
+     */
+    private function send404()
+    {
+        send(http_message(404));
+        die();
     }
 
     /**
@@ -189,12 +198,12 @@ class Router
         $route = $this->bind($matches);
 
         if ($route) {
-            if(isset($uri[1])){
+            if (isset($uri[1])) {
                 $route['body']->setQueryParams();
             }
             return $route['body'];
         } else {
-            throw RequestExceptionFactory::create(null, 404);
+            $this->send404();
         }
     }
 }
