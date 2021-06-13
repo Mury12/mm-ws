@@ -16,7 +16,7 @@ define('_DEFAULT_MODULE_PATH_', 'app/partials/class');
 /** Default application path */
 define('_DEFAULT_APPLICATION_PATH_', _DEFAULT_CORE_PATH_ . '/application');
 /** Default indexes file path */
-define('_DEFAULT_STARTER_PATH_', _DEFAULT_CORE_PATH_ . "/application/starters");
+define('_DEFAULT_STARTER_PATH_', "initiators");
 if (!\file_exists('app/config/local/variables-local.php')) {
 
     /** * Route protector use flag (not quite done...) */

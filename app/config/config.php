@@ -57,7 +57,7 @@ $routes = require_once(_DEFAULT_APPLICATION_PATH_ . '/router.php');
 $router->init($routes);
 /** Loads the page content (JSON ONLY) */
 $endpoint  = $router->get();
-/** Sets default middlewares that will be used in every page */
+/** Sets default middlewares that will be activated for every page */
 $middlewares = [[new Authentication()]];
 /**
  * @var Bool $caching gets if the endpoint is caching

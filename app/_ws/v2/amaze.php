@@ -7,6 +7,7 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
+use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Interfaces\View;
 
 
@@ -18,6 +19,16 @@ class Module extends View
     function me(): array
     {
         return ['I am running :D'];
+    }
+
+    function errors(): array
+    {
+        $code = $this->data['params']['code'];
+        if ($code) {
+            throw RequestExceptionFactory::create('', $code);
+        } else {
+            throw RequestExceptionFactory::field(['code']);
+        }
     }
 }
 

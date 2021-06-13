@@ -15,6 +15,62 @@ Generate a SSH key at `./.ssh/ssh-name` in order to use JWT and set its name in 
 Webservice can be initialized with PHP CLI or any bundler you want.
 `php -S localhost:8081` 
 
+## Initiators
+
+Initiators are index files used to initiate the server. If you need a more complex index file you can set up
+at `index.php` changing the default index file. Note that you'll need to cretate two files for it: one for
+development and another for production so you'll have:
+
+  1. `/initiators/my-index-file.production.php`
+  2. `/initiators/my-index-file.development.php`
+
+And `index.php` will look like:
+
+```php
+<?php
+
+use MMWS\Handler\MMWS;
+// Load configurations
+require 'app/config/config.php';
+// Instantiates the main class
+$mmws = new MMWS('my-index-file');
+// Runs the app
+$mmws->amaze();
+
+?>
+```
+
+The `my-index-file.env.php` will look like:
+
+```php
+try {
+  /*------------------Necessary code-------------------*/
+  global $endpoint; 
+  /** Sends 404 if no page is found */
+  if (!$endpoint) die(send(http_message(404)));
+  /** Allows options request to check server */
+  if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    send(http_message(204));
+    return;
+  }
+  // Contains the response from the endpoint
+  $response = $endpoint->render();
+  /*--------------------------------------------------*/
+
+  # Here and in any other empty space you can put
+  # any kind of code but this is the necessary code.
+
+  /*------------------Necessary code-------------------*/
+  // Sends it back to the client
+  return send($response);
+  /*--------------------------------------------------*/
+} catch (Exception $e) {
+  throw $e;
+} catch (Error $e) {
+  throw $e;
+}
+```
+
 ## Routes
 
 Routes are added to its specific file inside `app/routers/ROUTE-GROUP-NAME.php` 
@@ -23,7 +79,7 @@ to add a new domain to this file.
 
 ### Route model:
 
- - `app/routers/ws.php` -> The actual webservices routes
+ - `app/routers/ws/v2.php` -> The actual webservices routes
  - `app/routers/ms.php` -> General service routes
  - `app/routers/error.php` -> Error routes
 
@@ -36,7 +92,7 @@ it will search for the file. It must exist before try.
 
 ### Example
 
-`app/routers/services.php` :
+`app/routers/ws/v2.php` :
 
 The `MMWS\Handler\Endpoint` component is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
@@ -72,6 +128,7 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
 ```
 
 Of course there are other controls but its not needed. If you want to know more, check Endpoint model file. Fully documented.
+> Note that `EndpointFactory::create()` is an abstraction for `[$e = new Layout(), $e->fn()->..]`.
 Just enjoy this following example about how to create a route:
 
 ```php

@@ -32,9 +32,4 @@ function router_load_files($directory = 'app/routers'): array
     return $router;
 }
 
-return array_merge(router_load_files(), [
-    '' => [
-        'body' => EndpointFactory::create()
-            ->get('amaze', 'me')
-    ]
-]);
+return router_load_files();

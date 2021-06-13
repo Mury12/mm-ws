@@ -157,8 +157,12 @@ class Router
             if (array_key_exists($key, $matches) && $matches[$key] === $match)
                 unset($matches[$key]);
         }
+        // Checks if the matches are over and if it is, checks if a '/' exists, meaning that this could be a root route
         if (sizeof($matches) > 0) {
             $this->send404();
+        } else if (array_key_exists('/', $curRoute)) {
+            // and if it is, use it.
+            $curRoute = $curRoute['/'];
         }
         if (array_key_exists('body', $curRoute)) {
             $curRoute['body']->setEnv($params);

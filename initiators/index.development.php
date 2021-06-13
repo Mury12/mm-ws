@@ -1,7 +1,7 @@
 <?php
 
 /**
- * USING MMWS v0.10.0-beta
+ * USING MMWS v1.0.1-beta
  * @see https://github.com/mury12/mm-ws for more information
  * and updates.
  */
