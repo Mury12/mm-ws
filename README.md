@@ -1,4 +1,4 @@
-# MM-WS - PHP Webservice Template
+# MM-WS - PHP Webservice Template @v0.10.0-beta
 
 ## Before using
 
@@ -15,6 +15,62 @@ Generate a SSH key at `./.ssh/ssh-name` in order to use JWT and set its name in 
 Webservice can be initialized with PHP CLI or any bundler you want.
 `php -S localhost:8081` 
 
+## Initiators
+
+Initiators are index files used to initiate the server. If you need a more complex index file you can set up
+at `index.php` changing the default index file. Note that you'll need to cretate two files for it: one for
+development and another for production so you'll have:
+
+  1. `/initiators/my-index-file.production.php`
+  2. `/initiators/my-index-file.development.php`
+
+And `index.php` will look like:
+
+```php
+<?php
+
+use MMWS\Handler\MMWS;
+// Load configurations
+require 'app/config/config.php';
+// Instantiates the main class
+$mmws = new MMWS('my-index-file');
+// Runs the app
+$mmws->amaze();
+
+?>
+```
+
+The `my-index-file.env.php` will look like:
+
+```php
+try {
+  /*------------------Necessary code-------------------*/
+  global $endpoint; 
+  /** Sends 404 if no page is found */
+  if (!$endpoint) die(send(http_message(404)));
+  /** Allows options request to check server */
+  if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    send(http_message(204));
+    return;
+  }
+  // Contains the response from the endpoint
+  $response = $endpoint->render();
+  /*--------------------------------------------------*/
+
+  # Here and in any other empty space you can put
+  # any kind of code but this is the necessary code.
+
+  /*------------------Necessary code-------------------*/
+  // Sends it back to the client
+  return send($response);
+  /*--------------------------------------------------*/
+} catch (Exception $e) {
+  throw $e;
+} catch (Error $e) {
+  throw $e;
+}
+```
+
 ## Routes
 
 Routes are added to its specific file inside `app/routers/ROUTE-GROUP-NAME.php` 
@@ -23,16 +79,24 @@ to add a new domain to this file.
 
 ### Route model:
 
- - `app/routers/services.php` -> The actual webservices routes
- - `app/routers/micro-services.php` -> General service routes
- - `app/routers/errors.php` -> Error routes
+ - `app/routers/ws/v2.php` -> The actual webservices routes
+ - `app/routers/ms.php` -> General service routes
+ - `app/routers/error.php` -> Error routes
+
+> Note that you can add as much router files you want. The name of the file will be the prefix
+so if you need to create multiple domains, it is possible to use as folders.
+
+> Also note that module-create will ask you for the default route file or it will be created inside
+`routers/ws/v2.php`. If you want to write into another file, type the path like `ws/v1/domain.php` and
+it will search for the file. It must exist before try.
 
 ### Example
 
-`app/routers/services.php` :
+`app/routers/ws/v2.php` :
 
 The `MMWS\Handler\Endpoint` component is very important. It is responsible for
 every page/data rendering in the webservice, altough, it will need basically 2 functions:
+> Note that is more effective to use `EndpointFactory::create()->{methodA}->{methodB}->..` to create endpoints.
 
 ```php
 <?php 
@@ -64,6 +128,7 @@ every page/data rendering in the webservice, altough, it will need basically 2 f
 ```
 
 Of course there are other controls but its not needed. If you want to know more, check Endpoint model file. Fully documented.
+> Note that `EndpointFactory::create()` is an abstraction for `[$e = new Layout(), $e->fn()->..]`.
 Just enjoy this following example about how to create a route:
 
 ```php
@@ -184,17 +249,17 @@ modifying the following global variables in `variables.php`:
 ---
 ## Database Model Extractor
 
-No more worrying in creating the MVC files. In this environment, you have the
-MMWS Database Model Extractor. But well.. What does it mean??
+This module is responsible for creating the base files for working.
+Ensure to use it to develop faster.
 
-In every project, you MUST have to build your database first, right? So
-Once you've done it, you've already done the MVC files. Well, Its not an ORM,
-but it converts every table in your remote database to a Controller, a Model
-and an Entity so only lasts the business rules
+This extractor gets all the selected tables in a database and turns it 
+in to 3 files: Model, Controler and Entity and they're all linked, so
+you'll only need to use them. The `AbstractModel` and `AbstractController` classes
+will do most of the job, letting you only with the Entity classes that you'll put
+your CRUD business rules. Note that relation tables are possible but you will surely
+need to adjust them in order to get the expected results.
 
-Maybe in future the CRUD functions are added but for now, only method
-definition and no function. To do this, you can run it separately
-like `php mvc-creator.php`.
+To use it, just type `composer create-mvc` in your terminal.
 
 Usage:
 
@@ -204,11 +269,53 @@ Usage:
 use MMWS\Handler\DatabaseModelExtractor;
 
 $gen = new DatabaseModelExtractor('database_name', 'mvc_path', 1, 'VENDOR', 'Prefix');
+// It is now possible to set the tables to extract using the method below
+$gen->setTables(['table_1', 'table_2']);
+// If no table is set, it will get the whole database not including view tables.
 $gen->generate();
 
 ```
 Simply as that, all of the database tables (excluding view tables) will be in its folder models, entities and controllers
-in the MVC path. The folders MUST ALREADY EXISTS.
+in the MVC path. The folders MUST ALREADY EXIST.
+Note that you can of course count on `PDOQueryBuilder` class to build queries easily.
+
+## The Query Builder
+
+This template counts on simple query builder that counts on all the basic functions of a query.
+It is auto-implemented when you use the db extractor, but you may also want to create your own
+queries.
+
+Note that when you use the method `AbstractModel::toArray`, this will turn the props into snake_case 
+unless you specify that you dont want setting `$snake = false` on `MyModel::toArray([], false)`. Check 
+the method description for further information.
+
+Example of usage:
+```php
+$stmt = new PDOQueryBuilder('my_table');
+
+// Insert John
+$stmt->insert(['name' => 'jon']);
+$result = $stmt->run();
+
+// Select John
+$stmt->select(['id as userId', 'name']);
+$stmt->where('name', 'jon');
+$result = $stmt->run();
+
+$stmt->update(['email' => 'john@mail.com', 'name' => 'john'])
+// If where is not set, it will throw an error
+$stmt->where('id', 1);
+$result = $stmt->run();
+
+// Delete John
+$stmt->delete();
+// If where is not set, it will throw an error
+$stmt->where('id', 1);
+$result = $stmt->run();
+
+// Raw query
+$result = $stmt->raw('SELECT * FROM my_table WHERE id = ? OR name = ?', [1, 'john']);
+```
 
 ---
 ## String Case Handler
@@ -307,7 +414,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   │   └── variables.php (CONST Variables definition file)
 │   ├── \logs
 │   │   └── You know what 'log' means, right?
-│   ├── partials ── _core <-- Core classes, don't touch :)
+│   ├── partials ── _core <-- Core files, don't touch :)
 │   ├── partials ── classes
 │   │   ├── \controller
 │   │   │   └── Controller classes
@@ -326,16 +433,12 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   │   └── \services 
 │   │       └── Services classes
 │   ├── \routers
-│   │   ├── errors.php (Error router file)
-│   │   ├── micro-services.php (General services router)
-│   │   └── servoices.php (Webservice application services router)
+│   │   ├── error.php (Error router file)
+│   │   ├── ms.php (General services router)
+│   │   └── ws.php (Webservice application services router)
 │   ├── \sql
 │   │   └── Put your sql files here
-│   ├── \util (Utilities files, templates, error definition, etc.)
-│   ├── autoload.php (Autoloads all files included in partials/classes. THIS IS NOT the composer autoload.)
-│   ├── config.php (Loads the global settings)
-│   ├── routes.php (Root routes definition)
-│   ├── functions.php (Global functions)
+│   ├── \util (Utility files, templates, error definition, etc.)
 │   └── System-messages.json (System messages definition used in get_sysmsg($errCode). Not HTTP errors.)
 └── index.php (Endpoint renderer)
 ```

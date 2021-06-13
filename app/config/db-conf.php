@@ -1,5 +1,6 @@
 <?php
 
+use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Connection;
 
 /** Uses a local DB config to local db or dev */
@@ -23,6 +24,8 @@ try {
     /** @var PDO $conn This is the global variable to be used in DB queries */
     $conn = $db->mysql();
 } catch (PDOException $e) {
-    send(http_message(500));
-    die;
+    throw RequestExceptionFactory::create([
+        'message' => 'Database connection not available.',
+        'error' => $e->getMessage(),
+    ], 500);
 }

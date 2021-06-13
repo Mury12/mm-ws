@@ -81,7 +81,7 @@ class Connection
             );
             return $conn;
         } catch (\PDOException $e) {
-            report(['type' => 'Database error', 'msg' => $e->getMessage()]);
+            report(['type' => 'Database error', 'message' => $e->getMessage()]);
             throw $e;
         }
         return false;

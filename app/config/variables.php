@@ -9,7 +9,14 @@
 if (!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if (!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
 if (!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
-
+/** Default core classes path */
+define('_DEFAULT_CORE_PATH_', 'app/partials/_core');
+/** Default module classes path */
+define('_DEFAULT_MODULE_PATH_', 'app/partials/class');
+/** Default application path */
+define('_DEFAULT_APPLICATION_PATH_', _DEFAULT_CORE_PATH_ . '/application');
+/** Default indexes file path */
+define('_DEFAULT_STARTER_PATH_', "initiators");
 if (!\file_exists('app/config/local/variables-local.php')) {
 
     /** * Route protector use flag (not quite done...) */
@@ -54,8 +61,12 @@ if (!\file_exists('app/config/local/variables-local.php')) {
     // Enable the headers below if it will need permissioned pages
 
     // define('ORIGIN_HTTP_ADDR', getallheaders()['User-Addr'] ?? null);
-    define('USER_AUTHORIZATION_TOKEN', getallheaders()['Authorization'] ?? null);
+    if (function_exists('getallheaders')) {
+        define('USER_AUTHORIZATION_TOKEN', getallheaders()['Authorization'] ?? null);
+    }
     // define('USER_AUTHORIZATION_TOKEN', 'AUTHORIZED');
-    $key = file_get_contents($_ENV['JWT_KEY_PATH']);
-    define('_JWT_DEFINED_KEY_', $key);
+    if (array_key_exists('JWT_KEY_PATH', $_ENV)) {
+        $key = file_get_contents($_ENV['JWT_KEY_PATH']);
+        define('_JWT_DEFINED_KEY_', $key);
+    }
 } else require_once 'app/config/local/variables-local.php';

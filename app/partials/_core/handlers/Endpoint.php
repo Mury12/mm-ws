@@ -225,7 +225,7 @@ class Endpoint
     {
         global $request, $middlewares;
         /**
-         * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed AFTER the page rendering
+         * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed BEFORE page rendering
          */
         $middleware = new Queue(
             'MMWS\Interfaces\IMiddleware',
