@@ -24,5 +24,4 @@
 use MMWS\Factory\EndpointFactory;
 
 return [
-
 ];
