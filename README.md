@@ -23,9 +23,16 @@ to add a new domain to this file.
 
 ### Route model:
 
- - `app/routers/services.php` -> The actual webservices routes
- - `app/routers/micro-services.php` -> General service routes
- - `app/routers/errors.php` -> Error routes
+ - `app/routers/ws.php` -> The actual webservices routes
+ - `app/routers/ms.php` -> General service routes
+ - `app/routers/error.php` -> Error routes
+
+> Note that you can add as much router files you want. The name of the file will be the prefix
+so if you need to create multiple domains, it is possible to use as folders.
+
+> Also note that module-create will ask you for the default route file or it will be created inside
+`routers/ws/v2.php`. If you want to write into another file, type the path like `ws/v1/domain.php` and
+it will search for the file. It must exist before try.
 
 ### Example
 
@@ -369,9 +376,9 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 │   │   └── \services 
 │   │       └── Services classes
 │   ├── \routers
-│   │   ├── errors.php (Error router file)
-│   │   ├── micro-services.php (General services router)
-│   │   └── servoices.php (Webservice application services router)
+│   │   ├── error.php (Error router file)
+│   │   ├── ms.php (General services router)
+│   │   └── ws.php (Webservice application services router)
 │   ├── \sql
 │   │   └── Put your sql files here
 │   ├── \util (Utility files, templates, error definition, etc.)

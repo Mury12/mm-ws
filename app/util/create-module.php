@@ -56,27 +56,38 @@ if ($argc === 3) {
         // Explodes the URI to get the keywords to the path
 
         // Loads the current service routes array
-        $routes = require_once 'app/routers/services.php';
-        // Loads the template
-        // $template = file_get_contents('app/util/templates/service.template');
-        $template = file_get_contents('app/routers/services.php');
 
-        $current = $routes;
 
         // Asks for the url to create the service route
         // Do not do this in your coding lmao
         pathname:
         $done = false;
         while (!$done) {
-            print_r("\nOk. Type the URI (user or user/profile note that the 2nd option will not nest routes): ");
+            print_r("\nOk. Type the URI in router folder (ws/v2 ws/v1, ws/v2/user, etc..): ");
             $str = "";
             fscanf(STDIN, '%s', $str);
             $str = trim(strtolower(preg_replace('/[ _]/im', '-', $str)));
             if (strlen($str)) $done = true;
         }
+        // Checks if the selected router exists
+        $uriParts = explode('/', $str);
+        $routerFileName = $uriParts;
+        array_pop($routerFileName);
+        $routerFileName = implode('/', $routerFileName);
+        if (!file_exists("app/routers/$routerFileName.php")) {
+            print_r("\n Sorry, this file does not exist, please type the correct name");
+            goto pathname;
+        }
+
+        $routes = require_once "app/routers/$routerFileName.php";
+        // Loads the template
+        // $template = file_get_contents('app/util/templates/service.template');
+        $template = file_get_contents("app/routers/$routerFileName.php");
+
+        $current = $routes;
 
         // $uri = explode('/', $str);
-        $uri = $str;
+        $uri = $uriParts[sizeof($uriParts) - 1];
 
         if (array_key_exists($uri, $current)) {
             print_r("\nSorry, the path chosen is already taken. Please choose another.");
@@ -128,8 +139,8 @@ if ($argc === 3) {
         // Replaces the keyword with the new array of routes
         $output = str_replace("];\n", $text, $template);
         // Saves the file
-        file_put_contents('app/routers/services.php', $output);
-        print_r("\nService route for $name identified by /ws/v2/$uri successfully created at " . 'app/routers/services.php');
+        file_put_contents("app/routers/$routerFileName.php", $output);
+        print_r("\nService route for '$name' identified by '$routerFileName/$uri' successfully created at 'app/routers/$routerFileName.php'");
         print_r("\nThank you for using me. If you want to do it again, just call me `php create-module.php`.\n");
     } catch (Exception $e) {
         rmdir($path . $folder);

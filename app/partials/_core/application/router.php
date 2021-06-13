@@ -9,25 +9,32 @@
 
 use MMWS\Factory\EndpointFactory;
 
-$v2 = require_once('app/routers/services.php');
-$ms = require_once('app/routers/micro-services.php');
-$errors = require_once('app/routers/errors.php');
+/**
+ * This loads all the routers in the app/routers.
+ * @param string[] $directory the directory
+ */
+function router_load_files($directory = 'app/routers'): array
+{
+    if ($handle = opendir($directory)) {
+        while ($file = readdir($handle)) {
+            if ($file == "." || $file == "..") continue;
+            else {
+                $pathname = $directory . '/' . $file;
+                $domain = str_replace('.php', '', $file);
+                if (is_dir($pathname)) {
+                    $router[$domain] = router_load_files($pathname);
+                } else {
+                    $router[$domain] = require_once $pathname;
+                }
+            }
+        }
+    }
+    return $router;
+}
 
-$v2['ms'] = $ms;
-
-return [
+return array_merge(router_load_files(), [
     '' => [
         'body' => EndpointFactory::create()
             ->get('amaze', 'me')
-    ],
-    'ws' => [
-        'v2' => $v2,
-        'ms' => $ms,
-        'version' => [
-            'body' => EndpointFactory::create()
-                ->get('info', 'version')
-                ->cache()
-        ],
-    ],
-    'error' => $errors
-];
+    ]
+]);
