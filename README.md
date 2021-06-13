@@ -169,9 +169,9 @@ the procedure at `_ws/v2/band/yardbirds.php` file you'll get it by using `$this-
 
 The request model of our webservice is simple to use. Basically, it is composed by:
  1. The Request object;
- 2. Request::body;
- 3. Request::params; ad
- 4. Request::query.
+ 2. `Request::body`;
+ 3. `Request::params`; and
+ 4. `Request::query`.
 
 The `Module` class used to build an endpoint extends the `View` class, that has a `Request` object inside. So, to
 access these properties, you'll use `$this->data['prop']` as following:
@@ -354,11 +354,11 @@ Note that you can of course count on `PDOQueryBuilder` class to build queries ea
 
 ## The Module Self-Creator
 
-It is possible to create enpoints automatically. All you need is to type `composer create-module groupname domain`.
+It is possible to create endpoints automatically. All you need is to type `composer create-module groupname domain`.
 So, if you want to create an endpoint to manage users, just type `composer create-module manage user` and look to 
-the terminal and ask the required questions to proceed.
+the terminal and answer the required questions to proceed.
 
-After the creation is finished, you'll need to go to the `_ws/v2/domain/groupname.php` and adjust the required functions.
+After the creation is finished, you'll need to go to `_ws/v2/domain/groupname.php` and adjust the required functions.
 As it is a basic generic generator, it will not write business rules for you.
 
 ## The Query Builder
