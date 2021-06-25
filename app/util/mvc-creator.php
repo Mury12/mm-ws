@@ -22,7 +22,7 @@ require_once 'app/config/db-conf.php';
 $dbm = new DatabaseModelExtractor(DB_NAME, 'app/partials/classes', 1);
 
 // It will set to only extract these tables
-// $dbm->setTables(['table_1', 'table_2', 'table_3']);
+$dbm->setTables(['users']);
 
 // Starts 
 $dbm->generate();

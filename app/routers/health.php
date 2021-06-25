@@ -22,11 +22,14 @@
  */
 
 use MMWS\Factory\EndpointFactory;
+use MMWS\Middleware\Authentication;
 
 return [
     '/' => [
         'body' => EndpointFactory::create()
             ->get('amaze', 'me')
+            ->permission('not')
+            ->addMiddleware([new Authentication(), 'init'])
     ],
     'error' => [
         'params' => ['code'],

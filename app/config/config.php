@@ -58,7 +58,9 @@ $router->init($routes);
 /** Loads the page content (JSON ONLY) */
 $endpoint  = $router->get();
 /** Sets default middlewares that will be activated for every page */
-$middlewares = [[new Authentication()]];
+$middlewares = [[
+    // new Authentication()
+]];
 /**
  * @var Bool $caching gets if the endpoint is caching
  */
