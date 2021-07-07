@@ -15,6 +15,7 @@ use MMWS\Factory\EndpointFactory;
  */
 function router_load_files($directory = 'app/routers'): array
 {
+    $router = [];
     if ($handle = opendir($directory)) {
         while ($file = readdir($handle)) {
             if ($file == "." || $file == "..") continue;
@@ -22,9 +23,14 @@ function router_load_files($directory = 'app/routers'): array
                 $pathname = $directory . '/' . $file;
                 $domain = str_replace('.php', '', $file);
                 if (is_dir($pathname)) {
-                    $router[$domain] = router_load_files($pathname);
+                    $loadedRoutes = router_load_files($pathname);
                 } else {
-                    $router[$domain] = require_once $pathname;
+                    $loadedRoutes = require_once $pathname;
+                }
+                if(array_key_exists($domain, $router)){
+                    $router[$domain] = array_merge($router[$domain], $loadedRoutes);
+                }else{
+                    $router[$domain] = $loadedRoutes;
                 }
             }
         }

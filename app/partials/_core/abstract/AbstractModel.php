@@ -2,57 +2,16 @@
 
 namespace MMWS\Interfaces;
 
+use Error;
 use MMWS\Handler\CaseHandler;
 
 class AbstractModel
 {
-    public $entity;
 
     /**
      * @var String $table the table name for this model;
      */
-    public $table = 'avaliacao';
-
-    /**
-     * Saves this instance to the database
-     */
-    public function save()
-    {
-        return $this->entity->save();
-    }
-
-    /**
-     * Updates this instance to the database
-     */
-    public function update()
-    {
-        return $this->entity->update();
-    }
-
-    /**
-     * Get one instance from the database
-     */
-    public function get(array $filters = [], bool $asobj = false)
-    {
-        return $this->entity->get($filters, $asobj);
-    }
-
-    /**
-     * Get all the instances from the database and returns 
-     * as an SELF::CLASS array
-     */
-    public function getAll(array $filters = [], bool $asobj = false)
-    {
-        return $this->entity->getAll($filters, $asobj);
-    }
-
-    /**
-     * Removes this instance from the database
-     */
-    public function delete()
-    {
-        return $this->entity->delete();
-    }
+    public $table = '';
 
     /**
      * Returns an instance of the object as an array format,
@@ -77,7 +36,7 @@ class AbstractModel
     {
         $arr = [];
         foreach ((array) $this as $key => $prop) {
-            if (!(preg_match('/entity/im', $key) || $key === 'table' || array_search($key, $skip) !== false) && $prop) {
+            if (!($key === 'table' || array_search($key, $skip) !== false) && $prop) {
                 $k = $snake
                     ? CaseHandler::convert($key, 1)
                     : $key;
@@ -85,5 +44,19 @@ class AbstractModel
             }
         }
         return $arr;
+    }
+
+    public function __get(string $name)
+    {
+        return $this->{$name} ?? null;
+    }
+
+    public function __set($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->{$name} = $value;
+        } else {
+            throw new Error("Property $name does not exists for object of type '" . self::class . "'.");
+        }
     }
 }

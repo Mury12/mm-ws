@@ -196,7 +196,7 @@ class DatabaseModelExtractor
         $constructor = "";
         $attrSetter = "";
         foreach ($values as $value) {
-            $attributes .= "public $" . $value . ";\n    ";
+            $attributes .= "protected $" . $value . ";\n    ";
             $constructor .= "$" . $value . " = null, ";
             $attrSetter .= '$this->' . $value . " = $" . $value . ";\n\t    ";
         }
@@ -205,7 +205,6 @@ class DatabaseModelExtractor
         $output = str_replace('{CLASS_NAME}', $model, $output);
         $output = str_replace('{TABLE_NAME}', "'" . $this->snaked[$model] . "';\n", $output);
         $output = str_replace('{CONSTRUCTOR}', $constructor, $output);
-        $output = str_replace('{ENTITY}', $model . "Entity", $output);
         $output = str_replace('{VENDOR}', $this->vendor, $output);
         $output = str_replace('{ATTRIBUTE_SET}', $attrSetter, $output);
         return $output;

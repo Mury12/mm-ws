@@ -6,6 +6,8 @@
  * and updates.
  */
 
+use MMWS\Factory\RequestExceptionFactory;
+
 try {
   global $endpoint;
   /** Sends 404 if no page is found */
@@ -21,7 +23,7 @@ try {
   // Sends it back to the client
   return send($response);
 } catch (Exception $e) {
-  throw $e;
+  throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
 } catch (Error $e) {
-  throw $e;
+  throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
 }

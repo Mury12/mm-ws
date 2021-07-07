@@ -2,16 +2,17 @@
 
 namespace MMWS\Interfaces;
 
-class AbstractController 
+class AbstractController
 {
-    public $model;
+    protected $entity;
+    protected $model;
 
     /**
      * Saves this instance to the database
      */
     public function save()
     {
-        return $this->model->save();
+        return $this->entity->save();
     }
 
     /**
@@ -19,7 +20,7 @@ class AbstractController
      */
     public function update()
     {
-        return $this->model->update();
+        return $this->entity->update();
     }
 
     /**
@@ -27,7 +28,7 @@ class AbstractController
      */
     public function get(array $filters = [], bool $asobj = false)
     {
-        return $this->model->get($filters, $asobj);
+        return $this->entity->get($filters, $asobj);
     }
 
     /**
@@ -36,7 +37,7 @@ class AbstractController
      */
     public function getAll(array $filters = [], bool $asobj = false)
     {
-        return $this->model->getAll($filters, $asobj);
+        return $this->entity->getAll($filters, $asobj);
     }
 
     /**
@@ -44,6 +45,13 @@ class AbstractController
      */
     public function delete()
     {
-        return $this->model->delete();
+        return $this->entity->delete();
+    }
+
+    public function __get(string $name)
+    {
+        if ($this->model) {
+            return $this->model->{$name};
+        } else return null;
     }
 }

@@ -11,26 +11,26 @@
  * 
  */
  
-namespace {VENDOR}\Controller;
+namespace MMWS\Controller;
 
-use {VENDOR}\Model\{USE_CLASS};
-use {VENDOR}\Entity\{USE_CLASS}Entity;
-use {VENDOR}\Interfaces\AbstractController;
+use MMWS\Model\User;
+use MMWS\Entity\UserEntity;
+use MMWS\Interfaces\AbstractController;
 
-class {CLASS_NAME} extends AbstractController
+class UserController extends AbstractController
 {
     public $entity;
     public $model;
 
     public function __construct(array $data = [])
     {
-        $model = new {USE_CLASS}();
+        $model = new User();
         foreach ($data as $key => $prop) {
             if (property_exists($model, $key)) {
                 $model->{$key} = $prop;
             }
         }
-        $this->entity = new {USE_CLASS}Entity($model);
+        $this->entity = new UserEntity($model);
         $this->model = &$this->entity->model;
     }
 

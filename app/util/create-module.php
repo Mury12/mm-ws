@@ -75,8 +75,18 @@ if ($argc === 3) {
         array_pop($routerFileName);
         $routerFileName = implode('/', $routerFileName);
         if (!file_exists("app/routers/$routerFileName.php")) {
-            print_r("\n Sorry, this file does not exist, please type the correct name");
-            goto pathname;
+            print_r("\n The suggested router does not exist. Creating a new reference..");
+            $newRouterTemplate = file_get_contents('app/util/templates/router.template');
+            $suggestedDirectory = (explode('/', $routerFileName));
+            array_pop($suggestedDirectory);
+            $currentDirectory = "app/routers";
+            foreach ($suggestedDirectory as $directory) {
+                $currentDirectory .= "/$directory";
+                if (!is_dir($currentDirectory)) {
+                    mkdir($currentDirectory);
+                }
+            }
+            file_put_contents("app/routers/$routerFileName.php", $newRouterTemplate);
         }
 
         $routes = require_once "app/routers/$routerFileName.php";
