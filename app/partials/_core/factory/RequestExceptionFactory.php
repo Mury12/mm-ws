@@ -59,15 +59,22 @@ class RequestExceptionFactory
     static private function createMessage($message, int $code): RequestException
     {
         $error = array();
-        if (!is_array($message)) {
+        // Verifies if the message isn't a json encoded array
+        $msg = json_decode($message, true);
+        // Then if not, just assign
+        if (!$msg)
+            $msg = $message;
+
+        if (!is_array($msg)) {
             $error = [
-                'error' => $message
+                'error' => $msg
             ];
-        } else $error = $message;
-            $ex = new RequestException();
+        } else $error = $msg;
+
+        $ex = new RequestException();
         if ($code)
             $ex->setCode($code);
-        if ($message)
+        if ($msg)
             $ex->setMessage($error);
 
         return $ex;
