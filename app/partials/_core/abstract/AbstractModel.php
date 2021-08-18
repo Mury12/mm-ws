@@ -37,9 +37,10 @@ class AbstractModel
         $arr = [];
         foreach ((array) $this as $key => $prop) {
             if (!($key === 'table' || array_search($key, $skip) !== false) && $prop) {
+                $sanitizedKey = preg_replace('/\W+/i', '', $key);
                 $k = $snake
-                    ? CaseHandler::convert($key, 1)
-                    : $key;
+                    ? CaseHandler::convert($sanitizedKey, 1)
+                    : $sanitizedKey;
                 $arr[$k] = $prop;
             }
         }
