@@ -499,6 +499,8 @@ class PDOQueryBuilder
             $and[] = $str;
         }
         $this->query .= ($this->hasWhere ? ' AND ' : ' WHERE ') . '(' . implode(" $aggregator ", $and) . ')';
+        if (!$this->hasWhere)
+            $this->hasWhere = true;
         return $this;
     }
 

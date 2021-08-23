@@ -143,7 +143,7 @@ class {CLASS_NAME} extends AbstractEntity
             $stmt = new PDOQueryBuilder($this->model->table, $rowLimit, $page);
 
             $stmt->select($columns);
-            if (isset($filters['filters'])) {
+            if (isset($filters['filters']) && sizeof($filters['filters'])) {
                 $stmt->setFilters($filters['filters'], $and);
             }
             // $stmt->order(['name' => 'ASC']);
