@@ -159,7 +159,6 @@ class {CLASS_NAME} extends AbstractEntity
         return [];
     }
 
-
     /**
      * Removes this instance from the database
      */
@@ -175,6 +174,25 @@ class {CLASS_NAME} extends AbstractEntity
             return $stmt->run();
         } catch (PDOException $e) {
             throw RequestExceptionFactory::create("Something bad happened while performing this action", 500);
+        }
+    }
+    
+    public function search(string $query, bool $asobj = false, int $page = 1)
+    {
+        try {
+            $fields = $this->model->getColumnNames();
+            $stmt = new PDOQueryBuilder($this->model->table, 10, $page);
+            $stmt->select($fields);
+            $stmt->search([$fields], $query);
+            $instances = $stmt->run();
+            if ($asobj) {
+                return array_map(function ($instance) {
+                    $ctl = new {USE_CLASS}Controller($instance);
+                    return $ctl->model;
+                }, $instances);
+            } else return $instances;
+        } catch (PDOException $e) {
+            throw RequestExceptionFactory::create('Something bad happened while performing this action', 500);
         }
     }
 }
