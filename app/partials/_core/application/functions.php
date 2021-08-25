@@ -394,3 +394,19 @@ function keys_match($data, array $keys, string $instanceOf = null)
     }
     return sizeof($errors) ? $errors : false;
 }
+
+/**
+ * Remove null values or empty arrays from an array
+ * @param array &$array subject
+ * @return array
+ */
+function remove_nulls(array &$array)
+{
+    foreach ($array as $key => $prop) {
+        if (is_array($prop) && !sizeof($prop)) {
+            unset($array[$key]);
+        } else {
+            if (!$prop) unset($array[$key]);
+        }
+    }
+}

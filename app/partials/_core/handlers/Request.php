@@ -100,7 +100,7 @@ class Request
      */
     function setQuery(array $query)
     {
-        $this->query = $query;
+        $this->query = CaseHandler::convert($query, 1);
     }
 
     /**
