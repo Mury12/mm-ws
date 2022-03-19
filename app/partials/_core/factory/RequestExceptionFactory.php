@@ -60,7 +60,8 @@ class RequestExceptionFactory
     {
         $error = array();
         // Verifies if the message isn't a json encoded array
-        $msg = json_decode($message, true);
+        // Suppress the error because it doesn't really matter.
+        $msg = @json_decode($message, true);
         // Then if not, just assign
         if (!$msg)
             $msg = $message;
