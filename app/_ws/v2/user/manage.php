@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the {ENDPOINT_NAME} Module.
+ * This is the Manage Module.
  * A Module is a class that extends a a View, performing as 
  * a controller to a certain endpoint. Use this class to
  * perform calls to the actual controllers that execute
@@ -14,21 +14,24 @@
 
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Interfaces\View;
-use MMWS\Controller\{CONTROLLER_NAME};
+use MMWS\Controller\UserController;
+use MMWS\Handler\JWTHandler;
+use MMWS\Handler\RequestException;
+
 class Module extends View
 {
-     /**
+    /**
      * Call the create method to create a new user into
      * the database.
      */
     function create(): array
     {
-        $hasErrors = keys_match($this->data['body'], ['prop1', 'prop2']);
+        $hasErrors = keys_match($this->data['body'], ['name', 'email', 'password']);
         if (!$hasErrors) {
-            $controller = new {CONTROLLER_NAME}($this->data['body']);
+            $controller = new UserController($this->data['body']);
             // Checks if the generated instance is the right user type
             $result = $controller->save();
-            
+
             set_http_code(201);
             return $result;
         } else {
@@ -39,47 +42,10 @@ class Module extends View
     /**
      * Call the GET method to GET a single user or a set of users
      */
-    function get()
+    function get(): array
     {
-        $filters = [
-            'fields' => [
-                'id', 'checksum', 'item_name', 'item_type', 'created_at', 'price'
-            ],
-        ];
-        $hasErrors = keys_match($this->params, ['id']);
-        if (!$hasErrors) {
-            return $this->getOne();
-        } else {
-            return $this->getAll();
-        }
-    }
-
-    function getOne()
-    {
-        $controller = new {CONTROLLER_NAME}();
-        $controller->model->id = $this->params['id'];
-        $result = $controller->get([], true);
-        return DstProductFactory::createArrayWithObject($result);
-    }
-
-    function getAll()
-    {
-        $controller = new {CONTROLLER_NAME}();
-        if (sizeof($this->query)) {
-            $filters['filters'] = $this->query;
-        }
-        $result = $controller->getAll($filters, true);
-
-        /**
-         * @var \DollarSoundtrack\Model\DstProduct[]
-         */
-        $result = $controller->get($filters, true);
-        if (sizeof($result)) {
-            foreach ($result as &$product) {
-                DstProductFactory::createArrayWithObject($product);
-            }
-            return $result;
-        }
+        $controller = new UserController($this->data['params']);
+        return $controller->get($this->data['query']);
     }
 
     /**
@@ -89,7 +55,7 @@ class Module extends View
     function update()
     {
         if (array_key_exists('id', $this->data['params'])) {
-            $controller = new {CONTROLLER_NAME}($this->data['body']);
+            $controller = new UserController($this->data['body']);
             $controller->model->id = $this->data['params']['id'];
             return $controller->update();
         } else {
@@ -103,10 +69,35 @@ class Module extends View
     function delete()
     {
         if (array_key_exists('id', $this->data['params'])) {
-            $controller = new {CONTROLLER_NAME}($this->data['params']);
+            $controller = new UserController($this->data['params']);
             return $controller->delete();
         } else {
             throw RequestExceptionFactory::field(['id']);
+        }
+    }
+
+    function login()
+    {
+        $hasErrors = keys_match($this->data['body'], ['email', 'password']);
+        if (!$hasErrors) {
+            try {
+                $controller = new UserController();
+                $result = $controller->get([
+                    'filters' => $this->data['body'],
+                ], true);
+                if ($result) {
+                    $jwt = JWTHandler::create($result[0]);
+                    return ['token' => $jwt];
+                } else {
+                    throw RequestExceptionFactory::create("Incorrect user or password", 401);
+                }
+            } catch (RequestException $e) {
+                throw $e;
+            } catch (Error $e) {
+                throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
+            }
+        } else {
+            throw RequestExceptionFactory::field($hasErrors);
         }
     }
 }

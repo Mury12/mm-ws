@@ -202,11 +202,11 @@ class PDOQueryBuilder
         if ($this->trx && $this->trx instanceof \PDO) {
             try {
                 $this->trx->commit();
-                return $this;
             } catch (PDOException $e) {
                 throw $e;
             }
         }
+        return $this;
     }
 
     /**
@@ -219,11 +219,11 @@ class PDOQueryBuilder
         if ($this->trx && $this->trx instanceof \PDO) {
             try {
                 $this->trx->rollback();
-                return $this;
             } catch (PDOException $e) {
                 throw $e;
             }
         }
+        return $this;
     }
 
     private function check()
@@ -499,6 +499,8 @@ class PDOQueryBuilder
             $and[] = $str;
         }
         $this->query .= ($this->hasWhere ? ' AND ' : ' WHERE ') . '(' . implode(" $aggregator ", $and) . ')';
+        if (!$this->hasWhere)
+            $this->hasWhere = true;
         return $this;
     }
 

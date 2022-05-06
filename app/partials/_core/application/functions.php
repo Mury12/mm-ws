@@ -41,7 +41,7 @@ function report($error)
  */
 function http_message(Int $code, $status = null)
 {
-    $error = require_once('app/util/errors.php');
+    $error = $error ?? require('app/util/errors.php');
     set_http_code($error[$code]['code']);
     if ($status) {
         $error[$code]['status'] = $status;
@@ -155,7 +155,7 @@ function unique_id(Int $size = 6, $hash = 'sha256')
     $uid = '';
     $len = 6;
 
-    if (!$pre) return ['res' => false, 'msg' => 'Invalid hashing algorithm.'];
+    if (!$pre) return ['res' => false, 'message' => 'Invalid hashing algorithm.'];
 
     if ($size <= 128) {
         $len = $size;
@@ -393,4 +393,20 @@ function keys_match($data, array $keys, string $instanceOf = null)
         }
     }
     return sizeof($errors) ? $errors : false;
+}
+
+/**
+ * Remove null values or empty arrays from an array
+ * @param array &$array subject
+ * @return array
+ */
+function remove_nulls(array &$array)
+{
+    foreach ($array as $key => $prop) {
+        if (is_array($prop) && !sizeof($prop)) {
+            unset($array[$key]);
+        } else {
+            if (!$prop) unset($array[$key]);
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace MMWS\Middleware;
 
 use DateTime;
 use MMWS\Factory\RequestExceptionFactory;
+use MMWS\Handler\RequestException;
 use MMWS\Handler\SESSION;
 use MMWS\Interfaces\IMiddleware;
 
@@ -50,7 +51,15 @@ class Throttle implements IMiddleware
 
     function init()
     {
-        return $this->action();
+        try {
+            return $this->action();
+        } catch (RequestException $e) {
+            set_http_code($e->getCode());
+            $error = json_decode($e->getMessage(), true);
+            if (is_array($error))
+                send($error);
+            die();
+        }
     }
 
     function action()

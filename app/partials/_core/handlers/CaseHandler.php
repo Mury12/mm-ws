@@ -42,7 +42,7 @@ class CaseHandler
      */
     static function convert($content, Int $model = 0, Bool $capitalize = false, array $options = [])
     {
-        switch($model){
+        switch ($model) {
             case 0:
                 return self::snakeToCamel($content, $capitalize);
             case 1:
@@ -87,6 +87,9 @@ class CaseHandler
             $output = array();
             /** Loops through the array to get the keys */
             foreach ($content as $key => $value) {
+
+                if (is_array($value)) $value = self::snakeToCamel($value, $capitalize);
+
                 $parts = explode('_', $key);
 
                 $outVarName = '';
@@ -155,7 +158,7 @@ class CaseHandler
      * 
      * @return String|Array<String[]>
      */
-    private static function camelToSnake($content, $capitalize = false, Array $options = [])
+    private static function camelToSnake($content, $capitalize = false, array $options = [])
     {
         $separator = $options['separator'] ?? '_';
         if (is_array($content)) {

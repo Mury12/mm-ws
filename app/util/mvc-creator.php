@@ -8,13 +8,13 @@ use MMWS\Handler\DatabaseModelExtractor;
 use Dotenv\Dotenv;
 
 /** Composer autoload */
-require_once __DIR__ . '/vendor/autoload.php';
-require_once './app/autoload.php';
+require_once 'vendor/autoload.php';
+require_once 'app/partials/_core/application/autoload.php';
 
 /**
  * @var Dotenv\Dotenv $dotenv loads the environment variables in .env
  */
-$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv::createImmutable('app/../');
 $dotenv->load();
 
 require_once 'app/config/db-conf.php';

@@ -12,12 +12,10 @@
  */
  
 namespace {VENDOR}\Model;
-use {VENDOR}\Entity\{ENTITY};
-use {VENDOR}\Interfaces\AbstractModel;
+use MMWS\Interfaces\AbstractModel;
 
 class {CLASS_NAME} extends AbstractModel
 {
-
     /**
      * @var String $table the table name for this model;
      */   
@@ -28,6 +26,5 @@ class {CLASS_NAME} extends AbstractModel
     public function __construct({CONSTRUCTOR})
     {
         {ATTRIBUTE_SET}
-        $this->entity = new {ENTITY}($this);
     }
 }

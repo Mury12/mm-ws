@@ -59,9 +59,13 @@ class Request
     /**
      * Sets the Body of the request
      */
-    function setBody(array $body)
+    function setBody(?array $body)
     {
-        $this->body = $body;
+        if ($body && sizeof($body)) {
+            $this->body = $body;
+        } else {
+            throw new RequestException("Body cannot be empty for POST|PATCH|PUT requests.", 400);
+        }
     }
 
     /**
@@ -96,7 +100,7 @@ class Request
      */
     function setQuery(array $query)
     {
-        $this->query = $query;
+        $this->query = CaseHandler::convert($query, 1);
     }
 
     /**

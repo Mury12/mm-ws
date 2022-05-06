@@ -11,20 +11,20 @@
  * 
  */
  
-namespace {VENDOR}\Entity;
-use {VENDOR}\Model\{USE_CLASS};
-use {VENDOR}\Controller\{USE_CLASS}Controller;
+namespace MMWS\Entity;
+use MMWS\Model\User;
+use MMWS\Controller\UserController;
 use MMWS\Interfaces\AbstractEntity;
 use MMWS\Handler\PDOQueryBuilder;
 use MMWS\Factory\RequestExceptionFactory;
 use PDOException;
 
-class {CLASS_NAME} extends AbstractEntity
+class UserEntity extends AbstractEntity
 {
     
     public $model;
 
-    public function __construct({USE_CLASS} $model)
+    public function __construct(User $model)
     {
         $this->model = $model;
     }
@@ -63,10 +63,10 @@ class {CLASS_NAME} extends AbstractEntity
     public function update()
     {
         /**
-         * @var {USE_CLASS} $has{USE_CLASS};
+         * @var User $hasUser;
          */
-        $has{USE_CLASS} = $this->getOne(['*'], true);
-        if ($has{USE_CLASS}) {
+        $hasUser = $this->getOne(['*'], true);
+        if ($hasUser) {
             $fields = $this->model->toArray();
             $stmt = new PDOQueryBuilder($this->model->table);
             $stmt->update($fields);
@@ -85,7 +85,7 @@ class {CLASS_NAME} extends AbstractEntity
      * seen as return fields.
      * @param bool $asobj if true, will return an object instead of array.
      * 
-     * @return array|{USE_CLASS}
+     * @return array|User
      */
     public function get(array $filters = [], bool $asobj = false, string $aggregator = 'AND')
     {
@@ -102,7 +102,7 @@ class {CLASS_NAME} extends AbstractEntity
      * @param array $fields fields to return.
      * @param array $asobj returns as YooUser Object
      * 
-     * @return array|{USE_CLASS}
+     * @return array|User
      */
     private function getOne(array $fields = [], bool $asobj = false)
     {
@@ -115,7 +115,7 @@ class {CLASS_NAME} extends AbstractEntity
             $instance = $stmt->run();
             if (sizeof($instance))
                 return $asobj
-                    ? (new {USE_CLASS}Controller($instance[0]))->model
+                    ? (new UserController($instance[0]))->model
                     : $instance[0];
             else throw RequestExceptionFactory::create('Object not found', 422);
         } catch (\PDOException $e) {
@@ -127,10 +127,10 @@ class {CLASS_NAME} extends AbstractEntity
      * Get all the instances from the database and returns 
      * as a SELF::CLASS array or a pure indexed array
      * @param array $fields fields to return.
-     * @param array $asobj returns as {USE_CLASS} Object
+     * @param array $asobj returns as User Object
      * @param bool $and sets if the filter sould be put with AND or OR
 
-     * @return array|Array<{USE_CLASS}>
+     * @return array|Array<User>
      */
     public function getAll(array $filters = [], bool $asobj = false, bool $and = true)
     {
@@ -143,14 +143,14 @@ class {CLASS_NAME} extends AbstractEntity
             $stmt = new PDOQueryBuilder($this->model->table, $rowLimit, $page);
 
             $stmt->select($columns);
-            if (isset($filters['filters']) && sizeof($filters['filters'])) {
+            if (isset($filters['filters'])) {
                 $stmt->setFilters($filters['filters'], $and);
             }
             // $stmt->order(['name' => 'ASC']);
             $instances = $stmt->run();
             if ($asobj) {
                 return array_map(function ($instance) {
-                    return (new {USE_CLASS}Controller($instance))->model;
+                    return (new UserController($instance))->model;
                 }, $instances);
             } else return $instances;
         } catch (\PDOException $e) {
@@ -158,6 +158,7 @@ class {CLASS_NAME} extends AbstractEntity
         }
         return [];
     }
+
 
     /**
      * Removes this instance from the database
@@ -174,25 +175,6 @@ class {CLASS_NAME} extends AbstractEntity
             return $stmt->run();
         } catch (PDOException $e) {
             throw RequestExceptionFactory::create("Something bad happened while performing this action", 500);
-        }
-    }
-    
-    public function search(string $query, bool $asobj = false, int $page = 1)
-    {
-        try {
-            $fields = $this->model->getColumnNames();
-            $stmt = new PDOQueryBuilder($this->model->table, 10, $page);
-            $stmt->select($fields);
-            $stmt->search([$fields], $query);
-            $instances = $stmt->run();
-            if ($asobj) {
-                return array_map(function ($instance) {
-                    $ctl = new {USE_CLASS}Controller($instance);
-                    return $ctl->model;
-                }, $instances);
-            } else return $instances;
-        } catch (PDOException $e) {
-            throw RequestExceptionFactory::create('Something bad happened while performing this action', 500);
         }
     }
 }
