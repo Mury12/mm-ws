@@ -503,6 +503,32 @@ class PDOQueryBuilder
             $this->hasWhere = true;
         return $this;
     }
+    
+    function search(array $fields, string $query)
+    {
+        try {
+            $values = [];
+            preg_match_all('/([a-zA-Z0-9]+)/im', urldecode($query), $values);
+            if (sizeof($values)) {
+                $queryStr = [];
+                foreach ($fields as $field) {
+                    $fullStr = urldecode($query);
+                    $queryStr[] = "`$field` LIKE '%$fullStr%'";
+                    foreach ($values[0] as $value) {
+                        if (strtolower(mb_substr($value, -1)) === 's') {
+                            $substr = substr_replace($value, '', -1);
+                            $queryStr[] = "`$field` LIKE '%$substr%'";
+                        }
+                        $queryStr[] = "`$field` LIKE '%$value%'";
+                    }
+                }
+            }
+            $this->query .= ($this->hasWhere ? " AND " : "OR") . "(" . implode(" OR ", $queryStr) . ")";
+            return $this;
+        } catch (\PDOException $th) {
+            throw $th;
+        }
+    }
 
     function maxRows(int $limit): PDOQueryBuilder
     {
