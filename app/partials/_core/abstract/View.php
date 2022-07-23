@@ -44,9 +44,28 @@ abstract class View
      */
     protected $data = [];
 
+    /**
+     * @var array body request body
+     */
+    protected $body = [];
+
+    /**
+     * @var array params request params
+     */
+    protected $params = [];
+
+    /**
+     * @var array query request query
+     */
+    protected $query = [];
+
+
     function __construct(Request $request)
     {
         $this->request = $request;
+        $this->body = $request->getBody();
+        $this->params = $request->getParams();
+        $this->query = $request->getQuery();
         $this->data = $request->data();
         $this->method = $request->getProcedure();
     }
