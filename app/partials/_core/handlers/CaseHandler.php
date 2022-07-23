@@ -11,7 +11,7 @@ class CaseHandler
      * its indexes converted not its values
      * 
      * @param String|Array<String[]> $content string or string to be converted
-     * @param Int $model scheme to convert cases. 0 for snake to camel and 1 to camel to snake. Default is 1.
+     * @param Int $model scheme to convert cases. 0 for snake to camel and 1 to camel to snake. Default is 0.
      * @param Bool $capitalize to capitalise cases into CaseType
      * @param Array<String[]> options. A custom separator can be set to $model = 1 as 'separator' => '[any_char]'
      * 
@@ -166,6 +166,8 @@ class CaseHandler
 
             /** Loops through the array to get the keys */
             foreach ($content as $key => $value) {
+                if (is_array($value)) $value = self::camelToSnake($value, $capitalize, $options);
+
                 $parts = preg_split('/(?=[A-Z])/', $key, -1, PREG_SPLIT_NO_EMPTY);
 
                 $outVarName = '';
