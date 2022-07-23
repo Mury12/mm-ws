@@ -26,9 +26,9 @@ class Module extends View
      */
     function create(): array
     {
-        $hasErrors = keys_match($this->data['body'], ['name', 'email', 'password']);
+        $hasErrors = keys_match($this->body, ['name', 'email', 'password']);
         if (!$hasErrors) {
-            $controller = new UserController($this->data['body']);
+            $controller = new UserController($this->body);
             // Checks if the generated instance is the right user type
             $result = $controller->save();
 
@@ -44,8 +44,8 @@ class Module extends View
      */
     function get(): array
     {
-        $controller = new UserController($this->data['params']);
-        return $controller->get($this->data['query']);
+        $controller = new UserController($this->params);
+        return $controller->get($this->$query);
     }
 
     /**
@@ -54,9 +54,9 @@ class Module extends View
      */
     function update()
     {
-        if (array_key_exists('id', $this->data['params'])) {
-            $controller = new UserController($this->data['body']);
-            $controller->model->id = $this->data['params']['id'];
+        if (array_key_exists('id', $this->params)) {
+            $controller = new UserController($this->body);
+            $controller->model->id = $this->params['id'];
             return $controller->update();
         } else {
             throw RequestExceptionFactory::field(['id']);
@@ -68,8 +68,8 @@ class Module extends View
      */
     function delete()
     {
-        if (array_key_exists('id', $this->data['params'])) {
-            $controller = new UserController($this->data['params']);
+        if (array_key_exists('id', $this->params)) {
+            $controller = new UserController($this->params);
             return $controller->delete();
         } else {
             throw RequestExceptionFactory::field(['id']);
@@ -78,12 +78,12 @@ class Module extends View
 
     function login()
     {
-        $hasErrors = keys_match($this->data['body'], ['email', 'password']);
+        $hasErrors = keys_match($this->body, ['email', 'password']);
         if (!$hasErrors) {
             try {
                 $controller = new UserController();
                 $result = $controller->get([
-                    'filters' => $this->data['body'],
+                    'filters' => $this->body,
                 ], true);
                 if ($result) {
                     $jwt = JWTHandler::create($result[0]);
