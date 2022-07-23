@@ -39,47 +39,10 @@ class Module extends View
     /**
      * Call the GET method to GET a single user or a set of users
      */
-    function get()
+    function get(): array
     {
-        $filters = [
-            'fields' => [
-                'id', 'checksum', 'item_name', 'item_type', 'created_at', 'price'
-            ],
-        ];
-        $hasErrors = keys_match($this->params, ['id']);
-        if (!$hasErrors) {
-            return $this->getOne();
-        } else {
-            return $this->getAll();
-        }
-    }
-
-    function getOne()
-    {
-        $controller = new {CONTROLLER_NAME}();
-        $controller->model->id = $this->params['id'];
-        $result = $controller->get([], true);
-        return DstProductFactory::createArrayWithObject($result);
-    }
-
-    function getAll()
-    {
-        $controller = new {CONTROLLER_NAME}();
-        if (sizeof($this->query)) {
-            $filters['filters'] = $this->query;
-        }
-        $result = $controller->getAll($filters, true);
-
-        /**
-         * @var \DollarSoundtrack\Model\DstProduct[]
-         */
-        $result = $controller->get($filters, true);
-        if (sizeof($result)) {
-            foreach ($result as &$product) {
-                DstProductFactory::createArrayWithObject($product);
-            }
-            return $result;
-        }
+        $controller = new {CONTROLLER_NAME}($this->data['params']);
+        return $controller->get($this->data['query']);
     }
 
     /**
