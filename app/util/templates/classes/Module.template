@@ -23,9 +23,9 @@ class Module extends View
      */
     function create(): array
     {
-        $hasErrors = keys_match($this->data['body'], ['prop1', 'prop2']);
+        $hasErrors = keys_match($this->body, ['prop1', 'prop2']);
         if (!$hasErrors) {
-            $controller = new {CONTROLLER_NAME}($this->data['body']);
+            $controller = new {CONTROLLER_NAME}($this->body);
             // Checks if the generated instance is the right user type
             $result = $controller->save();
             
@@ -41,8 +41,8 @@ class Module extends View
      */
     function get(): array
     {
-        $controller = new {CONTROLLER_NAME}($this->data['params']);
-        return $controller->get($this->data['query']);
+        $controller = new {CONTROLLER_NAME}($this->params);
+        return $controller->get($this->query);
     }
 
     /**
@@ -51,9 +51,9 @@ class Module extends View
      */
     function update()
     {
-        if (array_key_exists('id', $this->data['params'])) {
-            $controller = new {CONTROLLER_NAME}($this->data['body']);
-            $controller->model->id = $this->data['params']['id'];
+        if (array_key_exists('id', $this->params)) {
+            $controller = new {CONTROLLER_NAME}($this->body);
+            $controller->model->id = $this->params['id'];
             return $controller->update();
         } else {
             throw RequestExceptionFactory::field(['id']);
@@ -65,8 +65,8 @@ class Module extends View
      */
     function delete()
     {
-        if (array_key_exists('id', $this->data['params'])) {
-            $controller = new {CONTROLLER_NAME}($this->data['params']);
+        if (array_key_exists('id', $this->params)) {
+            $controller = new {CONTROLLER_NAME}($this->params);
             return $controller->delete();
         } else {
             throw RequestExceptionFactory::field(['id']);
