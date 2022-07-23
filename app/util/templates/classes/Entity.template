@@ -106,7 +106,7 @@ class {CLASS_NAME} extends AbstractEntity
      */
     private function getOne(array $fields = [], bool $asobj = false)
     {
-        $columns = sizeof($fields) ? $fields : ['*'];
+        $columns = sizeof($fields) ? $fields : $this->model->getColumnNames();
         try {
             $stmt = new PDOQueryBuilder($this->model->table, 1);
             $stmt->select($columns);
@@ -135,7 +135,7 @@ class {CLASS_NAME} extends AbstractEntity
     public function getAll(array $filters = [], bool $asobj = false, bool $and = true)
     {
         $fields  = $filters['fields'] ?? [];
-        $columns = sizeof($fields) ? $fields : ['*'];
+        $columns = sizeof($fields) ? $fields : $this->model->getColumnNames();
         try {
             $rowLimit = $filters['amount'] ?? 100;
             $page = $filters['page'] ?? null;
