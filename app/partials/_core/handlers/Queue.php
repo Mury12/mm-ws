@@ -59,8 +59,9 @@ class Queue
      */
     function init()
     {
+        global $request;
         foreach ($this->promises as $key => $promise) {
-            $this->{$key} = $promise[0]->{$promise[1] ?? 'init'}();
+            $this->{$key} = $promise[0]->{$promise[1] ?? 'init'}($request);
         }
         $this->promises = [];
     }
