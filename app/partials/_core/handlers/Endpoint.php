@@ -246,20 +246,12 @@ class Endpoint
                 )
             );
             $middleware->init();
-
-            if (
-                property_exists($middleware, 'Authentication') &&
-                $middleware->Authentication
-            ) {
-                if (file_exists($req['page'])) {
-                    $view = require_once $req['page'];
-                } else {
-                    throw RequestExceptionFactory::create('The requested file does\'not exist.', 404);
-                };
-                return $this->checkAndRender($request, $view);
+            if (file_exists($req['page'])) {
+                $view = require_once $req['page'];
             } else {
-                die(send(http_message(405)));
-            }
+                throw RequestExceptionFactory::create('The requested file does\'not exist.', 404);
+            };
+            return $this->checkAndRender($request, $view);
         } else {
             die(send(http_message(401)));
         }
