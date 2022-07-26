@@ -2,6 +2,8 @@
 
 namespace MMWS\Interfaces;
 
+use MMWS\Handler\Request;
+
 require_once('app/util/ploader.php');
 
 /**
@@ -44,5 +46,5 @@ interface IMiddleware
      * Initializes the middleware. It can be called inside
      * a constructor if wanted.
      */
-    function init();
+    function init(Request $request);
 }
