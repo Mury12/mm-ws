@@ -140,8 +140,12 @@ return [
     'params' => ['param1', 'param2'] // Params to be put in the URL in its order route-name/param1/param2
     'body' => new EndpointFactory::create()
       ->get('band/led-zeppelin', 'getZoso')  // Function post|patch|put|get|delete uses specific request method and procedure. 
-      ->post('band/yardbirds', 'dazedAndConfused') // Yes, you can use multiple methods.
-      ->addMiddleware([new MiddlewareClassName()]) // Ads a middleware to do promise queue
+      ->post('band/yardbirds', 'dazedAndConfused', [// Yes, you can use multiple methods.
+        'middlewares' => [
+          [new MiddlewareClassName, 'initFunctionName'] // adds middleware to a specific method
+        ]
+      ]) 
+      ->addMiddleware([[new MiddlewareClassName(), 'initFunctionName']]) // Ads a middleware to do promise queue
       ->permission('auth') // But not mixed route permission
   ],
 

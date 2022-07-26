@@ -224,30 +224,33 @@ class Endpoint
     public function render()
     {
         global $request, $middlewares;
-        /**
-         * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed BEFORE page rendering
-         */
-        $middleware = new Queue(
-            'MMWS\Interfaces\IMiddleware',
-            array_merge(
-                $middlewares,
-                $this->middlewares
-            )
-        );
-        $middleware->init();
+        $method = $this->getRequestParams();
 
-        if (
-            property_exists($middleware, 'Authentication') &&
-            $middleware->Authentication
-        ) {
-            $method = $this->getRequestParams();
+        if ($req = $this->request->get($method)) {
 
-            if ($req = $this->request->get($method)) {
-                $request->setMethod($method);
-                $request->setParams($this->getEnv());
-                $request->setQuery($this->query);
-                $request->setProcedure($req['procedure']);
+            $request->setMethod($method);
+            $request->setParams($this->getEnv());
+            $request->setQuery($this->query);
+            $request->setProcedure($req['procedure']);
+            $request->setOpts($req['opts']);
 
+            /**
+             * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed BEFORE page rendering
+             */
+            $middleware = new Queue(
+                'MMWS\Interfaces\IMiddleware',
+                array_merge(
+                    $middlewares,
+                    $this->middlewares,
+                    $request->getMiddlewares()
+                )
+            );
+            $middleware->init();
+
+            if (
+                property_exists($middleware, 'Authentication') &&
+                $middleware->Authentication
+            ) {
                 if (file_exists($req['page'])) {
                     $view = require_once $req['page'];
                 } else {

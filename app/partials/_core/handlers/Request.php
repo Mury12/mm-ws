@@ -2,6 +2,7 @@
 
 namespace MMWS\Handler;
 
+use MMWS\Interfaces\IMiddleware;
 
 /**
  * Handles the HTTP requests
@@ -24,6 +25,7 @@ class Request
     private $params = [];
     private $query = [];
     private $method = null;
+    private $opts = [];
 
     function __construct()
     {
@@ -35,12 +37,14 @@ class Request
      * @param String $page the actual file to the endpoint
      * @param String $procedure the method to be called in $file
      */
-    public function add(String $method, String $page, String $procedure)
+    public function add(String $method, String $page, String $procedure, array $opts = [])
     {
         $this->request[strtoupper($method)] = [
             'page' => $this->setFilePath($page),
-            'procedure' => $procedure
+            'procedure' => $procedure,
+            'opts' => $opts
         ];
+
         return $this;
     }
 
@@ -145,6 +149,31 @@ class Request
         return $this->method;
     }
 
+    /**
+     * Sets route options to a specific method
+     */
+    function setOpts(array $opts)
+    {
+        $this->opts = $opts;
+    }
+
+    /**
+     * Gets the current request method options
+     */
+    function getOpts()
+    {
+        return $this->opts;
+    }
+
+    /**
+     * Gets the current middlewares for this method
+     * 
+     * @return IMiddleware[]
+     */
+    function getMiddlewares(): array
+    {
+        return $this->opts['middlewares'] ?? [];
+    }
 
     /**
      * Returns body and params from the request
