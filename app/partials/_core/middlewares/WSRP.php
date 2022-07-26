@@ -2,6 +2,7 @@
 
 namespace MMWS\Middleware;
 
+use MMWS\Handler\Request;
 use MMWS\Interfaces\IMiddleware;
 // require_once(explode('app/', __DIR__)[0].'app/partials/classes/interfaces/Middleware.php');
 
@@ -42,7 +43,7 @@ class WSRP implements IMiddleware
         return $memeFile;
     }
 
-    function init()
+    function init(Request $request)
     {
         $this->action();
     }

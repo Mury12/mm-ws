@@ -4,6 +4,7 @@ namespace MMWS\Middleware;
 
 use DateTime;
 use MMWS\Factory\RequestExceptionFactory;
+use MMWS\Handler\Request;
 use MMWS\Handler\RequestException;
 use MMWS\Handler\SESSION;
 use MMWS\Interfaces\IMiddleware;
@@ -49,7 +50,7 @@ class Throttle implements IMiddleware
         $this->period = $period;
     }
 
-    function init()
+    function init(Request $request)
     {
         try {
             return $this->action();

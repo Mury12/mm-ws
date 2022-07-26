@@ -2,6 +2,7 @@
 
 namespace MMWS\Middleware;
 
+use MMWS\Handler\Request;
 use MMWS\Handler\SESSION;
 use MMWS\Interfaces\IMiddleware;
 
@@ -32,7 +33,7 @@ class CACHE implements IMiddleware
 
     private $session = [];
 
-    function init()
+    function init(Request $request)
     {
         return $this->action();
     }

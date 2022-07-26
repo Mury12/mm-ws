@@ -11,8 +11,10 @@
 namespace MMWS\Middleware;
 
 use Exception;
+use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Interfaces\IMiddleware;
 use MMWS\Handler\JWTHandler;
+use MMWS\Handler\Request;
 
 // require_once('app/util/ploader.php');
 
@@ -21,15 +23,13 @@ class Authentication implements IMiddleware
     private $access;
     const TOKEN = USER_AUTHORIZATION_TOKEN;
 
-    function __construct()
+    const NOT_AUTH = 0;
+    const AUTH = 1;
+    const ANY_ACCESS = 2;
+
+    function __construct(int $permission = self::AUTH)
     {
-        global $endpoint;
-        if (is_array($endpoint)) {
-            $this->access = $endpoint[0]->getAccessLevel();
-        } else {
-            $this->access = $endpoint->getAccessLevel();
-        }
-        return $this->init();
+        $this->access = $permission;
     }
 
     /**
@@ -38,20 +38,22 @@ class Authentication implements IMiddleware
     function action()
     {
         try {
-            return $this->access === 'auth'
-                ? JWTHandler::verify(self::TOKEN)
-                : ($this->access  === 'not'
-                    ? !JWTHandler::verify(self::TOKEN)
-                    : true);
+            $verified = JWTHandler::verify(self::TOKEN);
+            if (
+                $this->access === self::AUTH && !$verified
+                || $this->access ===  self::NOT_AUTH && $verified
+            ) {
+                throw RequestExceptionFactory::create("User must be logged in.", 401);
+            }
         } catch (Exception $e) {
-            return false;
+            throw RequestExceptionFactory::create($e->getMessage(), 401);
         }
     }
 
     /**
      * Initiates the middleware
      */
-    function init()
+    function init(?Request $request)
     {
         if ($this->access) {
             return $this->action();
