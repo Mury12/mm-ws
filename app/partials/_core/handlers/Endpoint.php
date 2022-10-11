@@ -223,6 +223,7 @@ class Endpoint
      */
     public function render()
     {
+
         global $request, $middlewares;
         $method = $this->getRequestParams();
 
@@ -246,6 +247,7 @@ class Endpoint
                 )
             );
             $middleware->init();
+
             if (file_exists($req['page'])) {
                 $view = require_once $req['page'];
             } else {
@@ -330,11 +332,14 @@ class Endpoint
 
     /**
      * Sets the user permission to access the endpoint. If not set, default is "any".
-     * @param String $level auth|not|any 
+     * @param Int $level as NOT_AUTH = 0;
+     *                      AUTH = 1;
+     *                      ANY_ACCESS = 2;
+     * _You can also user Authentication::AUTH|NOT_AUTH|ANY_ACCESS constants_
      * 
      * @return MMWS\Handler\Endpoint self
      */
-    public function permission(String $level)
+    public function permission(Int $level = Authentication::NOT_AUTH)
     {
         $this->access = $level;
         return $this;

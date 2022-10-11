@@ -40,7 +40,7 @@ class AbstractModel
             $sanitizedKey = preg_replace('/\W+/i', '', $key);
             if (
                 array_search($sanitizedKey, array_merge($skip, $this->hidden)) === false
-                && $prop
+                && $prop !== null
             ) {
                 $k = $snake
                     ? CaseHandler::convert($sanitizedKey, 1)

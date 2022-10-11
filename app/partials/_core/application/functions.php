@@ -385,10 +385,10 @@ function keys_match($data, array $keys, string $instanceOf = null)
     $errors = [];
     foreach ($keys as $key => $value) {
         if ($instanceOf && $data instanceof $instanceOf) {
-            if (!property_exists($data, $value) || !$data->{$value} || $data->{$value} === '') {
+            if (!property_exists($data, $value) || $data->{$value} === null || $data->{$value} === '') {
                 $errors[] = $value;
             }
-        } else if (!array_key_exists($value, $data) || !$data[$value] || $data[$value] === '') {
+        } else if (!array_key_exists($value, $data) || $data[$value] === null || $data[$value] === '') {
             $errors[] = $value;
         }
     }

@@ -51,7 +51,8 @@ class JWTHandler
         if ($jwt === '' || !$jwt)
             return false;
         try {
-            JWT::decode($jwt, _JWT_DEFINED_KEY_, ['HS256']);
+            $decoded = JWT::decode($jwt, _JWT_DEFINED_KEY_, ['HS256']);
+            SESSION::add('user_id', $decoded->sub);
             return true;
         } catch (ExpiredException $e) {
             return false;
