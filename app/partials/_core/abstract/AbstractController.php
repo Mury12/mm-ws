@@ -28,7 +28,7 @@ class AbstractController
     /**
      * Get one instance from the database
      */
-    public function get(array $filters = [], bool $asobj = false)
+    public function get(array $filters = [], bool $asobj = true)
     {
         return $this->entity->get($filters, $asobj);
     }
@@ -37,7 +37,7 @@ class AbstractController
      * Get all the instances from the database and returns 
      * as an SELF::CLASS array
      */
-    public function getAll(array $filters = [], bool $asobj = false)
+    public function getAll(array $filters = [], bool $asobj = true)
     {
         return $this->entity->getAll($filters, $asobj);
     }

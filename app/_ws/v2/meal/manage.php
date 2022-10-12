@@ -49,7 +49,8 @@ class Module extends View
     {
         $controller = new MealController($this->params);
         $meals = $controller->get($this->query);
-        return $controller->withFoodStats($meals);
+        $withfodd = $controller->withFoodStats($meals);
+        return $withfodd;
     }
 
     /**

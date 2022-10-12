@@ -18,16 +18,15 @@ use MMWS\Interfaces\AbstractModel;
 
 class Diet extends AbstractModel
 {
-    protected $id;
-    protected $userId;
-    protected $weight;
-    protected $createdAt;
-    protected $carb = 0;
-    protected $prot = 0;
-    protected $tfat = 0;
-    protected $calories = 0;
-    protected $act = 1;
-
+    protected ?int $id;
+    protected ?int $userId;
+    protected ?float $weight;
+    protected ?string $createdAt;
+    protected ?float $carb;
+    protected ?float $prot;
+    protected ?float $tfat;
+    protected ?float $calories;
+    protected ?int $act = 1;
 
     public function __construct($id = null, $userId = null, $weight = null, $createdAt = null, $carb = null, $prot = null, $tfat = null, $cal = null, $act = 1)
     {

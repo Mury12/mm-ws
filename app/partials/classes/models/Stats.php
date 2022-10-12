@@ -1,5 +1,7 @@
 <?php
 
+namespace MMWS\Model;
+
 use MMWS\Interfaces\AbstractModel;
 use MMWS\Model\Food;
 

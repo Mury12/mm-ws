@@ -18,7 +18,8 @@ use MMWS\Model\Meal;
 use MMWS\Entity\MealEntity;
 use MMWS\Interfaces\AbstractController;
 use MMWS\Model\Food;
-use Stats;
+use MMWS\Model\MealWithStats;
+use MMWS\Model\Stats;
 
 class MealController extends AbstractController
 {
@@ -40,19 +41,24 @@ class MealController extends AbstractController
     public function withFoodStats($meals)
     {
 
-        if (!is_array($meals[0]))
+        if (!is_array($meals))
             $meals = [$meals];
 
+        /**
+         * @param Meal $meal
+         */
         return array_map(function ($meal) {
-            $ctl = new FoodController(['id' => $meal['id']]);
+            $ctl = new FoodController(['id' => $meal->id]);
             $food = $ctl->get([], true);
             if ($food instanceof Food) {
-                $stats = new Stats($food, $meal['qtd']);
-                return [
-                    'id' => $meal['id'],
-                    'stats' => $stats->toArray(),
-                    'food' => $food->toArray()
-                ];
+                $stats = new Stats($food, $meal->qtd);
+
+                $withStats = new MealWithStats();
+                $withStats->id = $meal->id;
+                $withStats->stats = $stats;
+                $withStats->food = $food;
+
+                return $withStats;
             }
             return $meal;
         }, $meals);

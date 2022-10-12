@@ -18,11 +18,11 @@ use MMWS\Interfaces\AbstractModel;
 
 class User extends AbstractModel
 {
-    protected $id;
-    protected $name;
-    protected $email;
-    protected $password;
-    protected $act;
+    protected ?int $id;
+    protected string $name;
+    protected string $email;
+    protected string $password;
+    protected ?int $act;
 
 
     public function __construct($id = null, $name = null, $email = null, $password = null, $act = null)

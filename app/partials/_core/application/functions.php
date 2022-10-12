@@ -5,6 +5,7 @@
  */
 
 use MMWS\Factory\RequestExceptionFactory;
+use MMWS\Interfaces\AbstractModel;
 
 /** @var $auth_enabled enable authentication ? */
 $auth_enabled = true;
@@ -57,6 +58,15 @@ function get_root_uri()
     return getenv('HTTP_HOST');
 }
 
+function modelToArray($object)
+{
+    $model = $object instanceof AbstractModel ? $object->toArray() : $object;
+    return array_map(function ($prop) {
+        if ($prop instanceof AbstractModel) return modelToArray($prop);
+        return $prop;
+    }, $model);
+}
+
 /**
  * Spits the requested content
  * @param Array $content is the formatted array to put on the response message
@@ -67,7 +77,10 @@ function send(array $content)
         set_http_code(204);
         return;
     }
-    print_r(json_encode($content, JSON_INVALID_UTF8_IGNORE));
+    $response = array_map(function ($item) {
+        return modelToArray($item);
+    }, $content);
+    print_r(json_encode($response, JSON_INVALID_UTF8_IGNORE));
     return;
 }
 

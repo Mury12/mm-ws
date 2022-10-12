@@ -18,12 +18,12 @@ use MMWS\Interfaces\AbstractModel;
 
 class Meal extends AbstractModel
 {
-    protected $id;
-    protected $dietId;
-    protected $foodId;
-    protected $qtd;
-    protected $createdAt;
-    protected $act;
+    protected ?int $id;
+    protected ?int $dietId;
+    protected ?int $foodId;
+    protected ?float $qtd;
+    protected ?string $createdAt;
+    protected ?int $act;
 
 
     public function __construct($id = null, $dietId = null, $foodId = null, $qtd = null, $createdAt = null, $act = null)
