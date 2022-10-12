@@ -39,15 +39,15 @@ class DBFieldSpec
 
     function asParam()
     {
-        return ($this->nullable || $this->default ? '?' : '') . $this->type . " $" . $this->name . ';';
+        return '?'  . $this->type . " $" . $this->name . ';';
     }
 
     function asArg()
     {
-        $param = $this->nullable || $this->default ? '?' : '';
+        $param = '?';
         $param .= $this->type . ' ';
-        $param .= '$' . $this->name . ' ';
-        $param .= ', ';
+        $param .= '$' . $this->name;
+        $param .= ' = null, ';
         return $param;
     }
 }
