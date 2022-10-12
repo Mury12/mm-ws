@@ -12,8 +12,7 @@ class AbstractModel
     /**
      * @var String $table the table name for this model;
      */
-    public $table = '';
-    protected $hidden = ['table', 'hidden'];
+    protected $hidden = ['hidden'];
 
     /**
      * Returns an instance of the object as an array format,
