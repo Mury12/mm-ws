@@ -49,7 +49,7 @@ class FoodEntity extends AbstractEntity
             $instanceExists = $this->get(['filters' => $fields], false);
 
             if (!sizeof($instanceExists)) {
-                $stmt = new PDOQueryBuilder($this->model->table);
+                $stmt = new PDOQueryBuilder($this->table);
                 $stmt->insert($fields);
 
                 // stmt->run returns last insert id.
@@ -74,7 +74,7 @@ class FoodEntity extends AbstractEntity
         $hasFood = $this->getOne(['*'], true);
         if ($hasFood) {
             $fields = $this->model->toArray();
-            $stmt = new PDOQueryBuilder($this->model->table);
+            $stmt = new PDOQueryBuilder($this->table);
             $stmt->update($fields);
             $stmt->where('id', $this->model->id);
 
@@ -114,7 +114,7 @@ class FoodEntity extends AbstractEntity
     {
         $columns = sizeof($fields) ? $fields : $this->model->getColumnNames();
         try {
-            $stmt = new PDOQueryBuilder($this->model->table, 1);
+            $stmt = new PDOQueryBuilder($this->table, 1);
             $stmt->select($columns);
             $stmt->where('id', $this->model->id);
 
@@ -146,7 +146,7 @@ class FoodEntity extends AbstractEntity
             $rowLimit = $filters['amount'] ?? 100;
             $page = $filters['page'] ?? null;
 
-            $stmt = new PDOQueryBuilder($this->model->table, $rowLimit, $page);
+            $stmt = new PDOQueryBuilder($this->table, $rowLimit, $page);
 
             $stmt->select($columns);
             if (isset($filters['filters']) && sizeof($filters['filters'])) {
@@ -172,7 +172,7 @@ class FoodEntity extends AbstractEntity
     {
         try {
             $this->get();
-            $stmt = new PDOQueryBuilder($this->model->table);
+            $stmt = new PDOQueryBuilder($this->table);
             $stmt->delete();
             $stmt->where('id', $this->model->id);
 
@@ -187,7 +187,7 @@ class FoodEntity extends AbstractEntity
     {
         try {
             $fields = $this->model->getColumnNames();
-            $stmt = new PDOQueryBuilder($this->model->table, 10, $page);
+            $stmt = new PDOQueryBuilder($this->table, 10, $page);
             $stmt->select($fields);
             $stmt->search([$fields], $query);
             $instances = $stmt->run();
