@@ -23,6 +23,10 @@ use PDOException;
 
 class UserEntity extends AbstractEntity
 {
+    /**
+     * @var String $table the table name for this model;
+     */
+    public $table = 'user';
 
     public $model;
 

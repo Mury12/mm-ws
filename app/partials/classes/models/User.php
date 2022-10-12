@@ -18,12 +18,6 @@ use MMWS\Interfaces\AbstractModel;
 
 class User extends AbstractModel
 {
-    /**
-     * @var String $table the table name for this model;
-     */
-    public $table = 'user';
-
-
     protected $id;
     protected $name;
     protected $email;

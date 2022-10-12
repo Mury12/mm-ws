@@ -16,12 +16,6 @@ use MMWS\Interfaces\AbstractModel;
 
 class Food extends AbstractModel
 {
-    /**
-     * @var String $table the table name for this model;
-     */   
-    public $table = 'food';
-
-
     protected $id;
     protected $name;
     protected $weight;

@@ -18,12 +18,6 @@ use MMWS\Interfaces\AbstractModel;
 
 class Diet extends AbstractModel
 {
-    /**
-     * @var String $table the table name for this model;
-     */
-    public $table = 'diet';
-
-
     protected $id;
     protected $userId;
     protected $weight;
