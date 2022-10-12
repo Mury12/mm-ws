@@ -2,6 +2,8 @@
 
 namespace MMWS\Model;
 
+use Exception;
+
 class DBFieldSpec
 {
     public string $name;
@@ -34,17 +36,21 @@ class DBFieldSpec
      */
     static function matchType(string $typename)
     {
-        return constant('self::' . strtoupper($typename)) ?? '';
+        try {
+            return constant('self::' . strtoupper($typename)) ?? '';
+        } catch (Exception $e) {
+            return '';
+        }
     }
 
     function asParam()
     {
-        return '?'  . $this->type . " $" . $this->name . ';';
+        return ($this->type ? ' ?' : ' ')  . $this->type . "$" . $this->name . ';';
     }
 
     function asArg()
     {
-        $param = '?';
+        $param = $this->type ? '?' : '';
         $param .= $this->type . ' ';
         $param .= '$' . $this->name;
         $param .= ' = null, ';

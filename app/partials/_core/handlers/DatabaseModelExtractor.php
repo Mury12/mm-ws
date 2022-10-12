@@ -218,7 +218,7 @@ class DatabaseModelExtractor
         $constructor = "";
         $attrSetter = "";
         foreach ($table->getFields() as $field) {
-            $attributes .= "protected " . $field->asParam() . "\n    ";
+            $attributes .= "protected" . $field->asParam() . "\n    ";
             $constructor .= $field->asArg();
             $attrSetter .= '$this->' . $field->name . " = $" . $field->name . ";\n\t    ";
         }
