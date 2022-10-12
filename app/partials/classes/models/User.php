@@ -18,20 +18,28 @@ use MMWS\Interfaces\AbstractModel;
 
 class User extends AbstractModel
 {
+    /**
+     * @var String $table the table name for this model;
+     */
+    public $table = 'user';
+
+
     protected ?int $id;
-    protected string $name;
-    protected string $email;
-    protected string $password;
-    protected ?int $act;
+    protected ?string $name;
+    protected ?string $email;
+    protected ?string $password;
+    protected ?\DateTime $createdAt;
+    protected ?\DateTime $updatedAt;
 
 
-    public function __construct($id = null, $name = null, $email = null, $password = null, $act = null)
+    public function __construct(?int $id = null, ?string $name = null, ?string $email = null, ?string $password = null, ?\DateTime $createdAt = null, ?\DateTime $updatedAt = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
-        $this->act = $act;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
     }
 
     public function encryptPassword()
