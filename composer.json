@@ -1,12 +1,15 @@
 {
-    "require": {
-        "vlucas/phpdotenv": "^5.1",
-        "firebase/php-jwt": "^5.2"
-    },
-    "scripts": {
-        "create-module": "php ./app/util/create-module.php",
-        "create-mvc": "php ./app/util/mvc-creator.php",
-        "restore-endpoint": "cp ./app/util/templates/classes/EndpointModel.template ./app/partials/_core/handlers/Endpoint.php",
-        "start": "php -S localhost:8081"
-    }
+  "require": {
+    "vlucas/phpdotenv": "^5.1",
+    "firebase/php-jwt": "^5.2"
+  },
+  "scripts": {
+    "create-module": "php ./app/util/create-module.php",
+    "create-mvc": "php ./app/util/mvc-creator.php",
+    "restore-endpoint": "cp ./app/util/templates/classes/EndpointModel.template ./app/partials/_core/handlers/Endpoint.php",
+    "start": [
+      "Composer\\Config::disableProcessTimeout",
+      "php -S 0.0.0.0:8081"
+    ]
+  }
 }

@@ -48,7 +48,7 @@ $router->headers();
 SESSION::init();
 /** Sets up Too many request middleware. 100 requests in 60 minutes max. Timeout 10 min */
 $tmr = new Throttle(100, 60, 600);
-$tmr->init();
+$tmr->init($request);
 /** Sets request caching interval */
 CACHE::$timeout = 10;
 /** Loads the Routes */
@@ -58,7 +58,7 @@ $router->init($routes);
 /** Loads the page content (JSON ONLY) */
 $endpoint  = $router->get();
 /** Sets default middlewares that will be activated for every page */
-$middlewares = [[new Authentication()]];
+$middlewares = [];
 /**
  * @var Bool $caching gets if the endpoint is caching
  */

@@ -16,10 +16,6 @@ use MMWS\Interfaces\AbstractModel;
 
 class {CLASS_NAME} extends AbstractModel
 {
-    /**
-     * @var String $table the table name for this model;
-     */   
-    public $table = {TABLE_NAME}
 
     {CLASS_ATTRIBUTES}
 
