@@ -203,7 +203,6 @@ class DatabaseModelExtractor
         $constructor = trim($constructor, ', ');
         $output = str_replace('{CLASS_ATTRIBUTES}', $attributes, $template);
         $output = str_replace('{CLASS_NAME}', $model, $output);
-        $output = str_replace('{TABLE_NAME}', "'" . $this->snaked[$model] . "';\n", $output);
         $output = str_replace('{CONSTRUCTOR}', $constructor, $output);
         $output = str_replace('{VENDOR}', $this->vendor, $output);
         $output = str_replace('{ATTRIBUTE_SET}', $attrSetter, $output);
@@ -221,6 +220,7 @@ class DatabaseModelExtractor
     private function entity($template, String $model)
     {
         $output = str_replace('{CLASS_NAME}', $model . 'Entity', $template);
+        $output = str_replace('{TABLE_NAME}', "'" . $this->snaked[$model] . "';\n", $output);
         $output = str_replace('{USE_CLASS}', $model, $output);
         $output = str_replace('{VENDOR}', $this->vendor, $output);
         return $output;
