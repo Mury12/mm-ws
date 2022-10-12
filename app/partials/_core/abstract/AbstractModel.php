@@ -4,6 +4,7 @@ namespace MMWS\Interfaces;
 
 use Error;
 use MMWS\Handler\CaseHandler;
+use ReflectionProperty;
 
 class AbstractModel
 {
@@ -92,6 +93,10 @@ class AbstractModel
     public function __set($name, $value)
     {
         if (property_exists($this, $name)) {
+            // $refl = new ReflectionProperty($this, $name);
+            // $cast = $refl->getType()->getName();
+            // settype($value, $cast);
+
             $this->{$name} = $value;
         } else {
             throw new Error("Property $name does not exists for object of type '" . self::class . "'.");

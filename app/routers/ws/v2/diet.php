@@ -25,34 +25,24 @@ use MMWS\Factory\EndpointFactory;
 use MMWS\Middleware\Authentication;
 
 return [
-	'user' => [
+	'/' => [
 		'params' => ['id'],
 		'body' => EndpointFactory::create()
-			->post('user/manage', 'create')
-			->get('user/manage', 'get')
-			->put('user/manage', 'update', [
-				'middlewares' => [new Authentication()]
+			->post('diet/manage', 'create', [
+				'middlewares' => [
+					[new Authentication()]
+				]
 			])
-			->delete('user/manage', 'delete', [
-				'middlewares' => [new Authentication()]
-			]),
-		'login' => [
-			'body' => EndpointFactory::create()
-				->post('user/manage', 'login'),
-		]
+			->get('diet/manage', 'get')
+			->put('diet/manage', 'update')
+			->delete('diet/manage', 'delete'),
 	],
-	'food' => [
+	'meal' => [
 		'params' => ['id'],
 		'body' => EndpointFactory::create()
-			->post('food/manage', 'create', [
-				'middlewares' => [[new Authentication()]]
-			])
-			->get('food/manage', 'get')
-			->put('food/manage', 'update', [
-				'middlewares' => [[new Authentication()]]
-			])
-			->delete('food/manage', 'delete', [
-				'middlewares' => [[new Authentication()]]
-			]),
+			->post('meal/manage', 'create')
+			->get('meal/manage', 'get')
+			->put('meal/manage', 'update')
+			->delete('meal/manage', 'delete'),
 	],
 ];

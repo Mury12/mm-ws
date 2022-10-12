@@ -7,6 +7,6 @@
         "create-module": "php ./app/util/create-module.php",
         "create-mvc": "php ./app/util/mvc-creator.php",
         "restore-endpoint": "cp ./app/util/templates/classes/EndpointModel.template ./app/partials/_core/handlers/Endpoint.php",
-        "start": "php -S localhost:8081"
+        "start": "php -S 0.0.0.0:8081"
     }
 }

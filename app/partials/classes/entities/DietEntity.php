@@ -14,19 +14,20 @@
 
 namespace MMWS\Entity;
 
-use MMWS\Model\User;
-use MMWS\Controller\UserController;
+use MMWS\Model\Diet;
+use MMWS\Controller\DietController;
 use MMWS\Interfaces\AbstractEntity;
 use MMWS\Handler\PDOQueryBuilder;
 use MMWS\Factory\RequestExceptionFactory;
+use MMWS\Handler\SESSION;
 use PDOException;
 
-class UserEntity extends AbstractEntity
+class DietEntity extends AbstractEntity
 {
 
     public $model;
 
-    public function __construct(User $model)
+    public function __construct(Diet $model)
     {
         $this->model = $model;
     }
@@ -42,18 +43,19 @@ class UserEntity extends AbstractEntity
              * Checks if an instance with the same data already exists.
              * Change this $fields to the wanted keys.
              */
-            $instanceExists = $this->get(['filters' => [
-                'email' => $this->model->email
-            ]], false);
+            $instanceExists = $this->get(['filters' => $fields], false);
 
             if (!sizeof($instanceExists)) {
-                $fields['password'] = $this->model->encryptPassword();
-
                 $stmt = new PDOQueryBuilder($this->model->table);
                 $stmt->insert($fields);
 
                 // stmt->run returns last insert id.
                 $id = $stmt->run();
+
+                $stmt->update(['act' => 0])
+                    ->where('id', $id['id'], '<')
+                    ->and('user_id', SESSION::get('user_id'));
+                $stmt->run();
                 return ['id' => $id['id']];
             } else {
                 throw RequestExceptionFactory::create("Data already exists", 409);
@@ -69,10 +71,10 @@ class UserEntity extends AbstractEntity
     public function update()
     {
         /**
-         * @var User $hasUser;
+         * @var Diet $hasDiet;
          */
-        $hasUser = $this->getOne(['*'], true);
-        if ($hasUser) {
+        $hasDiet = $this->getOne(['*'], true);
+        if ($hasDiet) {
             $fields = $this->model->toArray();
             $stmt = new PDOQueryBuilder($this->model->table);
             $stmt->update($fields);
@@ -91,7 +93,7 @@ class UserEntity extends AbstractEntity
      * seen as return fields.
      * @param bool $asobj if true, will return an object instead of array.
      * 
-     * @return array|User
+     * @return array|Diet
      */
     public function get(array $filters = [], bool $asobj = false, string $aggregator = 'AND')
     {
@@ -108,7 +110,7 @@ class UserEntity extends AbstractEntity
      * @param array $fields fields to return.
      * @param array $asobj returns as YooUser Object
      * 
-     * @return array|User
+     * @return array|Diet
      */
     private function getOne(array $fields = [], bool $asobj = false)
     {
@@ -121,7 +123,7 @@ class UserEntity extends AbstractEntity
             $instance = $stmt->run();
             if (sizeof($instance))
                 return $asobj
-                    ? (new UserController($instance[0]))->model
+                    ? (new DietController($instance[0]))->model
                     : $instance[0];
             else throw RequestExceptionFactory::create('Object not found', 422);
         } catch (\PDOException $e) {
@@ -133,10 +135,10 @@ class UserEntity extends AbstractEntity
      * Get all the instances from the database and returns 
      * as a SELF::CLASS array or a pure indexed array
      * @param array $fields fields to return.
-     * @param array $asobj returns as User Object
+     * @param array $asobj returns as Diet Object
      * @param bool $and sets if the filter sould be put with AND or OR
 
-     * @return array|Array<User>
+     * @return array|Array<Diet>
      */
     public function getAll(array $filters = [], bool $asobj = false, bool $and = true)
     {
@@ -153,10 +155,11 @@ class UserEntity extends AbstractEntity
                 $stmt->setFilters($filters['filters'], $and);
             }
             // $stmt->order(['name' => 'ASC']);
+            $stmt->and('user_id', SESSION::get('user_id'));
             $instances = $stmt->run();
             if ($asobj) {
                 return array_map(function ($instance) {
-                    return (new UserController($instance))->model;
+                    return (new DietController($instance))->model;
                 }, $instances);
             } else return $instances;
         } catch (\PDOException $e) {
@@ -193,7 +196,7 @@ class UserEntity extends AbstractEntity
             $instances = $stmt->run();
             if ($asobj) {
                 return array_map(function ($instance) {
-                    $ctl = new UserController($instance);
+                    $ctl = new DietController($instance);
                     return $ctl->model;
                 }, $instances);
             } else return $instances;

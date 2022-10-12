@@ -14,9 +14,8 @@
 
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Interfaces\View;
-use MMWS\Controller\UserController;
-use MMWS\Handler\JWTHandler;
-use MMWS\Handler\RequestException;
+use MMWS\Controller\DietController;
+use MMWS\Handler\SESSION;
 
 class Module extends View
 {
@@ -26,9 +25,10 @@ class Module extends View
      */
     function create(): array
     {
-        $hasErrors = keys_match($this->body, ['name', 'email', 'password']);
+        $hasErrors = keys_match($this->body, ['weight', 'carb', 'prot', 'tfat']);
         if (!$hasErrors) {
-            $controller = new UserController($this->body);
+            $args = (array_merge($this->body, ['userId' => SESSION::get('user_id')]));
+            $controller = new DietController($args);
             // Checks if the generated instance is the right user type
             $result = $controller->save();
 
@@ -44,7 +44,7 @@ class Module extends View
      */
     function get(): array
     {
-        $controller = new UserController($this->params);
+        $controller = new DietController($this->params);
         return $controller->get($this->query);
     }
 
@@ -55,7 +55,7 @@ class Module extends View
     function update()
     {
         if (array_key_exists('id', $this->params)) {
-            $controller = new UserController($this->body);
+            $controller = new DietController($this->body);
             $controller->model->id = $this->params['id'];
             return $controller->update();
         } else {
@@ -69,40 +69,10 @@ class Module extends View
     function delete()
     {
         if (array_key_exists('id', $this->params)) {
-            $controller = new UserController($this->params);
+            $controller = new DietController($this->params);
             return $controller->delete();
         } else {
             throw RequestExceptionFactory::field(['id']);
-        }
-    }
-
-    function login()
-    {
-        $hasErrors = keys_match($this->body, ['email', 'password']);
-        if (!$hasErrors) {
-            try {
-                $controller = new UserController();
-                $result = $controller->get([
-                    'filters' => ['email' => $this->body['email']],
-                ], true);
-
-                if (!sizeof($result)) throw RequestExceptionFactory::create("Incorrect user or password", 401);
-
-                $pwdMatch = $result[0]->matchPassword($this->body['password']);
-
-                if ($pwdMatch) {
-                    $jwt = JWTHandler::create($result[0]);
-                    return ['token' => $jwt];
-                } else {
-                    throw RequestExceptionFactory::create("Incorrect user or password", 401);
-                }
-            } catch (RequestException $e) {
-                throw $e;
-            } catch (Error $e) {
-                throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
-            }
-        } else {
-            throw RequestExceptionFactory::field($hasErrors);
         }
     }
 }

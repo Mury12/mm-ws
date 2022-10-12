@@ -12,11 +12,10 @@
  *
  */
 
+use MMWS\Controller\DietController;
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Interfaces\View;
-use MMWS\Controller\UserController;
-use MMWS\Handler\JWTHandler;
-use MMWS\Handler\RequestException;
+use MMWS\Controller\MealController;
 
 class Module extends View
 {
@@ -26,9 +25,13 @@ class Module extends View
      */
     function create(): array
     {
-        $hasErrors = keys_match($this->body, ['name', 'email', 'password']);
+        $hasErrors = keys_match($this->body, ['foodId', 'qtd']);
         if (!$hasErrors) {
-            $controller = new UserController($this->body);
+            $dietCtl = new DietController();
+            $actDietIv = $dietCtl->get(['filters' => ['act' => 1]], true);
+            if (!sizeof($actDietIv)) throw RequestExceptionFactory::create('You have to create a diet first.', 400);
+
+            $controller = new MealController(array_merge($this->body, ['dietId' => $actDietIv[0]->id]));
             // Checks if the generated instance is the right user type
             $result = $controller->save();
 
@@ -44,8 +47,9 @@ class Module extends View
      */
     function get(): array
     {
-        $controller = new UserController($this->params);
-        return $controller->get($this->query);
+        $controller = new MealController($this->params);
+        $meals = $controller->get($this->query);
+        return $controller->withFoodStats($meals);
     }
 
     /**
@@ -55,7 +59,7 @@ class Module extends View
     function update()
     {
         if (array_key_exists('id', $this->params)) {
-            $controller = new UserController($this->body);
+            $controller = new MealController($this->body);
             $controller->model->id = $this->params['id'];
             return $controller->update();
         } else {
@@ -69,40 +73,10 @@ class Module extends View
     function delete()
     {
         if (array_key_exists('id', $this->params)) {
-            $controller = new UserController($this->params);
+            $controller = new MealController($this->params);
             return $controller->delete();
         } else {
             throw RequestExceptionFactory::field(['id']);
-        }
-    }
-
-    function login()
-    {
-        $hasErrors = keys_match($this->body, ['email', 'password']);
-        if (!$hasErrors) {
-            try {
-                $controller = new UserController();
-                $result = $controller->get([
-                    'filters' => ['email' => $this->body['email']],
-                ], true);
-
-                if (!sizeof($result)) throw RequestExceptionFactory::create("Incorrect user or password", 401);
-
-                $pwdMatch = $result[0]->matchPassword($this->body['password']);
-
-                if ($pwdMatch) {
-                    $jwt = JWTHandler::create($result[0]);
-                    return ['token' => $jwt];
-                } else {
-                    throw RequestExceptionFactory::create("Incorrect user or password", 401);
-                }
-            } catch (RequestException $e) {
-                throw $e;
-            } catch (Error $e) {
-                throw RequestExceptionFactory::create($e->getMessage(), $e->getCode());
-            }
-        } else {
-            throw RequestExceptionFactory::field($hasErrors);
         }
     }
 }

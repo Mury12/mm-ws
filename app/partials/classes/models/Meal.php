@@ -16,37 +16,29 @@ namespace MMWS\Model;
 
 use MMWS\Interfaces\AbstractModel;
 
-class User extends AbstractModel
+class Meal extends AbstractModel
 {
     /**
      * @var String $table the table name for this model;
      */
-    public $table = 'user';
+    public $table = 'meal';
 
 
     protected $id;
-    protected $name;
-    protected $email;
-    protected $password;
+    protected $dietId;
+    protected $foodId;
+    protected $qtd;
+    protected $createdAt;
     protected $act;
 
 
-    public function __construct($id = null, $name = null, $email = null, $password = null, $act = null)
+    public function __construct($id = null, $dietId = null, $foodId = null, $qtd = null, $createdAt = null, $act = null)
     {
         $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
+        $this->dietId = $dietId;
+        $this->foodId = $foodId;
+        $this->qtd = $qtd;
+        $this->createdAt = $createdAt;
         $this->act = $act;
-    }
-
-    public function encryptPassword()
-    {
-        return password_hash($this->password, PASSWORD_BCRYPT);
-    }
-
-    public function matchPassword(string $raw)
-    {
-        return password_verify($raw, $this->password);
     }
 }
