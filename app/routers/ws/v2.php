@@ -22,6 +22,7 @@
  */
 
 use MMWS\Factory\EndpointFactory;
+use MMWS\Middleware\Authentication;
 
 return [
 	'user' => [
@@ -29,10 +30,12 @@ return [
 		'body' => EndpointFactory::create()
 			->post('user/manage', 'create')
 			->get('user/manage', 'get')
-			->put('user/manage', 'update')
-			->delete('user/manage', 'delete')
-			->permission('auth'),
-		// Add children routes calling the http methods from endpoint
+			->put('user/manage', 'update', [
+				'middlewares' => [new Authentication()]
+			])
+			->delete('user/manage', 'delete', [
+				'middlewares' => [new Authentication()]
+			]),
 		'login' => [
 			'body' => EndpointFactory::create()
 				->post('user/manage', 'login'),

@@ -45,7 +45,7 @@ class Module extends View
     function get(): array
     {
         $controller = new UserController($this->params);
-        return $controller->get($this->$query);
+        return $controller->get($this->query);
     }
 
     /**
@@ -83,9 +83,14 @@ class Module extends View
             try {
                 $controller = new UserController();
                 $result = $controller->get([
-                    'filters' => $this->body,
+                    'filters' => ['email' => $this->body['email']],
                 ], true);
-                if ($result) {
+
+                if (!sizeof($result)) throw RequestExceptionFactory::create("Incorrect user or password", 401);
+
+                $pwdMatch = $result[0]->matchPassword($this->body['password']);
+
+                if ($pwdMatch) {
                     $jwt = JWTHandler::create($result[0]);
                     return ['token' => $jwt];
                 } else {

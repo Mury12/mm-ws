@@ -20,6 +20,7 @@ try {
   }
   // Contains the response from the endpoint
   $response = $endpoint->render();
+
   // Sends it back to the client
   return send($response);
 } catch (Exception $e) {
