@@ -12,7 +12,6 @@ use Dotenv\Dotenv;
 use MMWS\Factory\RequestFactory;
 use MMWS\Handler\Router;
 use MMWS\Handler\SESSION;
-use MMWS\Middleware\Authentication;
 use MMWS\Middleware\CACHE;
 use MMWS\Middleware\Throttle;
 

@@ -79,11 +79,11 @@ abstract class View
      * 
      * @return array the request result
      */
-    function call(): array
+    function call()
     {
         if (method_exists($this, $this->method)) {
             $response = $this->{$this->method}();
-            return is_array($response) ? $response : [$response];
+            return $response;
         } else {
             throw RequestExceptionFactory::create(null, 404);
         }
