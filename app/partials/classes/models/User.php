@@ -18,20 +18,22 @@ use MMWS\Interfaces\AbstractModel;
 
 class User extends AbstractModel
 {
-    protected ?int $id;
-    protected string $name;
-    protected string $email;
-    protected string $password;
-    protected ?int $act;
-
-
-    public function __construct($id = null, $name = null, $email = null, $password = null, $act = null)
+    protected $id;
+    protected $name;
+    protected $email;
+    protected $password;
+    protected $createdAt;
+    protected $updatedAt;
+    
+    public function __construct($id = null, $name = null, $email = null, $password = null, $createdAt = null, $updatedAt = null)
     {
         $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
-        $this->act = $act;
+	    $this->name = $name;
+	    $this->email = $email;
+	    $this->password = $password;
+	    $this->createdAt = $createdAt;
+	    $this->updatedAt = $updatedAt;
+	    
     }
 
     public function encryptPassword()
