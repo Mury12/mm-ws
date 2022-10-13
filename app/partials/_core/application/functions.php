@@ -60,26 +60,31 @@ function get_root_uri()
 
 function modelToArray($object)
 {
-    $model = $object instanceof AbstractModel ? $object->toArray() : $object;
-    return array_map(function ($prop) {
-        if ($prop instanceof AbstractModel) return modelToArray($prop);
-        return $prop;
-    }, $model);
+    if ($object instanceof AbstractModel) {
+        $model = $object->toArray();
+        return array_map(function ($prop) {
+            if ($prop instanceof AbstractModel) return modelToArray($prop);
+            return $prop;
+        }, $model);
+    }
+    return $object;
 }
 
 /**
  * Spits the requested content
- * @param Array $content is the formatted array to put on the response message
+ * @param Array|Object $content is the formatted array to put on the response message
  */
-function send(array $content)
+function send($content)
 {
     if (!sizeof($content)) {
         set_http_code(204);
         return;
     }
-    $response = array_map(function ($item) {
-        return modelToArray($item);
-    }, $content);
+    if (is_array($content)) {
+        $response = array_map(function ($item) {
+            return modelToArray($item);
+        }, $content);
+    } else $response = modelToArray($content);
     print_r(json_encode($response, JSON_INVALID_UTF8_IGNORE));
     return;
 }
