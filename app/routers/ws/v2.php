@@ -41,18 +41,4 @@ return [
 				->post('user/manage', 'login'),
 		]
 	],
-	'food' => [
-		'params' => ['id'],
-		'body' => EndpointFactory::create()
-			->post('food/manage', 'create', [
-				'middlewares' => [[new Authentication()]]
-			])
-			->get('food/manage', 'get')
-			->put('food/manage', 'update', [
-				'middlewares' => [[new Authentication()]]
-			])
-			->delete('food/manage', 'delete', [
-				'middlewares' => [[new Authentication()]]
-			]),
-	],
 ];
