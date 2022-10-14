@@ -61,7 +61,7 @@ function get_root_uri()
 function modelToArray($object)
 {
     if ($object instanceof AbstractModel) {
-        $model = $object->toArray();
+        $model = $object->toArray([], false);
         return array_map(function ($prop) {
             if ($prop instanceof AbstractModel) return modelToArray($prop);
             return $prop;
