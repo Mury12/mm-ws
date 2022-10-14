@@ -17,6 +17,7 @@ use {VENDOR}\Controller\{USE_CLASS}Controller;
 use MMWS\Interfaces\AbstractEntity;
 use MMWS\Handler\PDOQueryBuilder;
 use MMWS\Factory\RequestExceptionFactory;
+use MMWS\Handler\CaseHandler;
 use PDOException;
 
 class {CLASS_NAME} extends AbstractEntity
@@ -118,7 +119,9 @@ class {CLASS_NAME} extends AbstractEntity
             $instance = $stmt->run();
             if (sizeof($instance))
                 return $asobj
-                    ? (new {USE_CLASS}Controller($instance[0]))->model
+                    ? (new {USE_CLASS}Controller(
+                        CaseHandler::convert($instance[0], 0)
+                    ))->model
                     : $instance[0];
             else throw RequestExceptionFactory::create('Object not found', 422);
         } catch (\PDOException $e) {
@@ -153,7 +156,9 @@ class {CLASS_NAME} extends AbstractEntity
             $instances = $stmt->run();
             if ($asobj) {
                 return array_map(function ($instance) {
-                    return (new {USE_CLASS}Controller($instance))->model;
+                    return (new {USE_CLASS}Controller(
+                        CaseHandler::convert($instance, 0)
+                    ))->model;
                 }, $instances);
             } else return $instances;
         } catch (\PDOException $e) {
@@ -190,7 +195,9 @@ class {CLASS_NAME} extends AbstractEntity
             $instances = $stmt->run();
             if ($asobj) {
                 return array_map(function ($instance) {
-                    $ctl = new {USE_CLASS}Controller($instance);
+                    $ctl = new {USE_CLASS}Controller(
+                        CaseHandler::convert($instance, 0)
+                    );
                     return $ctl->model;
                 }, $instances);
             } else return $instances;
