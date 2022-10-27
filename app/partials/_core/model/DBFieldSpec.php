@@ -21,6 +21,7 @@ class DBFieldSpec
     const DATE = 'string';
     const VARCHAR = 'string';
     const CHAR = 'string';
+    // TODO: Needs a transform to JSON on GETTER
     const LONGTEXT = 'string';
 
     public function __construct(string $name, string $type, ?string $nullable = 'NO', $default = null, ?string $extra)

@@ -1,4 +1,5 @@
-# MM-WS - PHP Webservice Template @v0.10.0-beta
+# MM-WS - PHP Webservice Template @v0.11.0-beta0 (Breaking changes!)
+> V0.11.0-beta0 does not support backwards compat with v0.10.x
 
 ## Before using
 
