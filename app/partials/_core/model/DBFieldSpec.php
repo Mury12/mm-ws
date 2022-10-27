@@ -15,11 +15,13 @@ class DBFieldSpec
     const TINYINT = 'int';
     const DOUBLE = 'float';
     const FLOAT = 'float';
-    const DATETIME = '\DateTime';
-    const TIMESTAMP = '\DateTime';
-    const DATE = '\DateTime';
+    //TODO: Create a transformer
+    const DATETIME = 'string';
+    const TIMESTAMP = 'string';
+    const DATE = 'string';
     const VARCHAR = 'string';
     const CHAR = 'string';
+    const LONGTEXT = 'string';
 
     public function __construct(string $name, string $type, ?string $nullable = 'NO', $default = null, ?string $extra)
     {
@@ -45,7 +47,7 @@ class DBFieldSpec
 
     function asParam()
     {
-        return ($this->type ? ' ?' : ' ')  . $this->type . "$" . $this->name . ';';
+        return ($this->type ? ' ?' : ' ')  . $this->type . " $" . $this->name . ';';
     }
 
     function asArg()
