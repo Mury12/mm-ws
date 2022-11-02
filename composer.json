@@ -12,5 +12,13 @@
       "Composer\\Config::disableProcessTimeout",
       "php -S 0.0.0.0:8081"
     ]
+  },
+  "autoload": {
+    "psr-4": {
+      "MMWS\\": [
+        "core",
+        "src/classes"
+      ]
+    }
   }
 }

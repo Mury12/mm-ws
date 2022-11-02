@@ -164,9 +164,9 @@ class DatabaseModelExtractor
             $e = $this->entity($template['entity'], $className);
             $c = $this->controller($template['controller'], $className);
 
-            $file['model'] = fopen($this->MVCFolderPath . '/models/' . $this->prefix . $className . '.model.php', 'w');
-            $file['entity'] = fopen($this->MVCFolderPath . '/entities/' . $this->prefix . $className . '.entity.php', 'w');
-            $file['controller'] = fopen($this->MVCFolderPath . '/controllers/' . $this->prefix . $className . '.controller.php', 'w');
+            $file['model'] = fopen($this->MVCFolderPath . '/Model/' . $this->prefix . $className . '.php', 'w');
+            $file['entity'] = fopen($this->MVCFolderPath . '/Entity/' . $this->prefix . $className . 'Entity.php', 'w');
+            $file['controller'] = fopen($this->MVCFolderPath . '/Controller/' . $this->prefix . $className . 'Controller.php', 'w');
 
             try {
                 fwrite($file['model'], $m);

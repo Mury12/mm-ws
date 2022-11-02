@@ -12,7 +12,7 @@ use MMWS\Handler\Request;
  * 
  * Example Usage:
  * ```php
- * use MMWS\Interfaces\AbstractView;
+ * use MMWS\Abstracts\View;
  * 
  * class View extends AbstractView
  * {
