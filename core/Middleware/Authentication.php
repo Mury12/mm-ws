@@ -12,13 +12,13 @@ namespace MMWS\Middleware;
 
 use Exception;
 use MMWS\Factory\RequestExceptionFactory;
-use MMWS\Interfaces\IMiddleware;
+use MMWS\Interfaces\Middleware;
 use MMWS\Handler\JWTHandler;
 use MMWS\Handler\Request;
 
-// require_once('app/util/ploader.php');
+// require_once('src/util/ploader.php');
 
-class Authentication implements IMiddleware
+class Authentication implements Middleware
 {
     private $access;
     const TOKEN = USER_AUTHORIZATION_TOKEN;

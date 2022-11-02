@@ -4,7 +4,7 @@ namespace MMWS\Middleware;
 
 use MMWS\Handler\Request;
 use MMWS\Handler\SESSION;
-use MMWS\Interfaces\IMiddleware;
+use MMWS\Interfaces\Middleware;
 
 /**
  * Implements request caching with timeout
@@ -12,7 +12,7 @@ use MMWS\Interfaces\IMiddleware;
  * @param Int $timeout time in seconds to REDO the request. Default is 10 seconds 
  * @param Int $interval interval between requests. Default is 1 second
  */
-class CACHE implements IMiddleware
+class Cache implements Middleware
 {
 
 

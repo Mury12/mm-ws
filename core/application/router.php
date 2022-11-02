@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Routes are now defined separately in app/routers/router-file.php
+ * Routes are now defined separately in src/routers/router-file.php
  * Do not change this file to avoid route breaking.
  * This file is used only to define route domains such as ws->v1|v2|v3
  * and so on
@@ -10,10 +10,10 @@
 use MMWS\Factory\EndpointFactory;
 
 /**
- * This loads all the routers in the app/routers.
+ * This loads all the routers in the src/routers.
  * @param string[] $directory the directory
  */
-function router_load_files($directory = 'app/routers'): array
+function router_load_files($directory = 'src/routers'): array
 {
     $router = [];
     if ($handle = opendir($directory)) {

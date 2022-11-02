@@ -12,7 +12,7 @@ use MMWS\Factory\RequestExceptionFactory;
  * 
  * @param Array<Endpoint> $routes the indexed routes array with its properties
  * 
- * For examples see the router files in app/routers
+ * For examples see the router files in src/routers
  * 
  * ----------
  * 
@@ -22,7 +22,7 @@ use MMWS\Factory\RequestExceptionFactory;
  * 
  * $router = new Router();
  * 
- * $router->init(require_once(app/routes.php));
+ * $router->init(require_once(src/routes.php));
  * 
  * $endpoint = $router->get();
  * 

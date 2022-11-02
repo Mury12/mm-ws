@@ -2,6 +2,7 @@
 
 namespace MMWS\Interfaces;
 
-interface IFactory {
+interface Factory
+{
     static function create(array $args);
 }

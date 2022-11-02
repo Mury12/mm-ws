@@ -7,7 +7,7 @@ use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Request;
 use MMWS\Handler\RequestException;
 use MMWS\Handler\SESSION;
-use MMWS\Interfaces\IMiddleware;
+use MMWS\Interfaces\Middleware;
 
 /**
  * Implements a 429 error when client tries
@@ -18,7 +18,7 @@ use MMWS\Interfaces\IMiddleware;
  * @param Int $timeout time in seconds to REDO the request. Default is 10 seconds 
  * @param Int $interval interval between requests. Default is 1 second
  */
-class Throttle implements IMiddleware
+class Throttle implements Middleware
 {
     private $name = '_session_timeout_throttle';
 

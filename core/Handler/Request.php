@@ -2,7 +2,7 @@
 
 namespace MMWS\Handler;
 
-use MMWS\Interfaces\IMiddleware;
+use MMWS\Interfaces\Middleware;
 
 /**
  * Handles the HTTP requests
@@ -168,7 +168,7 @@ class Request
     /**
      * Gets the current middlewares for this method
      * 
-     * @return IMiddleware[]
+     * @return Middleware[]
      */
     function getMiddlewares(): array
     {
@@ -193,6 +193,6 @@ class Request
      */
     private function setFilePath(String $page, Int $v = 2)
     {
-        return 'app/_ws/v' . $v . '/' . $page . '.php';
+        return 'src/_ws/v' . $v . '/' . $page . '.php';
     }
 }

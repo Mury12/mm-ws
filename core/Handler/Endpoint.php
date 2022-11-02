@@ -2,12 +2,12 @@
 
 namespace MMWS\Handler;
 
-use MMWS\Middleware\CACHE;
+use MMWS\Middleware\Cache;
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Queue;
 use MMWS\Middleware\Authentication;
 use MMWS\Handler\Request;
-use MMWS\Interfaces\View;
+use MMWS\Abstracts\View;
 
 /**
  * Creates endpoints and configure it.
@@ -239,7 +239,7 @@ class Endpoint
              * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed BEFORE page rendering
              */
             $middleware = new Queue(
-                'MMWS\Interfaces\IMiddleware',
+                'MMWS\Interfaces\Middleware',
                 array_merge(
                     $middlewares,
                     $this->middlewares,
@@ -265,16 +265,16 @@ class Endpoint
         if ($this->caching && $_SERVER['REQUEST_METHOD'] === 'GET') {
             global $cached;
             try {
-                $cached = CACHE::check($request->getProcedure());
+                $cached = Cache::check($request->getProcedure());
                 /**
-                 * CACHEs requests if caching is enabled
+                 * Caches requests if caching is enabled
                  */
                 if (!$cached) {
                     /**
                      * @var mixed $m result from the procedure
                      */
                     $m = $view->call();
-                    CACHE::put($m, $request->getProcedure());
+                    Cache::put($m, $request->getProcedure());
                 }
                 $m = $m ?? $cached;
             } catch (\Exception $e) {
@@ -374,7 +374,7 @@ class Endpoint
     }
 
     /**
-     * Gets the file located in 'app/partials/pieces' that can be put to complement another endpoint.
+     * Gets the file located in 'src/partials/pieces' that can be put to complement another endpoint.
      * @deprecated in v1.0.1
      * @var file filename with no extension.
      * 
@@ -382,7 +382,7 @@ class Endpoint
      */
     public function getFilePartial($file)
     {
-        return \file_get_contents('app/partials/pieces/' . $file . '.php');
+        return \file_get_contents('src/partials/pieces/' . $file . '.php');
     }
 
     /**

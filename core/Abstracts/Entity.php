@@ -1,8 +1,8 @@
 <?php
 
-namespace MMWS\Interfaces;
+namespace MMWS\Abstracts;
 
-class AbstractEntity
+class Entity
 {
     protected $model;
     protected $table;

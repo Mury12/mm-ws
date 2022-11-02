@@ -1,12 +1,11 @@
 <?php
 
-namespace MMWS\Interfaces;
+namespace MMWS\Abstracts;
 
 use Error;
 use MMWS\Handler\CaseHandler;
-use ReflectionProperty;
 
-class AbstractModel
+class Model
 {
 
     /**
@@ -103,7 +102,7 @@ class AbstractModel
     }
 
     /**
-     * Set fields to be hidden when `AbstractModel::toArray()` or `AbstractModel::getColumnNames()` are called.
+     * Set fields to be hidden when `Model::toArray()` or `Model::getColumnNames()` are called.
      * 
      * It is used to allow relationships in the model without damaging generated queries.
      * 
@@ -112,5 +111,10 @@ class AbstractModel
     public function setHiddenFields(array $fields)
     {
         $this->hidden = array_merge($this->hidden, $fields);
+    }
+
+    public function resetHiddenFields()
+    {
+        $this->hidden = ['hidden'];
     }
 }

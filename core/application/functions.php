@@ -5,7 +5,7 @@
  */
 
 use MMWS\Factory\RequestExceptionFactory;
-use MMWS\Interfaces\AbstractModel;
+use MMWS\Abstracts\Model;
 
 /** @var $auth_enabled enable authentication ? */
 $auth_enabled = true;
@@ -27,10 +27,10 @@ function report($error)
     // $error['FROM_IP'] = ORIGIN_HTTP_ADDR;
     $error['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
     $error['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
-    if (!file_exists('app/logs/error.log')) {
-        file_put_contents('app/logs/error.log', '');
+    if (!file_exists('src/logs/error.log')) {
+        file_put_contents('src/logs/error.log', '');
     }
-    error_log(json_encode($error) . "\n", 3, 'app/logs/error.log');
+    error_log(json_encode($error) . "\n", 3, 'src/logs/error.log');
 }
 
 /**
@@ -42,7 +42,7 @@ function report($error)
  */
 function http_message(Int $code, $status = null)
 {
-    $error = $error ?? require('app/util/errors.php');
+    $error = $error ?? require('src/util/errors.php');
     set_http_code($error[$code]['code']);
     if ($status) {
         $error[$code]['status'] = $status;
@@ -60,35 +60,35 @@ function get_root_uri()
 
 function modelToArray($object)
 {
-    if ($object instanceof AbstractModel) {
+    if ($object instanceof Model) {
         $model = $object->toArray([], false);
         return array_map(function ($prop) {
-            if ($prop instanceof AbstractModel) return modelToArray($prop);
+            if ($prop instanceof Model) return modelToArray($prop);
             return $prop;
         }, $model);
     }
     return $object;
 }
-
 /**
  * Spits the requested content
- * @param Array|Object $content is the formatted array to put on the response message
+ * @param Array $content is the formatted array to put on the response message
  */
 function send($content)
 {
-    if (!sizeof($content)) {
+    if (!$content || is_array($content) && !sizeof($content)) {
         set_http_code(204);
         return;
     }
+
     if (is_array($content)) {
         $response = array_map(function ($item) {
             return modelToArray($item);
         }, $content);
     } else $response = modelToArray($content);
+
     print_r(json_encode($response, JSON_INVALID_UTF8_IGNORE));
     return;
 }
-
 function auth_enabled()
 {
     global $auth_enabled;
@@ -280,8 +280,8 @@ function put_params($key = false)
  */
 function get_sysmsg(Int $msgCode)
 {
-    if (file_exists('app/System-messages.json')) {
-        $err = file_get_contents('app/System-messages.json');
+    if (file_exists('src/System-messages.json')) {
+        $err = file_get_contents('src/System-messages.json');
         $err = json_decode($err, true);
         return $err[$msgCode]['message'];
     }
@@ -309,8 +309,8 @@ function pop_password(Int $length = 8)
  */
 function get_part_template(String $template, array $data)
 {
-    if (file_exists('app/util/templates/' . $template . '-template.php')) {
-        $html = file_get_contents('app/util/templates/' . $template . '-template.php');
+    if (file_exists('src/util/templates/' . $template . '-template.php')) {
+        $html = file_get_contents('src/util/templates/' . $template . '-template.php');
         foreach ($data as $key => $value) {
             $html = preg_replace("/\{\{" . $key . "}\}/", $value, $html);
         }

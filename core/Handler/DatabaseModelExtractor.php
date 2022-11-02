@@ -2,11 +2,8 @@
 
 namespace MMWS\Handler;
 
-use DateTime;
 use Dotenv\Exception\InvalidFileException;
 use MMWS\Handler\CaseHandler;
-use MMWS\Model\DBFieldSpec;
-use MMWS\Model\DBTableSpec;
 use PDO;
 use PDOStatement;
 
@@ -29,7 +26,7 @@ use PDOStatement;
  * 
  * use MMWS\Handler\DatabaseModelExtractor;
  * 
- * $dbm = new DatabaseModelExtractor('mm_dbname', 'app/partials/classes', 1);
+ * $dbm = new DatabaseModelExtractor('mm_dbname', 'src/partials/classes', 1);
  * 
  * $dbm->generate();
  * 
@@ -41,14 +38,14 @@ use PDOStatement;
 class DatabaseModelExtractor
 {
     /**
-     * @var DBTableSpec[] $tables transcribed schema
+     * @var Array<Array<String>> $tables transcribed schema
      */
-    private $tables = [];
+    private $tables = array();
 
     /**
      * @var Array<String> $snaked raw table names
      */
-    private $snaked = [];
+    private $snaked = array();
 
     /**
      * @var String $dbName the database name
@@ -113,7 +110,7 @@ class DatabaseModelExtractor
     {
         global $conn;
 
-        $query  = " SELECT `TABLE_NAME`, `COLUMN_NAME`, `COLUMN_DEFAULT`, `IS_NULLABLE`, `DATA_TYPE`, `EXTRA`";
+        $query  = " SELECT `TABLE_NAME`, `COLUMN_NAME`";
         $query .= " FROM `INFORMATION_SCHEMA`.`COLUMNS` ";
         $query .= " WHERE `TABLE_SCHEMA` = '" . $this->dbName . "'";
         $query .= " AND `TABLE_NAME` NOT LIKE '%view%'";
@@ -132,27 +129,12 @@ class DatabaseModelExtractor
                 $className = CaseHandler::convert($value['TABLE_NAME'], 0, true);
                 $this->snaked[$className] = $value['TABLE_NAME'];
 
-                if (!array_key_exists($className, $this->tables)) {
-                    $table = new DBTableSpec($className);
-                    $this->tables[$className] = $table;
-                } else {
-                    $table = $this->tables[$className];
-                }
-
-                $columnName = $this->snakeToCamel > 0
+                $this->tables[$className][] = $this->snakeToCamel > 0
                     ? CaseHandler::convert(
                         $value['COLUMN_NAME'],
                         0,
                         $this->snakeToCamel === 2 ? true : false
                     ) : $value['COLUMN_NAME'];
-
-                $table->addField(new DBFieldSpec(
-                    $columnName,
-                    $value['DATA_TYPE'],
-                    $value['IS_NULLABLE'],
-                    $value['COLUMN_DEFAULT'],
-                    $value['EXTRA']
-                ));
             }
 
             return true;
@@ -170,25 +152,21 @@ class DatabaseModelExtractor
     function generate()
     {
         $this->getRemoteTables();
-        $template['model'] = file_get_contents('app/util/templates/classes/Model.template');
-        $template['entity'] = file_get_contents('app/util/templates/classes/Entity.template');
-        $template['controller'] = file_get_contents('app/util/templates/classes/Controller.template');
+        $template['model'] = file_get_contents('src/util/templates/classes/Model.template');
+        $template['entity'] = file_get_contents('src/util/templates/classes/Entity.template');
+        $template['controller'] = file_get_contents('src/util/templates/classes/Controller.template');
         $count = 0;
         foreach ($this->tables as $model => $value) {
             print_r("Generating MVCE for " . $model . "...\n");
 
             $className = $model;
-            $m = $this->model(
-                $template['model'],
-                $className,
-                $value
-            );
+            $m = $this->model($template['model'], $className, $value);
             $e = $this->entity($template['entity'], $className);
             $c = $this->controller($template['controller'], $className);
 
-            $file['model'] = fopen($this->MVCFolderPath . '/models/' . $this->prefix . $className . '.php', 'w');
-            $file['entity'] = fopen($this->MVCFolderPath . '/entities/' . $this->prefix . $className . 'Entity.php', 'w');
-            $file['controller'] = fopen($this->MVCFolderPath . '/controllers/' . $this->prefix . $className . 'Controller.php', 'w');
+            $file['model'] = fopen($this->MVCFolderPath . '/models/' . $this->prefix . $className . '.model.php', 'w');
+            $file['entity'] = fopen($this->MVCFolderPath . '/entities/' . $this->prefix . $className . '.entity.php', 'w');
+            $file['controller'] = fopen($this->MVCFolderPath . '/controllers/' . $this->prefix . $className . '.controller.php', 'w');
 
             try {
                 fwrite($file['model'], $m);
@@ -212,15 +190,15 @@ class DatabaseModelExtractor
      * 
      * @return String the fulfilled template content
      */
-    private function model($template, String $model, DBTableSpec $table)
+    private function model($template, String $model, array $values)
     {
         $attributes = "";
         $constructor = "";
         $attrSetter = "";
-        foreach ($table->getFields() as $field) {
-            $attributes .= "protected" . $field->asParam() . "\n    ";
-            $constructor .= $field->asArg();
-            $attrSetter .= '$this->' . $field->name . " = $" . $field->name . ";\n\t    ";
+        foreach ($values as $value) {
+            $attributes .= "protected $" . $value . ";\n    ";
+            $constructor .= "$" . $value . " = null, ";
+            $attrSetter .= '$this->' . $value . " = $" . $value . ";\n\t    ";
         }
         $constructor = trim($constructor, ', ');
         $output = str_replace('{CLASS_ATTRIBUTES}', $attributes, $template);

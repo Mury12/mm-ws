@@ -2,11 +2,11 @@
 
 namespace MMWS\Factory;
 
-use MMWS\Interfaces\IFactory;
+use MMWS\Interfaces\Factory;
 use PDOStatement;
 use ValueError;
 
-class PDOQueryFactory implements IFactory
+class PDOQueryFactory implements Factory
 {
     /**
      * @param array $stmt array with query params. 

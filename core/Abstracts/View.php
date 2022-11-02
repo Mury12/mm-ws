@@ -1,6 +1,6 @@
 <?php
 
-namespace MMWS\Interfaces;
+namespace MMWS\Abstracts;
 
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Request;

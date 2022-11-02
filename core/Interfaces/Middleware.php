@@ -4,8 +4,6 @@ namespace MMWS\Interfaces;
 
 use MMWS\Handler\Request;
 
-require_once('app/util/ploader.php');
-
 /**
  * Middleware Interface
  * 
@@ -33,7 +31,7 @@ require_once('app/util/ploader.php');
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.6.1-alpha
  */
-interface IMiddleware
+interface Middleware
 {
     /**
      * The action that will be called by initializer
