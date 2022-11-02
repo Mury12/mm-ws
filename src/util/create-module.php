@@ -1,6 +1,6 @@
 <?php
-require_once 'app/partials/_core/application/functions.php';
-require_once 'app/partials/_core/application/autoload.php';
+require_once 'core/application/functions.php';
+require_once 'core/application/autoload.php';
 $argv;
 if ($argc === 3) {
     try {
@@ -9,7 +9,7 @@ if ($argc === 3) {
         // Folder name (domain)
         $folder = $argv[2];
         // Modules path
-        $path =  'app/_ws/v2/';
+        $path =  'src/_ws/v2/';
         // Checks if this is a directory and if not create one
         if (!is_dir($path . $folder)) {
             mkdir($path . $folder);
@@ -31,7 +31,7 @@ if ($argc === 3) {
         fscanf(STDIN, "%s", $className);
 
         // Loads the template file
-        $template = file_get_contents('app/util/templates/classes/Module.template');
+        $template = file_get_contents('src/util/templates/classes/Module.template');
         // Replaces the keywords
         $output = str_replace('{ENDPOINT_NAME}', ucfirst(preg_replace('/[\-]/im', ' ', $name)), $template);
         $output = str_replace('{CONTROLLER_NAME}', $className, $output);
@@ -74,25 +74,25 @@ if ($argc === 3) {
         $routerFileName = $uriParts;
         array_pop($routerFileName);
         $routerFileName = implode('/', $routerFileName);
-        if (!file_exists("app/routers/$routerFileName.php")) {
+        if (!file_exists("src/routers/$routerFileName.php")) {
             print_r("\n The suggested router does not exist. Creating a new reference..");
-            $newRouterTemplate = file_get_contents('app/util/templates/router.template');
+            $newRouterTemplate = file_get_contents('src/util/templates/router.template');
             $suggestedDirectory = (explode('/', $routerFileName));
             array_pop($suggestedDirectory);
-            $currentDirectory = "app/routers";
+            $currentDirectory = "src/routers";
             foreach ($suggestedDirectory as $directory) {
                 $currentDirectory .= "/$directory";
                 if (!is_dir($currentDirectory)) {
                     mkdir($currentDirectory);
                 }
             }
-            file_put_contents("app/routers/$routerFileName.php", $newRouterTemplate);
+            file_put_contents("src/routers/$routerFileName.php", $newRouterTemplate);
         }
 
-        $routes = require_once "app/routers/$routerFileName.php";
+        $routes = require_once "src/routers/$routerFileName.php";
         // Loads the template
-        // $template = file_get_contents('app/util/templates/service.template');
-        $template = file_get_contents("app/routers/$routerFileName.php");
+        // $template = file_get_contents('src/util/templates/service.template');
+        $template = file_get_contents("src/routers/$routerFileName.php");
 
         $current = $routes;
 
@@ -149,8 +149,8 @@ if ($argc === 3) {
         // Replaces the keyword with the new array of routes
         $output = str_replace("];\n", $text, $template);
         // Saves the file
-        file_put_contents("app/routers/$routerFileName.php", $output);
-        print_r("\nService route for '$name' identified by '$routerFileName/$uri' successfully created at 'app/routers/$routerFileName.php'");
+        file_put_contents("src/routers/$routerFileName.php", $output);
+        print_r("\nService route for '$name' identified by '$routerFileName/$uri' successfully created at 'src/routers/$routerFileName.php'");
         print_r("\nThank you for using me. If you want to do it again, just call me `php create-module.php`.\n");
     } catch (Exception $e) {
         rmdir($path . $folder);

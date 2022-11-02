@@ -506,7 +506,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 ```
 ├── core <-- Core files, don't touch :)
 ├── \app
-│   ├── \_files
+│   ├── \upload
 │   │   ├── File A.jpg
 │   │   ├── \Folder B
 │   │   │   └── File B.pdf

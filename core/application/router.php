@@ -13,7 +13,7 @@ use MMWS\Factory\EndpointFactory;
  * This loads all the routers in the src/routers.
  * @param string[] $directory the directory
  */
-function router_load_files($directory = 'src/routers'): array
+function router_loadupload($directory = 'src/routers'): array
 {
     $router = [];
     if ($handle = opendir($directory)) {
@@ -23,7 +23,7 @@ function router_load_files($directory = 'src/routers'): array
                 $pathname = $directory . '/' . $file;
                 $domain = str_replace('.php', '', $file);
                 if (is_dir($pathname)) {
-                    $loadedRoutes = router_load_files($pathname);
+                    $loadedRoutes = router_loadupload($pathname);
                 } else {
                     $loadedRoutes = require_once $pathname;
                 }
@@ -38,4 +38,4 @@ function router_load_files($directory = 'src/routers'): array
     return $router;
 }
 
-return router_load_files();
+return router_loadupload();

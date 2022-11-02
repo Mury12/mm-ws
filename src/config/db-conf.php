@@ -4,7 +4,7 @@ use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Connection;
 
 /** Uses a local DB config to local db or dev */
-if (!file_exists('app/config/local/db-local.php')) {
+if (!file_exists('src/config/local/db-local.php')) {
     /** Cloud DB host IP */
     define('DB_HOST', $_ENV['DB_HOST']);
     /** Cloud DB NAME */
@@ -13,7 +13,7 @@ if (!file_exists('app/config/local/db-local.php')) {
     define('DB_USER', $_ENV['DB_USER']);
     /** Cloud DB password */
     define('DB_PASS', $_ENV['DB_PASS']);
-} else require_once('app/config/local/db-local.php');
+} else require_once('src/config/local/db-local.php');
 
 /** Creates a connection into DB using PDO 
  * @var MMWS\Handler\Connection $db prepared connection object

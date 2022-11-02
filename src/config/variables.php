@@ -5,19 +5,19 @@
  * Do not change it before analysis
  */
 
-// require_once('app/util/ploader.php');
+// require_once('src/util/ploader.php');
 if (!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if (!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
 if (!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
 /** Default core classes path */
-define('_DEFAULT_CORE_PATH_', 'app/partials/_core');
+define('_DEFAULT_CORE_PATH_', 'core');
 /** Default module classes path */
-define('_DEFAULT_MODULE_PATH_', 'app/partials/class');
+define('_DEFAULT_MODULE_PATH_', 'src/class');
 /** Default application path */
 define('_DEFAULT_APPLICATION_PATH_', _DEFAULT_CORE_PATH_ . '/application');
 /** Default indexes file path */
 define('_DEFAULT_STARTER_PATH_', "initiators");
-if (!\file_exists('app/config/local/variables-local.php')) {
+if (!\file_exists('src/config/local/variables-local.php')) {
 
     /** * Route protector use flag (not quite done...) */
     define('_WILL_IT_SMITH_', true);
@@ -44,7 +44,7 @@ if (!\file_exists('app/config/local/variables-local.php')) {
 
 
     /** Files */
-    define('DEFAULT_FILE_PATH', 'app/_files/');
+    define('DEFAULT_FILE_PATH', 'src/upload/');
 
     /** MailGun */
     define('DEFAULT_NOREPLY_EMAIL', 'noreply@YOUR_EMAIL.com');
@@ -69,4 +69,4 @@ if (!\file_exists('app/config/local/variables-local.php')) {
         $key = file_get_contents($_ENV['JWT_KEY_PATH']);
         define('_JWT_DEFINED_KEY_', $key);
     }
-} else require_once 'app/config/local/variables-local.php';
+} else require_once 'src/config/local/variables-local.php';

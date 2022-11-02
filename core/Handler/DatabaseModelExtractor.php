@@ -26,7 +26,7 @@ use PDOStatement;
  * 
  * use MMWS\Handler\DatabaseModelExtractor;
  * 
- * $dbm = new DatabaseModelExtractor('mm_dbname', 'src/partials/classes', 1);
+ * $dbm = new DatabaseModelExtractor('mm_dbname', 'src/classes', 1);
  * 
  * $dbm->generate();
  * 

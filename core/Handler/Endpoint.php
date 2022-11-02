@@ -374,7 +374,7 @@ class Endpoint
     }
 
     /**
-     * Gets the file located in 'src/partials/pieces' that can be put to complement another endpoint.
+     * Gets the file located in 'src/pieces' that can be put to complement another endpoint.
      * @deprecated in v1.0.1
      * @var file filename with no extension.
      * 
@@ -382,7 +382,7 @@ class Endpoint
      */
     public function getFilePartial($file)
     {
-        return \file_get_contents('src/partials/pieces/' . $file . '.php');
+        return \file_get_contents('src/pieces/' . $file . '.php');
     }
 
     /**

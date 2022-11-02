@@ -5,9 +5,9 @@
     "firebase/php-jwt": "^5.2"
   },
   "scripts": {
-    "create-module": "php ./app/util/create-module.php",
-    "create-mvc": "php ./app/util/mvc-creator.php",
-    "restore-endpoint": "cp ./app/util/templates/classes/EndpointModel.template ./app/partials/_core/handlers/Endpoint.php",
+    "create-module": "php ./src/util/create-module.php",
+    "create-mvc": "php ./src/util/mvc-creator.php",
+    "restore-endpoint": "cp ./src/util/templates/classes/EndpointModel.template ./core/handlers/Endpoint.php",
     "start": [
       "Composer\\Config::disableProcessTimeout",
       "php -S 0.0.0.0:8081"

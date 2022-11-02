@@ -25,13 +25,13 @@ $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
 
 /** System defined variables */
-require_once 'app/config/variables.php';
+require_once 'src/config/variables.php';
 
 /** Autoloads all the classes */
 require_once _DEFAULT_APPLICATION_PATH_ . '/autoload.php';
 
 /** Database connection configuration file */
-require_once 'app/config/db-conf.php';
+require_once 'src/config/db-conf.php';
 /**
  * @var MMWS\Handler\Request contains the request data. If this is null, then the
  * request wasn't succeed.

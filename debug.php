@@ -7,10 +7,10 @@
 use MMWS\Handler\DatabaseModelExtractor;
 use MMWS\Handler\Connection;
 
-require_once 'app/autoload.php';
-require_once 'app/functions.php';
-require_once('app/config/db-conf.php');
-define('DEFAULT_FILE_PATH', 'app/_files/');
+require_once 'src/autoload.php';
+require_once 'src/functions.php';
+require_once('src/config/db-conf.php');
+define('DEFAULT_FILE_PATH', 'src/upload/');
 
 // $c_db = new Connection(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 
@@ -22,7 +22,7 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 //     die;
 // }
 
-$dbm = new DatabaseModelExtractor('mm_dietacerta', 'app/partials/classes', 1);
+$dbm = new DatabaseModelExtractor('mm_dietacerta', 'src/classes', 1);
 
 echo "\n ----DEBUG START ----\n";
 print_r($dbm->generate());

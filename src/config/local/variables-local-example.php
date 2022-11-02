@@ -35,7 +35,7 @@ define('HTTP_CONTENT_TYPE', 'application/json');
 
 
 /** Files */
-define('DEFAULT_FILE_PATH', 'app/_files/');
+define('DEFAULT_FILE_PATH', 'src/upload/');
 
 /** MailGun */
 define('DEFAULT_NOREPLY_EMAIL', 'noreply@YOUR_EMAIL.com');
