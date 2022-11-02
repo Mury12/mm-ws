@@ -1,4 +1,4 @@
-# MM-WS - PHP Webservice Template @v0.12.0-beta0 (Breaking changes!)
+# MM-WS - PHP Webservice Template @v0.12.0-beta1 (Breaking changes!)
 
 __V0.12.x is is migrating to PHP 8.x, and older versions will be marked as stale.__
 
