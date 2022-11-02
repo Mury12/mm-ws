@@ -10,7 +10,7 @@
 
 use MMWS\Handler\MMWS;
 // Load configurations
-require 'app/config/config.php';
+require 'src/config/config.php';
 // Instantiates the main class
 $mmws = new MMWS('index');
 // Runs the app

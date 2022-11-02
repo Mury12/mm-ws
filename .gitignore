@@ -17,10 +17,10 @@ node_modules
 *.sw?
 
 #files to be ignored
-app/_files/**/*
-app/logs/error.log
-app/config/local/*-local.php
-app/util/WillSmithTheRouteProtector.php
+src/upload/**/*
+src/logs/error.log
+src/config/local/*-local.php
+src/util/WillSmithTheRouteProtector.php
 /wsrp/*
 /vendor
 composer.lock

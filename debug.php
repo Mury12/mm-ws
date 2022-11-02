@@ -4,13 +4,12 @@
  * This file is used to debug specific functionalities 
  */
 
-use MMWS\Handler\DatabaseModelExtractor;
+use MMWS\Handler\DBPuller;
 use MMWS\Handler\Connection;
 
-require_once 'app/autoload.php';
-require_once 'app/functions.php';
-require_once('app/config/db-conf.php');
-define('DEFAULT_FILE_PATH', 'app/_files/');
+require_once _DEFAULT_APPLICATION_PATH_ . '/functions.php';
+require_once('src/config/db-conf.php');
+define('DEFAULT_FILE_PATH', 'src/upload/');
 
 // $c_db = new Connection(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 
@@ -22,7 +21,7 @@ define('DEFAULT_FILE_PATH', 'app/_files/');
 //     die;
 // }
 
-$dbm = new DatabaseModelExtractor('mm_dietacerta', 'app/partials/classes', 1);
+$dbm = new DBPuller('my_test_db', 'src/classes', 1);
 
 echo "\n ----DEBUG START ----\n";
 print_r($dbm->generate());
