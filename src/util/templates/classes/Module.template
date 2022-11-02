@@ -13,8 +13,9 @@
  */
 
 use MMWS\Factory\RequestExceptionFactory;
-use MMWS\Interfaces\View;
+use MMWS\Abstracts\View;
 use MMWS\Controller\{CONTROLLER_NAME};
+
 class Module extends View
 {
      /**

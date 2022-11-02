@@ -12,9 +12,9 @@
  */
  
 namespace {VENDOR}\Model;
-use MMWS\Interfaces\AbstractModel;
+use MMWS\Abstracts\Model;
 
-class {CLASS_NAME} extends AbstractModel
+class {CLASS_NAME} extends Model
 {
 
     {CLASS_ATTRIBUTES}

@@ -24,9 +24,9 @@ use PDOStatement;
  * 
  * Example Usage:
  * 
- * use MMWS\Handler\DatabaseModelExtractor;
+ * use MMWS\Handler\DBPuller;
  * 
- * $dbm = new DatabaseModelExtractor('mm_dbname', 'src/classes', 1);
+ * $dbm = new DBPuller('mm_dbname', 'src/classes', 1);
  * 
  * $dbm->generate();
  * 
@@ -35,7 +35,7 @@ use PDOStatement;
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.9.1-alpha
  */
-class DatabaseModelExtractor
+class DBPuller
 {
     /**
      * @var Array<Array<String>> $tables transcribed schema
@@ -95,7 +95,7 @@ class DatabaseModelExtractor
      * 
      * @return DatabaseModelExtract the instance itself
      */
-    function setTables(array $tables): DatabaseModelExtractor
+    function setTables(array $tables): DBPuller
     {
         $this->tablesIncluded = $tables;
         return $this;

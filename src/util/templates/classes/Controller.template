@@ -15,9 +15,9 @@ namespace {VENDOR}\Controller;
 
 use {VENDOR}\Model\{USE_CLASS};
 use {VENDOR}\Entity\{USE_CLASS}Entity;
-use MMWS\Interfaces\AbstractController;
+use MMWS\Abstracts\Controller;
 
-class {CLASS_NAME} extends AbstractController
+class {CLASS_NAME} extends Controller
 {
     public $entity;
     public $model;

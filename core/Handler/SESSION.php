@@ -2,10 +2,7 @@
 
 namespace MMWS\Handler;
 
-use DateInterval;
-use DateTime;
 use Exception;
-use Firebase\JWT\SignatureInvalidException;
 use MMWS\Factory\RequestExceptionFactory;
 
 /**

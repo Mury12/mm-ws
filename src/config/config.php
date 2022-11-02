@@ -12,7 +12,7 @@ use Dotenv\Dotenv;
 use MMWS\Factory\RequestFactory;
 use MMWS\Handler\Router;
 use MMWS\Handler\SESSION;
-use MMWS\Middleware\CACHE;
+use MMWS\Middleware\Cache;
 use MMWS\Middleware\Throttle;
 
 /** Composer autoload */
@@ -27,8 +27,8 @@ $dotenv->load();
 /** System defined variables */
 require_once 'src/config/variables.php';
 
-/** Autoloads all the classes */
-require_once _DEFAULT_APPLICATION_PATH_ . '/autoload.php';
+/** Load global functions */
+require_once _DEFAULT_APPLICATION_PATH_ . '/functions.php';
 
 /** Database connection configuration file */
 require_once 'src/config/db-conf.php';
@@ -49,7 +49,7 @@ SESSION::init();
 $tmr = new Throttle(100, 60, 600);
 $tmr->init($request);
 /** Sets request caching interval */
-CACHE::$timeout = 10;
+Cache::$timeout = 10;
 /** Loads the Routes */
 $routes = require_once(_DEFAULT_APPLICATION_PATH_ . '/router.php');
 /** Creates the routes */

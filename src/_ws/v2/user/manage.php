@@ -13,7 +13,7 @@
  */
 
 use MMWS\Factory\RequestExceptionFactory;
-use MMWS\Interfaces\View;
+use MMWS\Abstracts\View;
 use MMWS\Controller\UserController;
 use MMWS\Handler\JWTHandler;
 use MMWS\Handler\RequestException;

@@ -2,9 +2,6 @@
 
 namespace MMWS\Handler;
 
-use MMWF\Factory\RequestFactory;
-use MMWS\Factory\RequestExceptionFactory;
-
 /**
  * Manage the server routes
  * This is the main router handling every route created

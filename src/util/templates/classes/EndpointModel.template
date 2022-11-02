@@ -2,12 +2,12 @@
 
 namespace MMWS\Handler;
 
-use MMWS\Middleware\CACHE;
+use MMWS\Middleware\Cache;
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\Queue;
 use MMWS\Middleware\Authentication;
 use MMWS\Handler\Request;
-use MMWS\Interfaces\View;
+use MMWS\Abstracts\View;
 
 /**
  * Creates endpoints and configure it.
@@ -268,16 +268,16 @@ class Endpoint
         if ($this->caching && $_SERVER['REQUEST_METHOD'] === 'GET') {
             global $cached;
             try {
-                $cached = CACHE::check($request->getProcedure());
+                $cached = Cache::check($request->getProcedure());
                 /**
-                 * CACHEs requests if caching is enabled
+                 * Caches requests if caching is enabled
                  */
                 if (!$cached) {
                     /**
                      * @var mixed $m result from the procedure
                      */
                     $m = $view->call();
-                    CACHE::put($m, $request->getProcedure());
+                    Cache::put($m, $request->getProcedure());
                 }
                 $m = $m ?? $cached;
             } catch (\Exception $e) {

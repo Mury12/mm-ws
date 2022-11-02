@@ -14,13 +14,13 @@
 namespace {VENDOR}\Entity;
 use {VENDOR}\Model\{USE_CLASS};
 use {VENDOR}\Controller\{USE_CLASS}Controller;
-use MMWS\Interfaces\AbstractEntity;
+use MMWS\Abstracts\Entity;
 use MMWS\Handler\PDOQueryBuilder;
 use MMWS\Factory\RequestExceptionFactory;
 use MMWS\Handler\CaseHandler;
 use PDOException;
 
-class {CLASS_NAME} extends AbstractEntity
+class {CLASS_NAME} extends Entity
 {
     
     /**

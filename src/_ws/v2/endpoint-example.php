@@ -8,7 +8,7 @@
  */
 
 use MMWS\Factory\RequestExceptionFactory;
-use MMWS\Interfaces\View;
+use MMWS\Abstracts\View;
 
 
 class Module extends View

@@ -7,7 +7,7 @@
  * *** DO NOT CHANGE THIS TEMPLATE IF IT'S ALREADY IN PRODUCTION ***
  */
 
-use MMWS\Interfaces\View;
+use MMWS\Abstracts\View;
 
 class Module extends View
 {

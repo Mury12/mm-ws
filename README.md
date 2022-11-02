@@ -358,9 +358,9 @@ Usage:
 ```php
 <?php
 
-use MMWS\Handler\DatabaseModelExtractor;
+use MMWS\Handler\DBPuller;
 
-$gen = new DatabaseModelExtractor('database_name', 'mvc_path', 1, 'VENDOR', 'Prefix');
+$gen = new DBPuller('database_name', 'mvc_path', 1, 'VENDOR', 'Prefix');
 // It is now possible to set the tables to extract using the method below
 $gen->setTables(['table_1', 'table_2']);
 // If no table is set, it will get the whole database not including view tables.
