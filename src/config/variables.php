@@ -69,4 +69,5 @@ if (!\file_exists('src/config/local/variables-local.php')) {
         $key = file_get_contents($_ENV['JWT_KEY_PATH']);
         define('_JWT_DEFINED_KEY_', $key);
     }
+    define('_SESSION_USER_ID_', 'user_id');
 } else require_once 'src/config/local/variables-local.php';
