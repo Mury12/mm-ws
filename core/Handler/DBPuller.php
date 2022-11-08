@@ -4,6 +4,8 @@ namespace MMWS\Handler;
 
 use Dotenv\Exception\InvalidFileException;
 use MMWS\Handler\CaseHandler;
+use MMWS\Model\DBFieldSpec;
+use MMWS\Model\DBTableSpec;
 use PDO;
 use PDOStatement;
 
@@ -24,9 +26,9 @@ use PDOStatement;
  * 
  * Example Usage:
  * 
- * use MMWS\Handler\DBPuller;
+ * use MMWS\Handler\DatabaseModelExtractor;
  * 
- * $dbm = new DBPuller('mm_dbname', 'src/classes', 1);
+ * $dbm = new DatabaseModelExtractor('mm_dbname', 'src/partials/classes', 1);
  * 
  * $dbm->generate();
  * 
@@ -35,17 +37,17 @@ use PDOStatement;
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.9.1-alpha
  */
-class DBPuller
+class DatabaseModelExtractor
 {
     /**
-     * @var Array<Array<String>> $tables transcribed schema
+     * @var DBTableSpec[] $tables transcribed schema
      */
-    private $tables = array();
+    private $tables = [];
 
     /**
      * @var Array<String> $snaked raw table names
      */
-    private $snaked = array();
+    private $snaked = [];
 
     /**
      * @var String $dbName the database name
@@ -95,7 +97,7 @@ class DBPuller
      * 
      * @return DatabaseModelExtract the instance itself
      */
-    function setTables(array $tables): DBPuller
+    function setTables(array $tables): DatabaseModelExtractor
     {
         $this->tablesIncluded = $tables;
         return $this;
@@ -110,7 +112,7 @@ class DBPuller
     {
         global $conn;
 
-        $query  = " SELECT `TABLE_NAME`, `COLUMN_NAME`";
+        $query  = " SELECT `TABLE_NAME`, `COLUMN_NAME`, `COLUMN_DEFAULT`, `IS_NULLABLE`, `DATA_TYPE`, `EXTRA`";
         $query .= " FROM `INFORMATION_SCHEMA`.`COLUMNS` ";
         $query .= " WHERE `TABLE_SCHEMA` = '" . $this->dbName . "'";
         $query .= " AND `TABLE_NAME` NOT LIKE '%view%'";
@@ -129,12 +131,27 @@ class DBPuller
                 $className = CaseHandler::convert($value['TABLE_NAME'], 0, true);
                 $this->snaked[$className] = $value['TABLE_NAME'];
 
-                $this->tables[$className][] = $this->snakeToCamel > 0
+                if (!array_key_exists($className, $this->tables)) {
+                    $table = new DBTableSpec($className);
+                    $this->tables[$className] = $table;
+                } else {
+                    $table = $this->tables[$className];
+                }
+
+                $columnName = $this->snakeToCamel > 0
                     ? CaseHandler::convert(
                         $value['COLUMN_NAME'],
                         0,
                         $this->snakeToCamel === 2 ? true : false
                     ) : $value['COLUMN_NAME'];
+
+                $table->addField(new DBFieldSpec(
+                    $columnName,
+                    $value['DATA_TYPE'],
+                    $value['IS_NULLABLE'],
+                    $value['COLUMN_DEFAULT'],
+                    $value['EXTRA']
+                ));
             }
 
             return true;
@@ -160,11 +177,15 @@ class DBPuller
             print_r("Generating MVCE for " . $model . "...\n");
 
             $className = $model;
-            $m = $this->model($template['model'], $className, $value);
+            $m = $this->model(
+                $template['model'],
+                $className,
+                $value
+            );
             $e = $this->entity($template['entity'], $className);
             $c = $this->controller($template['controller'], $className);
 
-            $file['model'] = fopen($this->MVCFolderPath . '/Model/' . $this->prefix . $className . '.php', 'w');
+            $file['model'] = fopen($this->MVCFolderPath . '/Modl/' . $this->prefix . $className . '.php', 'w');
             $file['entity'] = fopen($this->MVCFolderPath . '/Entity/' . $this->prefix . $className . 'Entity.php', 'w');
             $file['controller'] = fopen($this->MVCFolderPath . '/Controller/' . $this->prefix . $className . 'Controller.php', 'w');
 
@@ -190,15 +211,15 @@ class DBPuller
      * 
      * @return String the fulfilled template content
      */
-    private function model($template, String $model, array $values)
+    private function model($template, String $model, DBTableSpec $table)
     {
         $attributes = "";
         $constructor = "";
         $attrSetter = "";
-        foreach ($values as $value) {
-            $attributes .= "protected $" . $value . ";\n    ";
-            $constructor .= "$" . $value . " = null, ";
-            $attrSetter .= '$this->' . $value . " = $" . $value . ";\n\t    ";
+        foreach ($table->getFields() as $field) {
+            $attributes .= "protected" . $field->asParam() . "\n    ";
+            $constructor .= $field->asArg();
+            $attrSetter .= '$this->' . $field->name . " = $" . $field->name . ";\n\t    ";
         }
         $constructor = trim($constructor, ', ');
         $output = str_replace('{CLASS_ATTRIBUTES}', $attributes, $template);
