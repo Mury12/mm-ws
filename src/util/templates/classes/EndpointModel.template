@@ -228,7 +228,7 @@ class Endpoint
          * @var Queue $middleware MMWS\Interfaces\Middleware queue to be executed AFTER the page rendering
          */
         $middleware = new Queue(
-            'MMWS\Interfaces\IMiddleware',
+            'MMWS\Interfaces\Middleware',
             array_merge(
                 $middlewares,
                 $this->middlewares
