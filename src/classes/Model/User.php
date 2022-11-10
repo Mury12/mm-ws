@@ -14,9 +14,9 @@
 
 namespace MMWS\Model;
 
-use MMWS\Interfaces\AbstractModel;
+use MMWS\Abstracts\Model;
 
-class User extends AbstractModel
+class User extends Model
 {
     protected $id;
     protected $name;

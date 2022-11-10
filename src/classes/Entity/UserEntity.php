@@ -16,12 +16,12 @@ namespace MMWS\Entity;
 
 use MMWS\Model\User;
 use MMWS\Controller\UserController;
-use MMWS\Interfaces\AbstractEntity;
+use MMWS\Abstracts\Entity;
 use MMWS\Handler\PDOQueryBuilder;
 use MMWS\Factory\RequestExceptionFactory;
 use PDOException;
 
-class UserEntity extends AbstractEntity
+class UserEntity extends Entity
 {
     /**
      * @var String $table the table name for this model;

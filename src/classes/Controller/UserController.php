@@ -15,9 +15,9 @@ namespace MMWS\Controller;
 
 use MMWS\Model\User;
 use MMWS\Entity\UserEntity;
-use MMWS\Interfaces\AbstractController;
+use MMWS\Abstracts\Controller;
 
-class UserController extends AbstractController
+class UserController extends Controller
 {
     public $entity;
     public $model;
