@@ -25,7 +25,7 @@ class Module extends View
      * Call the create method to create a new user into
      * the database.
      */
-    function create(): array
+    function create()
     {
         $hasErrors = keys_match($this->body, ['name', 'email', 'password']);
         if (!$hasErrors) {

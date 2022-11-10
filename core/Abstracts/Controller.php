@@ -75,7 +75,7 @@ class Controller
      * 
      * @return array[]|Object[]
      */
-    public function search(string $query, array $columns, array $skipColumns = null, bool $asobj = false, int $page = 1)
+    public function search(string $query, array $columns, array $skipColumns = null, bool $asobj = true, int $page = 1)
     {
         return $this->entity->search($query, $columns, $skipColumns, $asobj, $page);
     }

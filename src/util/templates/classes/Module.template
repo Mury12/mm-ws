@@ -22,7 +22,7 @@ class Module extends View
      * Call the create method to create a new user into
      * the database.
      */
-    function create(): array
+    function create()
     {
         $hasErrors = keys_match($this->body, ['prop1', 'prop2']);
         if (!$hasErrors) {
@@ -40,7 +40,7 @@ class Module extends View
     /**
      * Call the GET method to GET a single user or a set of users
      */
-    function get(): array
+    function get()
     {
         $controller = new {CONTROLLER_NAME}($this->params);
         return $controller->get($this->query);

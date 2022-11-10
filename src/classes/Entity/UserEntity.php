@@ -92,7 +92,7 @@ class UserEntity extends Entity
      * 
      * @return array|User
      */
-    public function get(array $filters = [], bool $asobj = false, string $aggregator = 'AND')
+    public function get(array $filters = [], bool $asobj = true, string $aggregator = 'AND')
     {
         if ($this->model->id) {
             return $this->getOne($filters, $asobj);
@@ -109,7 +109,7 @@ class UserEntity extends Entity
      * 
      * @return array|User
      */
-    private function getOne(array $fields = [], bool $asobj = false)
+    private function getOne(array $fields = [], bool $asobj = true)
     {
         $columns = sizeof($fields) ? $fields : $this->model->getColumnNames();
         try {
@@ -139,7 +139,7 @@ class UserEntity extends Entity
 
      * @return array|Array<User>
      */
-    public function getAll(array $filters = [], bool $asobj = false, bool $and = true)
+    public function getAll(array $filters = [], bool $asobj = true, bool $and = true)
     {
         $fields  = $filters['fields'] ?? [];
         $columns = sizeof($fields) ? $fields : $this->model->getColumnNames();
@@ -186,7 +186,7 @@ class UserEntity extends Entity
         }
     }
     
-    public function search(string $query, bool $asobj = false, int $page = 1)
+    public function search(string $query, bool $asobj = true, int $page = 1)
     {
         try {
             $fields = $this->model->getColumnNames();
