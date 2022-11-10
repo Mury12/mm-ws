@@ -37,7 +37,7 @@ use PDOStatement;
  * @author Andre Mury <mury_gh@hotmail.com>
  * @version MMWS^0.9.1-alpha
  */
-class DatabaseModelExtractor
+class DBPuller
 {
     /**
      * @var DBTableSpec[] $tables transcribed schema
@@ -97,7 +97,7 @@ class DatabaseModelExtractor
      * 
      * @return DatabaseModelExtract the instance itself
      */
-    function setTables(array $tables): DatabaseModelExtractor
+    function setTables(array $tables): DBPuller
     {
         $this->tablesIncluded = $tables;
         return $this;
@@ -185,7 +185,7 @@ class DatabaseModelExtractor
             $e = $this->entity($template['entity'], $className);
             $c = $this->controller($template['controller'], $className);
 
-            $file['model'] = fopen($this->MVCFolderPath . '/Modl/' . $this->prefix . $className . '.php', 'w');
+            $file['model'] = fopen($this->MVCFolderPath . '/Model/' . $this->prefix . $className . '.php', 'w');
             $file['entity'] = fopen($this->MVCFolderPath . '/Entity/' . $this->prefix . $className . 'Entity.php', 'w');
             $file['controller'] = fopen($this->MVCFolderPath . '/Controller/' . $this->prefix . $className . 'Controller.php', 'w');
 
