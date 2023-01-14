@@ -8,16 +8,17 @@
  */
 
 use MMWS\Abstracts\View;
+use MMWS\Model\UniqueId;
 
 class Module extends View
 {
     /**
      * Creates an user
      */
-    function getUniqueId(): array
+    function getUniqueId(): UniqueId
     {
         $params = $this->data['params'];
-        return unique_id($params['len'] ?? 6, $params['hash'] ?? 'sha256');
+        return new UniqueId($params['len'] ?? 6, $params['hash'] ?? 'sha256');
     }
 }
 
