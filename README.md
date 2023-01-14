@@ -1,6 +1,6 @@
-# MM-WS - PHP Webservice Template @v0.12.1-beta1 (Breaking changes!)
+# MM-WS - PHP Webservice Template @v0.12.1-beta2
 
-__V0.12.x is is migrating to PHP 8.x, and older versions will be marked as stale.__
+**V0.12.x is is migrating to PHP 8.x, and older versions will be marked as stale.**
 
 > V0.12.1-beta0 does not support backwards compat with v0.11.x or lower.
 
@@ -88,7 +88,7 @@ to add a new domain to this file.
 - `src/routers/error.php` -> Error routes
 
 > Note that you can add as much router files as you want. The name of the file will be the prefix
-> so if you need to create multiple domains, it is possible to use as folders, just like 
+> so if you need to create multiple domains, it is possible to use as folders, just like
 > `src/routers/ws/my-subpath/my-sub-subpath/my-context.php` will be translated to
 > `ws/my-subpath/my-sub-subpath/my-context/:route`.
 
