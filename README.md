@@ -15,9 +15,18 @@ Generate a SSH key at `./.ssh/ssh-name` in order to use JWT and set its name in 
 ## Running
 
 `composer install` - to install dependencies
+`composer update-core` - to update the core repository
+
+Get an .env file and fill its fields
+`cp .env.example .env` - 
 
 Webservice can be initialized with PHP CLI or any bundler you want.
-`php -S localhost:8081`
+`composer start`
+
+Since **v0.12.1-beta2** the application core was migrated to a separated repository, this means 
+that you will be able to get core updates to the app with minimum effort, unless it's breaking changes.
+To update the core app, just ask composer with `composer update-core` and this will checkout the latest 
+stable branch.
 
 ## Initiators
 
@@ -79,13 +88,15 @@ try {
 
 Routes are added to its specific file inside `src/routers/ROUTE-GROUP-NAME.php`
 If another router file is needed, also is needed to modify `src/routes.php` in order
-to add a new domain to this file.
+to add a new domain to this file. The router can also interpret folder path mapping,
+just like `routers/ws/v2/companies/users.php` then your endpoint will result in
+`ws/v2/companies/users/<any other child>`
 
 ### Route model:
 
 - `src/routers/ws/v2.php` -> The actual webservices routes
 - `src/routers/ms.php` -> General service routes
-- `src/routers/error.php` -> Error routes
+- `src/routers/health.php` -> Ws health status
 
 > Note that you can add as much router files as you want. The name of the file will be the prefix
 > so if you need to create multiple domains, it is possible to use as folders, just like
@@ -504,7 +515,7 @@ unique id generator, token generator, error handlers, etc., but the most used ar
 ## Directory Tree
 
 ```
-├── core <-- Core files, don't touch :)
+├── core <-- Core submodule. You can play around, but this wont be pushed to your repo.
 ├── \app
 │   ├── \upload
 │   │   ├── File A.jpg
