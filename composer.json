@@ -20,7 +20,7 @@
       "git submodule init",
       "git submodule update"
     ],
-    "update-core": "git submodule init && git submodule update"
+    "update-core": "git submodule init && git submodule update --remote"
   },
   "autoload": {
     "psr-4": {
