@@ -1,5 +1,5 @@
 {
-  "version": "0.12.1-beta1",
+  "version": "0.12.3-beta1",
   "require": {
     "vlucas/phpdotenv": "^5.1",
     "firebase/php-jwt": "^5.2"
