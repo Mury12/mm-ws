@@ -1,8 +1,8 @@
-# MM-WS - PHP Webservice Template @v0.12.0-beta1 (Breaking changes!)
+# MM-WS - PHP Webservice Template @v0.12.1-beta1 (Breaking changes!)
 
 __V0.12.x is is migrating to PHP 8.x, and older versions will be marked as stale.__
 
-> V0.12.0-beta0 does not support backwards compat with v0.11.x or lower.
+> V0.12.1-beta0 does not support backwards compat with v0.11.x or lower.
 
 ## Before using
 
