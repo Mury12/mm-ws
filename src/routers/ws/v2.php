@@ -25,16 +25,18 @@ use MMWS\Factory\EndpointFactory;
 use MMWS\Middleware\Authentication;
 
 return [
-	'user' => [
+	'users' => [
 		'params' => ['id'],
 		'body' => EndpointFactory::create()
 			->post('user/manage', 'create')
-			->get('user/manage', 'get')
+			->get('user/manage', 'get', [
+				'middlewares' => [[new Authentication()]]
+			])
 			->put('user/manage', 'update', [
-				'middlewares' => [new Authentication()]
+				'middlewares' => [[new Authentication()]]
 			])
 			->delete('user/manage', 'delete', [
-				'middlewares' => [new Authentication()]
+				'middlewares' => [[new Authentication()]]
 			]),
 		'login' => [
 			'body' => EndpointFactory::create()
