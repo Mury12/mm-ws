@@ -1,0 +1,36 @@
+FROM php:7.4-fpm
+
+ARG user
+ARG uid
+
+RUN rm /etc/apt/preferences.d/no-debian-php
+RUN apt update && \
+    apt install -y apt-transport-https git php-mbstring php-gmp php-dom php-gd php-curl zip nano 
+
+RUN docker-php-ext-install mysqli pdo_mysql
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Composer <Installed locally for faster deploying purposes>
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Create system user to run Composer and Artisan Commands
+# RUN useradd -G www-data,root -u $uid -d /home/$user $user
+# RUN mkdir -p /home/$user/.composer && \
+#     chown -R $user:$user /home/$user
+
+WORKDIR /var/www/ws-dietacerta
+
+COPY ./composer.json .
+
+
+RUN composer install
+# COPY ./composer.lock .
+COPY . .
+
+RUN chown www-data:www-data /var/www/ws-dietacerta -R
+
+USER $user
+
+
+EXPOSE 7000

@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+    prod:
+        build:
+            args:
+                user: www-data
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile.prod
+        ports: 
+            - "7000:9000"
+        image: ws-dietacerta
+        container_name: ws-dietacerta
+        restart: unless-stopped
+        working_dir: /var/www/ws-dietacerta
+        volumes:
+            - ./:/var/www/ws-dietacerta
+    app:
+        build:
+            args:
+                user: www-data
+                # uid: 1000
+            context: ./
+            dockerfile: Dockerfile.dev
+        ports: 
+            - "7000:8080"
+        image: ws-dietacerta
+        container_name: ws-dietacerta
+        restart: unless-stopped
+        command: 'php -S 0.0.0.0:8080'
+        volumes:
+            - ./:/app
